@@ -1,8 +1,9 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder } = require("discord.js");
 const axios = require("axios");
 const db = require("croxydb");
 
-let lastUnix = null;
+let lastCheckedUnix = null;
 let isChecking = false;
 
 async function kontrolEt(client) {
@@ -10,23 +11,26 @@ async function kontrolEt(client) {
   isChecking = true;
 
   try {
-    const response = await axios.get("https://rudsdev.xyz/api/deprem", {
+    const response = await axios.get("https://api.orhanaydogdu.com.tr/deprem/lives", {
       timeout: 10000,
       headers: {
         "User-Agent": "Mozilla/5.0"
       }
     });
 
-    const deprem = response.data[0];
-    if (!deprem || deprem.unix === lastUnix) return;
+    const raw = response.data.result || response.data || [];
+    const deprem = raw[0];
+    if (!deprem) return;
 
-    lastUnix = deprem.unix;
+    const depremUnix = deprem.unix || deprem.timestamp || Date.now();
+    if (depremUnix === lastCheckedUnix) return;
+    lastCheckedUnix = depremUnix;
 
     const embed = new EmbedBuilder()
       .setColor("#e74c3c")
-      .setTitle("📢 Yeni Deprem Tespit Edildi!")
+      .setTitle(emoji.kbdZil + " Yeni Deprem Tespit Edildi!")
       .setDescription(
-        `**Yer:** ${deprem.yer} ${deprem.sehir}\n📍 **Büyüklük:** ${deprem.buyukluk} ML\n⛏️ **Derinlik:** ${deprem.derinlik} km\n⏰ **Zaman:** ${deprem.tarih} - ${deprem.saat}`
+        `**Yer:** ${deprem.location || deprem.yer || 'Bilinmiyor'}\n${emoji.kbdNews} **Büyüklük:** ${deprem.mag || deprem.buyukluk || '?'} ML\n${emoji.kbdCalisma} **Derinlik:** ${deprem.depth || deprem.derinlik || '?'} km\n${emoji.kbdSaat} **Zaman:** ${deprem.date || deprem.tarih || ''} ${deprem.time || deprem.saat || ''}`
       )
       .setTimestamp();
 
@@ -50,7 +54,9 @@ async function kontrolEt(client) {
       }
     }
   } catch (err) {
-    console.error("Deprem kontrol hatası:", err.message);
+    if (err.code !== 404 && !err.message.includes("404")) {
+      console.error("Deprem kontrol hatası:", err.message);
+    }
   } finally {
     isChecking = false;
   }

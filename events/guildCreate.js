@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
   EmbedBuilder,
   ActionRowBuilder,
@@ -40,20 +41,18 @@ module.exports = {
 
       // === 2. DM MESAJI SUNUCU SAHİBİNE ===
       const dmEmbed = new EmbedBuilder()
-        .setTitle(`✅ ${client.user.username} Hizmete Hazır!`)
+        .setTitle(`${emoji.tik} ${client.user.username} Hizmete Hazır!`)
         .setDescription(
           `Selam, beni **${guild.name}** adlı sunucuya ekledin!\n\nHerhangi bir konuda destek almak istersen, aşağıdaki butona tıklayarak destek sunucumuza ulaşabilirsin.\n\n> Bu mesajı sadece sen alıyorsun çünkü sunucu sahibisin. Seviliyorsun, byy :)`
         )
-        .setImage(
-          "https://cdn.discordapp.com/avatars/1245719534200033446/d9d9ec2479b48809e5c347b6f6b39994.webp?size=1024"
-        )
+        .setImage(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
         .setColor("#2B2D31");
 
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-          .setLabel("🎉 Destek Sunucusu")
+          .setLabel(emoji.kbdOyun + " Destek Sunucusu")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://discord.gg/nMeEdX7KuY")
+          .setURL(config["desteksunucu"])
       );
 
       await owner.user

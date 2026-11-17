@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Events, ChannelType, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 const config = require("../config.json");
@@ -24,7 +25,7 @@ module.exports = {
       member &&
       !member.user.bot
     ) {
-      const odaIsim = `║👤 ${member.displayName}`.slice(0, 100);
+      const odaIsim = `║${emoji.kbdUser} ${member.displayName}`.slice(0, 100);
 
       const ozelOda = await newState.guild.channels.create({
         name: odaIsim,

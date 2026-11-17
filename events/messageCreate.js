@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const db = require("croxydb");
 const { PermissionFlagsBits, EmbedBuilder, Events, PermissionsBitField } = require("discord.js");
 const Discord = require("discord.js");
@@ -39,7 +40,7 @@ module.exports = {
             if (kullanıcı) {
                 const sebep = await db.get(`afk_${kullanıcı.id}`);
                 if (sebep) {
-                    message.reply(`❔ | Etiketlediğin kullanıcı **${sebep}** sebebiyle afk modunda!`);
+                    message.reply(`${emoji.kbdNews} | Etiketlediğin kullanıcı **${sebep}** sebebiyle afk modunda!`);
                 }
             }
 

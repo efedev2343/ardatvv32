@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("croxydb");
 
@@ -76,10 +77,10 @@ module.exports = {
               .setTitle("Etiketlenip Sonra Silinen Mesaj")
               .setDescription(`${message.author} adlı kullanıcı sizi etiketlediği bir mesajı sildi.`)
               .addFields(
-                { name: "📝 Silinen Mesaj", value: messageContent || "*Mesaj boştu*", inline: false },
-                { name: "📍 Kanal", value: `<#${message.channel.id}>`, inline: true },
-                { name: "🕒 Yazılma Zamanı", value: `<t:${Math.floor(message.createdTimestamp / 1000)}:F>`, inline: true },
-                { name: "🗑️ Silinme Zamanı", value: `<t:${Math.floor(Date.now() / 1000)}:R>`, inline: true }
+                { name: emoji.kbdNews + " Silinen Mesaj", value: messageContent || "*Mesaj boştu*", inline: false },
+                { name: emoji.kbdNews + " Kanal", value: `<#${message.channel.id}>`, inline: true },
+                { name: emoji.kbdSaat + " Yazılma Zamanı", value: `<t:${Math.floor(message.createdTimestamp / 1000)}:F>`, inline: true },
+                { name: emoji.kbdNews + " Silinme Zamanı", value: `<t:${Math.floor(Date.now() / 1000)}:R>`, inline: true }
               )
               .setFooter({
                 text: message.guild?.name || "Bilinmeyen Sunucu",

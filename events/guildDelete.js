@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { 
   Events, 
   EmbedBuilder, 
@@ -38,16 +39,16 @@ Sunucu Sayısı: ${client.guilds.cache.size}`)
     // === 2. Sunucu Sahibine DM ===
     if (owner) {
       const dmEmbed = new EmbedBuilder()
-        .setTitle(`😢 ${client.user.username} Sunucudan Atıldı`)
+        .setTitle(`${emoji.kbdOyun} ${client.user.username} Sunucudan Atıldı`)
         .setDescription(`Selam, beni **${guild.name}** adlı sunucudan çıkardın ya da attınız. Eğer yanlışlıkla olduysa tekrar ekleyebilirsin.\n\nDestek istersen aşağıdan ulaşabilirsin.\n\n> Bu mesajı sadece sen alıyorsun çünkü sunucu sahibisin.`)
-        .setImage("https://cdn.discordapp.com/avatars/1245719534200033446/d9d9ec2479b48809e5c347b6f6b39994.webp?size=1024")
+        .setImage(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
         .setColor("#2B2D31");
 
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-          .setLabel("🎉 Destek Sunucusu")
+          .setLabel(emoji.kbdOyun + " Destek Sunucusu")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://discord.gg/nMeEdX7KuY")
+          .setURL(config["desteksunucu"])
       );
 
       await owner.send({ embeds: [dmEmbed], components: [row] }).catch(err => {

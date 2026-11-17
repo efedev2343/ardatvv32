@@ -1,8 +1,10 @@
-const { EmbedBuilder, PermissionsBitField } = require("discord.js");
+const emoji = require("../emoji.js");
+const { EmbedBuilder, PermissionsBitField, AttachmentBuilder } = require("discord.js");
 const db = require("croxydb");
 const moment = require("moment");
 require("moment-duration-format");
 moment.locale("tr");
+const { WelcomeLeave } = require("canvafy");
 
 module.exports = {
   name: "guildMemberAdd",
@@ -56,59 +58,22 @@ module.exports = {
 
       const channel = hgbb?.channel && guild.channels.cache.get(hgbb.channel);
       if (channel?.isTextBased()) {
-        const tagUser = `<@${member.user.id}>`;
-        const tagInviter = inviter ? `<@${inviter.id}>` : "Bilinmiyor";
+        try {
+          const welcomeImage = await new WelcomeLeave()
+            .setAvatar(member.user.displayAvatarURL({ dynamic: true, size: 1024 }))
+            .setBackground("image", "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2070&auto=format&fit=crop")
+            .setTitle(emoji.kbdOyun + " Sunucuya Hoş Geldin!")
+            .setDescription(`${member.user} sunucuya katıldı!\n\n${emoji.kbdUser} Sunucuda artık **${memberCount}** kişi var!`)
+            .setBorder("#57F287")
+            .setAvatarBorder("#57F287")
+            .setOverlayOpacity(0.85)
+            .build();
 
-        const msgText = sayacMessage?.joinMsg
-          ?.replace("{member}", tagUser)
-          ?.replace("{guild.memberCount}", memberCount)
-          ?.replace("{guild.name}", guild.name)
-          ?.replace("{owner.name}", `<@${guild.ownerId}>`)
-          ?.replace("{inviter}", tagInviter)
-          ?.replace("{inviteCount}", `${totalInvites}`);
-
-        const embed = new EmbedBuilder()
-          .setColor("#57F287")
-          .setAuthor({
-            name: `${member.user.username} aramıza katıldı!`,
-            iconURL: member.user.displayAvatarURL({ dynamic: true }),
-            url: `https://discord.com/users/${member.user.id}`,
-          })
-          .setDescription(
-            msgText ||
-              `${tagUser} **${guild.name}** sunucusuna hoş geldin!\n\n💎 Seninle birlikte **${memberCount}** üyeye ulaştık!\n**Davet Eden:** ${tagInviter}`
-          )
-          .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-          .setImage("https://hizliresim.com/3ieu447")
-          .addFields(
-            {
-              name: "📆 Hesap Oluşturulma",
-              value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
-              inline: true,
-            },
-            {
-              name: "🎯 Katılma Sırası",
-              value: `#${guild.memberCount}`,
-              inline: true,
-            },
-            {
-              name: "🤖 Bot Mu?",
-              value: member.user.bot ? "Evet" : "Hayır",
-              inline: true,
-            },
-            {
-              name: "📨 Toplam Davet",
-              value: `${totalInvites}`,
-              inline: true,
-            }
-          )
-          .setFooter({
-            text: `${guild.name} • ${moment().format("DD MMMM YYYY")}`,
-            iconURL: guild.iconURL({ dynamic: true }) || client.user.displayAvatarURL(),
-          })
-          .setTimestamp();
-
-        await channel.send({ content: tagUser, embeds: [embed] });
+          const attachment = new AttachmentBuilder(welcomeImage, { name: "welcome.png" });
+          await channel.send({ content: `${member.user}`, files: [attachment] });
+        } catch (canvasErr) {
+          console.error("Canvas welcome hatası:", canvasErr.message);
+        }
       }
 
       /** ================
@@ -147,8 +112,8 @@ module.exports = {
               const logChannel = member.guild.channels.cache.get(roleLogChannel);
               if (logChannel) {
                 const embed = new EmbedBuilder()
-                  .setTitle("Yeni Rol Eklendi! 🔑")
-                  .setDescription(`**${member.user.tag}** adlı üyeye ${role} rolü verildi! 🎯`)
+                  .setTitle("Yeni Rol Eklendi! " + emoji.kbdKilit)
+                  .setDescription(`**${member.user.tag}** adlı üyeye ${role} rolü verildi! ${emoji.kbdOyun}`)
                   .setColor("#FFD700")
                   .setFooter({
                     text: "Rol Verildi",
@@ -175,11 +140,11 @@ module.exports = {
         const isRisky = new Date().getTime() - member.user.createdAt.getTime() < 1296000000; // 15 gün
         if (isRisky) {
           try {
-            await member.ban({ reason: "Yeni riskli hesap ⛔" });
+            await member.ban({ reason: "Yeni riskli hesap " + emoji.carpi });
             if (logChannel) {
               const embed = new EmbedBuilder()
                 .setDescription(
-                  `<a:uyari:1225959324426174475>  | **${member.user.tag}**, Hesabı yeni olduğu için sunucudan yasaklandı! ⛔`
+                  `${emoji.kbdWarn}  | **${member.user.tag}**, Hesabı yeni olduğu için sunucudan yasaklandı! ${emoji.carpi}`
                 )
                 .setColor("#FEE75C")
                 .setFooter({

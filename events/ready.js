@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { ActivityType, EmbedBuilder } = require('discord.js');
 const db = require('croxydb');
 
@@ -6,7 +7,7 @@ module.exports = {
   once: true,
 
   run: async (client) => {
-    console.log(`${client.user.tag} Aktif! 💕`);
+    console.log(`${client.user.tag} Aktif! ${emoji.kbdOK}`); // Bot aktif olduğunda konsola basılır
 
     client.user.setPresence({
       activities: [{ name: "/Yardım", type: ActivityType.Custom }], 
@@ -23,10 +24,6 @@ module.exports = {
         { name: "/yardım", type: ActivityType.Playing },
         { name: "Gelişmiş Güvenlik Sistemleriyle Sunucunu Güvene Al", type: ActivityType.Playing },
         { name: "Moderasyon Sistemleriyle Sunucunu Kolay Yönet", type: ActivityType.Playing },
-        { name: "Coded By Efe Better Dev", type: ActivityType.Playing },
-        { name: "Vds sponsorluk aranıyor efebetter.dev", type: ActivityType.Playing },
-        { name: "Vds olmadıgı için 7/24 aktif degil bot ", type: ActivityType.Playing },
-        // { name: "Twitch", type: ActivityType.Streaming, url: "https://www.twitch.tv/blewys_" },
       ];
 
       
@@ -50,7 +47,7 @@ module.exports = {
       }, 10000); 
 
       
-      const channelId = '1276899166701752320';
+      const channelId = '1572199738445537370';
 
       const channel = await client.channels.fetch(channelId);
 
@@ -84,7 +81,7 @@ module.exports = {
 
       if (errorChannel) {
         const errorEmbed = new EmbedBuilder()
-          .setTitle("❌ Hata")
+          .setTitle(emoji.carpi + " Hata")
           .setDescription(`Bot başlama mesajı gönderilirken bir hata oluştu:\n\`${error.message}\``)
           .setColor("Red")
           .setTimestamp();

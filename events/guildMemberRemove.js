@@ -1,7 +1,9 @@
-const { EmbedBuilder } = require("discord.js");
+const emoji = require("../emoji.js");
+const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const db = require("croxydb");
 const moment = require("moment");
 require("moment-duration-format");
+const { WelcomeLeave } = require("canvafy");
 
 module.exports = {
     name: "guildMemberRemove",
@@ -25,88 +27,25 @@ module.exports = {
             }
 
          
-            const inviterId = db.fetch(`inviter_${member.id}_${member.guild.id}`);
-            let inviterData = {
-                tag: "Bilinmiyor",
-                id: null,
-                remainingInvites: 0
-            };
-            
-            if (inviterId) {
-                const inviter = await client.users.fetch(inviterId).catch(() => null);
-                inviterData.tag = inviter ? inviter.tag : `ID: ${inviterId}`;
-                inviterData.id = inviterId;
-                
-                let totalInvites = db.fetch(`inviteCount_${inviterId}_${member.guild.id}`) || 0;
-                inviterData.remainingInvites = Math.max(totalInvites - 1, 0);
-                db.set(`inviteCount_${inviterId}_${member.guild.id}`, inviterData.remainingInvites);
-                
-                if (member.user.bot) {
-                    inviterData.tag += " (Bot)";
-                }
+            try {
+              const leaveImage = await new WelcomeLeave()
+                .setAvatar(member.user.displayAvatarURL({ dynamic: true, size: 1024 }))
+                .setBackground("image", "https://images.unsplash.com/photo-1544717297-fa65b98c6453?q=80&w=2070&auto=format&fit=crop")
+                .setTitle(emoji.kbdOyun + " Sunucudan Ayrıldı!")
+                .setDescription(`${member.user} sunucudan ayrıldı!\n\n${emoji.kbdUser} Sunucuda **${member.guild.memberCount}** kişi kaldı!`)
+                .setBorder("#FF4D4D")
+                .setAvatarBorder("#FF4D4D")
+                .setOverlayOpacity(0.85)
+                .build();
+
+              const attachment = new AttachmentBuilder(leaveImage, { name: "leave.png" });
+              await kanal.send({ 
+                content: `${emoji.kbdOyun} ${member.user}`, 
+                files: [attachment] 
+              });
+            } catch (canvasErr) {
+              console.error("Canvas leave hatası:", canvasErr.message);
             }
-
-            const joinDate = moment(member.joinedAt);
-            const membershipDuration = moment.duration(moment().diff(joinDate));
-            const formattedDuration = membershipDuration.format("y [yıl], M [ay], d [gün], h [saat], m [dakika]");
-
-            
-            const roles = member.roles.cache
-                .filter(role => role.id !== member.guild.id) 
-                .sort((a, b) => b.position - a.position)
-                .first(5)
-                .map(role => role.toString());
-
-           
-            const ayrilmaEmbed = new EmbedBuilder()
-                .setColor("#FF4D4D")
-                .setAuthor({ 
-                    name: `${member.user.tag} sunucudan ayrıldı`, 
-                    iconURL: member.user.displayAvatarURL({ dynamic: true, size: 256 }) 
-                })
-                .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }))
-                .setImage("https://hizliresim.com/3ieu447") 
-                .addFields(
-                    { 
-                        name: "📊 Üye Bilgileri", 
-                        value: [
-                            `• Hesap Oluşturma: <t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
-                            `• Katılma Tarihi: <t:${Math.floor(member.joinedTimestamp / 1000)}:R>`,
-                            `• Üyelik Süresi: ${formattedDuration}`,
-                            `• Bot: ${member.user.bot ? "✅" : "❌"}`,
-                            `• ID: \`${member.id}\``
-                        ].join("\n"),
-                        inline: true
-                    },
-                    { 
-                        name: "📌 Sunucu Bilgileri", 
-                        value: [
-                            `• Toplam Üye: ${member.guild.memberCount}`,
-                            `• Sunucu Sahibi: <@${member.guild.ownerId}>`,
-                            `• Roller (${roles.length}): ${roles.join(", ") || "Yok"}`
-                        ].join("\n"),
-                        inline: true
-                    },
-                    {
-                        name: "🎟️ Davet Bilgileri",
-                        value: [
-                            `• Davet Eden: ${inviterData.tag}`,
-                            `• Kalan Davetler: ${inviterData.remainingInvites}`,
-                            `• Davet Eden ID: ${inviterData.id ? `\`${inviterData.id}\`` : "Bilinmiyor"}`
-                        ].join("\n")
-                    }
-                )
-                .setFooter({ 
-                    text: `${member.guild.name} • ${new Date().getFullYear()}`, 
-                    iconURL: member.guild.iconURL({ dynamic: true }) || client.user.displayAvatarURL()
-                })
-                .setTimestamp();
-
-            
-            await kanal.send({ 
-                content: `👋 ${member.user.tag} (\`${member.id}\`) sunucudan ayrıldı!`, 
-                embeds: [ayrilmaEmbed] 
-            });
 
         } catch (err) {
             console.error(`[MEMBER_LEAVE_ERROR] Sunucu: ${member.guild.id} - Üye: ${member.id} - Hata:`, err);
@@ -117,7 +56,7 @@ module.exports = {
                 const kanal = member.guild.channels.cache.get(hgbb1.channel);
                 if (kanal && kanal.isTextBased()) {
                     await kanal.send({
-                        content: `⚠️ **${member.user.tag}** sunucudan ayrıldı, ancak ayrıntılı bilgi gösterilirken bir hata oluştu.`
+                        content: `${emoji.kbdWarn} **${member.user.tag}** sunucudan ayrıldı, ancak ayrıntılı bilgi gösterilirken bir hata oluştu.`
                     }).catch(console.error);
                 }
             }
@@ -140,3 +79,4 @@ client.on('guildMemberRemove', async member => {
     console.error(`Mesaj gönderilemedi: ${error}`);
   }
 });
+
