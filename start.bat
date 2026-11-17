@@ -1,6 +1,6 @@
 @echo off
 :run
-title ardatvv
+title deneme 
 node shard.js
 color A
 echo 

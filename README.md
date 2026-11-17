@@ -14,7 +14,7 @@
 # ⚡ Discord Moderasyon Botu Altyapısı
 
 Merhaba! 👋  
-Bu proje, **ardatvv’nin eski altyapısı temel alınarak yenilenmiş Discord moderasyon botu altyapısıdır.**  
+Bu proje, **deneme ’nin eski altyapısı temel alınarak yenilenmiş Discord moderasyon botu altyapısıdır.**  
 Daha düzenli, anlaşılır ve genişletilebilir hale getirildiği için **paylaşıma açılmıştır**.  
 
 ---

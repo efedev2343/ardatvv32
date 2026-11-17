@@ -1,3 +1,4 @@
+const emoji = require("./emoji.js");
 const { ShardingManager, WebhookClient } = require('discord.js');
 const config = require('./config.json');
 
@@ -6,14 +7,14 @@ const manager = new ShardingManager('./index.js', { //Burada main dosyanızın a
     totalShards: 1, //İsterseniz shard sayısını değiştirebilirsiniz. Ama shard sayısı değişmiyor diye biliyorum öyle ayarladım.
 });
 
-const webhook = new WebhookClient({ url: "" }); //Boş kısma webhook url gelecek.
+const webhook = new WebhookClient({ url: "https://discord.com/api/webhooks/1572199084364660756/xS9glhGUKjJiXVy76FVDaS3kUuKPf_vl4QG3Nevq8C_BageCCSo7VMk5_-YO9pOiG6i6" }); //Boş kısma webhook url gelecek.
 
 manager.on('shardCreate', shard => {
-    console.log(`🔄 Shard #${shard.id} başlatılıyor...`);
+    console.log(`${emoji.kbdRocket} Shard #${shard.id} başlatılıyor...`);
 
     shard.on('ready', async () => {
-        console.log(`❌ Shard #${shard.id} çalışıyor.`);
-        webhook.send(`<:pleasant_OK:1394248357328719964> **Shard #${shard.id} çalışıyor!**`);
+        console.log(`${emoji.kbdOK} Shard #${shard.id} çalışıyor.`);
+        webhook.send(`${emoji.kbdOK} **Shard #${shard.id} çalışıyor!**`);
 
         try {
             const pleasant_sunucu = await manager.broadcastEval(c => c.guilds.cache.size);
@@ -21,19 +22,19 @@ manager.on('shardCreate', shard => {
             const pleasant_topsunucu = pleasant_sunucu.reduce((a, b) => a + b, 0);
             const pleasant_topüye = pleasant_üye.reduce((a, b) => a + b, 0);
 
-            console.log(`🌍 Toplam Sunucu: ${pleasant_topsunucu}, Kullanıcı: ${pleasant_topüye}`);
-            webhook.send(`<:pleasant_SERVER:1394248383396315197> **Toplam Sunucu:** ${pleasant_topsunucu}\n<:pleasant_USERS:1394248391424344225> **Toplam Kullanıcı:** ${pleasant_topüye}`);
+            console.log(`${emoji.kbdServer} Toplam Sunucu: ${pleasant_topsunucu} ${emoji.kbdUsers} Toplam Kullanıcı: ${pleasant_topüye}`);
+            webhook.send(`${emoji.kbdServer} **Toplam Sunucu:** ${pleasant_topsunucu}\n${emoji.kbdUsers} **Toplam Kullanıcı:** ${pleasant_topüye}`);
 
         } catch (err) {
-            console.error("❌ Sunucu veya kullanıcı verisi alınamadı:", err);
-            webhook.send(`<:pleasant_X:1334148610614628436> **Hata:** \`\`\`${err.message}\`\`\``);
+            console.error(emoji.kbdX + " Sunucu veya kullanıcı verisi alınamadı:", err);
+            webhook.send(`${emoji.kbdX} **Hata:** \`\`\`${err.message}\`\`\``);
         }
     });
 
-    shard.on('disconnect', () => webhook.send(`<:pleasant_WARN:1394248366942064660> **Shard #${shard.id} bağlantısı koptu.**`));
-    shard.on('reconnecting', () => webhook.send(`<:pleasant_LOADNG:1394248347799388160> **Shard #${shard.id} tekrar bağlanıyor.**`));
-    shard.on('error', error => webhook.send(`<:pleasant_X:1334148610614628436> **Shard #${shard.id} hata verdi!**\n\`\`\`${error.message}\`\`\``));
+    shard.on('disconnect', () => webhook.send(`${emoji.kbdWarn} **Shard #${shard.id} bağlantısı koptu.**`));
+    shard.on('reconnecting', () => webhook.send(`${emoji.kbdLoad} **Shard #${shard.id} tekrar bağlanıyor.**`));
+    shard.on('error', error => webhook.send(`${emoji.kbdX} **Shard #${shard.id} hata verdi!**\n\`\`\`${error.message}\`\`\``));
 });
 
-manager.spawn().then(() => console.log('✅ Tüm shardlar başlatıldı.'))
+manager.spawn().then(() => console.log(emoji.kbdOK + ' Tüm shardlar başlatıldı.'))
     .catch(err => console.error('Shard başlatma hatası:', err));

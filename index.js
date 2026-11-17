@@ -1,3 +1,4 @@
+const emoji = require("./emoji.js");
 const Discord = require("discord.js");
 const { EmbedBuilder, REST, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, GatewayIntentBits, Partials } = require("discord.js");
 const fs = require("fs");
@@ -77,7 +78,7 @@ for (let commandName of fs.readdirSync("./commands")) {
       options: command.options || [],
       dm_permission: false,
       type: 1,
-      execute: command.execute
+      execute: command.run || command.execute
     });
 
     console.log(`[+] ${commandName} komutu başarıyla yüklendi.`);
@@ -154,14 +155,25 @@ client.on('messageCreate', async (msg) => {
   }
 
   
-  if (msg.content.startsWith(config.prefix)) {
-    const args = msg.content.slice(config.prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
+  const prefixes = [
+    ...(Array.isArray(config.prefixes) ? config.prefixes : []),
+    config.prefix
+  ].filter((p) => typeof p === "string" && p.length > 0);
+
+  const matchedPrefix = [...new Set(prefixes)]
+    .sort((a, b) => b.length - a.length)
+    .find((p) => msg.content.startsWith(p));
+
+  if (matchedPrefix) {
+    const args = msg.content.slice(matchedPrefix.length).trim().split(/ +/);
+    const command = args.shift()?.toLowerCase();
+    if (!command) return;
 
     const cmd = client.commands.find(cmd => cmd.name === command);
-    if (cmd && cmd.execute) {
+    if (cmd) {
       try {
-        await cmd.execute(msg, args);
+        if (cmd.execute) await cmd.execute(msg, args);
+        else if (cmd.run) await cmd.run(msg, args);
       } catch (error) {
         console.error(`[x] ${command} komutu çalıştırılırken hata:`, error);
         await msg.reply('Komut çalıştırılırken bir hata oluştu.');
@@ -175,19 +187,7 @@ client.on('messageCreate', async (msg) => {
 
 
 
-client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) return;
 
-  const cmd = client.commands.find(cmd => cmd.name === interaction.commandName);
-  if (cmd && cmd.execute) {
-    try {
-      await cmd.execute(interaction);
-    } catch (error) {
-      console.error(`[x] ${interaction.commandName} komutu çalıştırılırken hata:`, error);
-      await interaction.reply({ content: 'Komut çalıştırılırken bir hata oluştu.', ephemeral: true });
-    }
-  }
-});
 
 
 console.log(`[-] ${fs.readdirSync("./events").length} olay algılandı.`);
@@ -215,12 +215,30 @@ client.once("ready", async () => {
   
   setInterval(() => kontrolEt(client), 60000);
 
+  // Bot yeniden başladığında aktif çekilişleri tekrar başlat
+  const cekilisCmd = require('./commands/cekilis');
+  try {
+    const allData = db.all();
+    const aktifCekilisler = Object.entries(allData)
+      .filter(([key]) => key.startsWith('cekilis_'))
+      .map(([key, value]) => ({ msgId: key.split('_')[1], data: value }));
+
+    for (const { msgId, data } of aktifCekilisler) {
+      cekilisCmd.checkCekilisSuresi(client, msgId);
+    }
+    if (aktifCekilisler.length > 0) {
+      console.log(`[+] ${aktifCekilisler.length} aktif çekiliş yeniden başlatıldı.`);
+    }
+  } catch (err) {
+    console.error('[x] Aktif çekilişler yeniden başlatılırken hata:', err);
+  }
+
   try {
     await rest.put(Routes.applicationCommands(client.user.id), {
       body: client.commands,
     });
 
-    console.log(`${client.user.tag} Aktif! 💕`);
+    console.log(`${client.user.tag} Aktif! ${emoji.kbdOK}`); // Bot aktif olduğunda konsola basılır
     db.set("botAcilis_", Date.now());
 
     
@@ -268,7 +286,7 @@ async function komutCalistir(interaction, komutIsmi, komutFonksiyonu) {
       kanal.send({
         embeds: [
           new EmbedBuilder()
-            .setTitle("❌ Komut Hatası")
+            .setTitle(emoji.carpi + " Komut Hatası")
             .setColor("Red")
             .addFields(
               { name: "Komutu Kullanan", value: `${interaction.user.tag} (${interaction.user.id})`, inline: false },
@@ -291,7 +309,7 @@ process.on('uncaughtException', async (err) => {
     kanal.send({
       embeds: [
         new EmbedBuilder()
-          .setTitle("❌ Yakalanmayan Hata")
+          .setTitle(emoji.carpi + " Yakalanmayan Hata")
           .setColor("Red")
           .setDescription(`\`\`\`js\n${err.stack?.slice(0, 1900) || err.message}\n\`\`\``)
           .setTimestamp()
@@ -307,7 +325,7 @@ process.on('unhandledRejection', async (err) => {
     kanal.send({
       embeds: [
         new EmbedBuilder()
-          .setTitle("⚠️ Yakalanmayan Promise Hatası")
+          .setTitle(emoji.kbdWarn + " Yakalanmayan Promise Hatası")
           .setColor("Orange")
           .setDescription(`\`\`\`js\n${(err?.stack || err)?.toString().slice(0, 1900)}\n\`\`\``)
           .setTimestamp()
@@ -323,7 +341,7 @@ client.on('error', async (err) => {
     kanal.send({
       embeds: [
         new EmbedBuilder()
-          .setTitle("🚨 Discord.js Hatası")
+          .setTitle(emoji.kbdWarn + " Discord.js Hatası")
           .setColor("DarkRed")
           .setDescription(`\`\`\`js\n${(err.stack || err.message || err).toString().slice(0, 1900)}\n\`\`\``)
           .setTimestamp()
@@ -339,7 +357,7 @@ client.on('warn', async (info) => {
     kanal.send({
       embeds: [
         new EmbedBuilder()
-          .setTitle("⚠️ Uyarı")
+          .setTitle(emoji.kbdWarn + " Uyarı")
           .setColor("Yellow")
           .setDescription(`\`\`\`\n${info.toString().slice(0, 1900)}\n\`\`\``)
           .setTimestamp()
@@ -841,4 +859,5 @@ async function getExecutor(oldMember, newMember) {
 
     return `<@${entry.executor.id}> (\`${entry.executor.id}\` - \`${entry.executor.username}#${entry.executor.discriminator}\`)`;
 }
+
 
