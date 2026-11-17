@@ -1,5 +1,7 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js");
 const { DiscordBanners } = require("discord-banners");
+const config = require("../config.json");
 
 module.exports = {
     name: "banner",
@@ -39,21 +41,21 @@ module.exports = {
                 name: `${target.username} için özel bir vitrin`,
                 iconURL: target.displayAvatarURL({ dynamic: true }),
             })
-            .setTitle(hasBanner ? "🎨 Muhteşem bir banner keşfettik!" : "🌈 Henüz bir banner yok!")
+            .setTitle(hasBanner ? [emoji.kbdOyun + " Muhteşem bir banner keşfettik!"] : emoji.kbdNews + " Henüz bir banner yok!")
             .setDescription(
                 hasBanner
-                    ? `✨ **${target.username}**, senin banner'ın gerçekten etkileyici görünüyor! Aşağıda detaylıca inceleyebilirsin.`
-                    : `🙃 **${target.username}**, şu anda özel bir banner'ın yok ama merak etme, senin yerini dolduracak hoş bir görsel hazırladık!`
+                    ? `${emoji.kbdOyun} **${target.username}**, senin banner'ın gerçekten etkileyici görünüyor! Aşağıda detaylıca inceleyebilirsin.`
+                    : `${emoji.kbdOyun} **${target.username}**, şu anda özel bir banner'ın yok ama merak etme, senin yerini dolduracak hoş bir görsel hazırladık!`
             )
             .setImage(bannerURL)
             .addFields(
                 {
-                    name: "👤 Kullanıcı",
+                    name: emoji.kbdUser + " Kullanıcı",
                     value: `<@${target.id}> (\`${target.tag}\`)`,
                     inline: true,
                 },
                 {
-                    name: "🆔 Kullanıcı ID",
+                    name: emoji.kbdApi + " Kullanıcı ID",
                     value: `\`${target.id}\``,
                     inline: true,
                 }
@@ -72,19 +74,19 @@ module.exports = {
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Link)
                     .setURL(bannerURL)
-                    .setLabel("📥 Banner'ı Gör / İndir"),
+                    .setLabel(emoji.kbdNews + " Banner'ı Gör / İndir"),
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Link)
-                    .setURL("https://discord.gg/nMeEdX7KuY")
-                    .setLabel("💬 Destek Sunucusu")
+                    .setURL(config["desteksunucu"])
+                    .setLabel(emoji.kbdNews + " Destek Sunucusu")
             );
         } catch {
             // URL geçersizse sadece destek sunucusu butonunu ekle
             buttons.addComponents(
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Link)
-                    .setURL("https://discord.gg/nMeEdX7KuY")
-                    .setLabel("💬 Destek Sunucusu")
+                    .setURL(config["desteksunucu"])
+                    .setLabel(emoji.kbdNews + " Destek Sunucusu")
             );
         }
 

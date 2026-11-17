@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, AttachmentBuilder } = require("discord.js");
 const db = require("croxydb");
 const { createCanvas, loadImage } = require('canvas');
@@ -94,12 +95,12 @@ module.exports = {
 
     
     ctx.font = '30px "Arial"';
-    wrapText(ctx, `🔹 Sebep: ${sebep}`, 400, 240, 500, 35);
+    wrapText(ctx, `${emoji.kbdOyun} Sebep: ${sebep}`, 400, 240, 500, 35);
 
     
     ctx.font = '25px "Arial"';
     const now = new Date();
-    ctx.fillText(`⏰ ${now.toLocaleDateString()} - ${now.toLocaleTimeString()}`, 400, 330);
+    ctx.fillText(`${emoji.kbdSaat} ${now.toLocaleDateString()} - ${now.toLocaleTimeString()}`, 400, 330);
 
     ctx.font = 'italic 20px "Arial"';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';

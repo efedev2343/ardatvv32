@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, AttachmentBuilder } = require("discord.js");
 const { createCanvas, loadImage, registerFont } = require("canvas");
 const moment = require("moment");
@@ -71,7 +72,7 @@ module.exports = {
 
       if (!member) {
         return interaction.editReply({
-          content: "<a:carpi:1227670096462221363>  Bu kullanıcı sunucuda bulunamadı",
+          content: emoji.carpi + "  Bu kullanıcı sunucuda bulunamadı",
           ephemeral: true
         });
       }
@@ -233,7 +234,7 @@ module.exports = {
       
       ctx.font = "20px 'Poppins', 'Arial'";
       ctx.fillStyle = "#aaaaaa";
-      ctx.fillText("Kullanıcı Profil Bilgileri", headerX, 130);
+      ctx.fillText(`${emoji.kbdUser} Kullanıcı Profil Bilgileri`, headerX, 130);
       ctx.shadowBlur = 0;
       
       // Divider line - adjusted position
@@ -247,45 +248,45 @@ module.exports = {
       // Prepare user info
       const statusMap = {
         online: "🟢 Çevrimiçi",
-        idle: "🌙 Boşta",
-        dnd: "⛔ Rahatsız Etmeyin",
+        idle: emoji.kbdNews + " Boşta",
+        dnd: emoji.carpi + " Rahatsız Etmeyin",
         offline: "⚫ Çevrimdışı"
       };
       
       const flags = user.flags?.toArray() || [];
       const badgeNames = {
-        ActiveDeveloper: "👨‍💻 Aktif Geliştirici",
-        BugHunterLevel1: "🐛 Hata Avcısı",
-        BugHunterLevel2: "🐛 Hata Avcısı Seviye 2",
-        PremiumEarlySupporter: "🌟 Erken Destekçi",
-        Partner: "🤝 Discord Partneri",
-        Staff: "👨‍💼 Discord Ekibi",
-        HypeSquadOnlineHouse1: "⚡ HypeSquad Bravery",
-        HypeSquadOnlineHouse2: "💖 HypeSquad Brilliance",
-        HypeSquadOnlineHouse3: "✨ HypeSquad Balance",
-        Hypesquad: "⚡ HypeSquad Etkinlikleri",
-        CertifiedModerator: "<:admin:1296904503966044190>Sertifikalı Moderator",
-        VerifiedDeveloper: "✔️ Onaylı Geliştirici"
+        ActiveDeveloper: emoji.kbdUser + " Aktif Geliştirici",
+        BugHunterLevel1: emoji.carpi + " Hata Avcısı",
+        BugHunterLevel2: emoji.carpi + " Hata Avcısı Seviye 2",
+        PremiumEarlySupporter: emoji.kbdTac + " Erken Destekçi",
+        Partner: emoji.kbdOyun + " Discord Partneri",
+        Staff: emoji.kbdUser + " Discord Ekibi",
+        HypeSquadOnlineHouse1: emoji.kbdZil + " HypeSquad Bravery",
+        HypeSquadOnlineHouse2: emoji.kbdOyun + " HypeSquad Brilliance",
+        HypeSquadOnlineHouse3: emoji.kbdOyun + " HypeSquad Balance",
+        Hypesquad: emoji.kbdZil + " HypeSquad Etkinlikleri",
+        CertifiedModerator: emoji.admin + " Sertifikalı Moderator",
+        VerifiedDeveloper: emoji.tik + " Onaylı Geliştirici"
       };
       
       const badges = flags.map(flag => badgeNames[flag] || flag).join(", ") || "Yok";
       
       const userInfo = [
-        { title: "👤 Kullanıcı", value: user.tag },
-        { title: "🆔 ID", value: user.id },
-        { title: "📛 Takma Ad", value: member.nickname || "Yok" },
-        { title: "🎖️ Rozetler", value: badges },
-        { title: " Hesap Oluşturulma", value: moment(user.createdAt).format("LL LTS") },
-        { title: "⏳ Hesap Yaşı", value: moment(user.createdAt).fromNow(true) + " önce" },
+        { title: emoji.kbdUser + " Kullanıcı", value: user.tag },
+        { title: emoji.kbdApi + " ID", value: user.id },
+        { title: emoji.kbdApi + " Takma Ad", value: member.nickname || "Yok" },
+        { title: emoji.kbdTac + " Rozetler", value: badges },
+        { title: "📅 Hesap Oluşturulma", value: moment(user.createdAt).format("LL LTS") },
+        { title: emoji.kbdSaat + " Hesap Yaşı", value: moment(user.createdAt).fromNow(true) + " önce" },
         { title: "📆 Sunucuya Katılma", value: moment(member.joinedAt).format("LL LTS") },
-        { title: "⏱️ Sunucuda Süre", value: moment(member.joinedAt).fromNow(true) + " önce" },
-        { title: "📊 Durum", value: statusMap[member.presence?.status] || "Bilinmiyor" },
-        { title: "📱 Cihaz", value: getActiveDevices(member.presence) || "Bilinmiyor" },
-        { title: "🎭 Rol Sayısı", value: (member.roles.cache.size - 1).toString() },
-        { title: "👑 En Yüksek Rol", value: member.roles.highest.name || "Yok" },
-        { title: "💎 Boost Durumu", value: member.premiumSince ? 
+        { title: emoji.kbdSaat + " Sunucuda Süre", value: moment(member.joinedAt).fromNow(true) + " önce" },
+        { title: emoji.kbdNews + " Durum", value: statusMap[member.presence?.status] || "Bilinmiyor" },
+        { title: emoji.kbdApi + " Cihaz", value: getActiveDevices(member.presence) || "Bilinmiyor" },
+        { title: emoji.kbdOyun + " Rol Sayısı", value: (member.roles.cache.size - 1).toString() },
+        { title: emoji.kbdTac + " En Yüksek Rol", value: member.roles.highest.name || "Yok" },
+        { title: emoji.kbdOyun + " Boost Durumu", value: member.premiumSince ? 
           `${moment(member.premiumSince).fromNow()} (${moment(member.premiumSince).format("LL")})` : "Boost yok" },
-        { title: "<:bot:1382376704265424941> Bot", value: user.bot ? "Evet" : "Hayır" }
+        { title: emoji.kbdBot2 + " Bot", value: user.bot ? "Evet" : "Hayır" }
       ];
 
       // Draw user info with adjusted layout
@@ -348,8 +349,8 @@ module.exports = {
         if (!presence?.clientStatus) return null;
         const deviceMap = {
           desktop: "🖥️ Masaüstü",
-          mobile: "📱 Mobil",
-          web: "🌐 Web"
+          mobile: emoji.kbdApi + " Mobil",
+          web: emoji.kbdDiscordLink + " Web"
         };
         return Object.keys(presence.clientStatus).map(device => deviceMap[device] || device).join(", ");
       }
@@ -361,7 +362,7 @@ module.exports = {
     } catch (error) {
       console.error("Kullanıcı bilgi komutunda hata:", error);
       await interaction.editReply({
-        content: "<a:carpi:1227670096462221363>  Bilgileri işlerken bir hata oluştu",
+        content: emoji.carpi + "  Bilgileri işlerken bir hata oluştu",
         ephemeral: true
       });
     }

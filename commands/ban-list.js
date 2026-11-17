@@ -6,6 +6,7 @@ const {
   ComponentType
 } = require("discord.js");
 const config = require("../config.json");
+const emoji = require("../emoji.js");
 
 module.exports = {
   name: "banlist",
@@ -24,7 +25,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setColor("Red")
-              .setTitle("<:kilit:1372649443353952316> Ban Listesi")
+              .setTitle(emoji.kbdKilit + " Ban Listesi")
               .setDescription("Sunucuda banlanan kullanıcı yok.")
           ]
         });
@@ -33,14 +34,14 @@ module.exports = {
       let page = 0;
       const pageSize = 10;
       const content = bannedUsers.map(
-        ban => `🔨 **${ban.user.username}** • \`${ban.user.id}\``
+        ban => `${emoji.kbdCalisma} **${ban.user.username}** • \`${ban.user.id}\``
       );
       const totalPages = Math.ceil(content.length / pageSize);
 
       const generateEmbed = () => {
         return new EmbedBuilder()
           .setColor("#e74c3c")
-          .setTitle(`🚫 ${config["bot-adi"] || "Bot"} - Ban Listesi`)
+          .setTitle(`${emoji.carpi} ${config["bot-adi"] || "Bot"} - Ban Listesi`)
           .setDescription(content.slice(page * pageSize, (page + 1) * pageSize).join("\n"))
           .setFooter({
             text: `Sayfa ${page + 1} / ${totalPages}`,
@@ -53,17 +54,17 @@ module.exports = {
         return new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId("back")
-            .setLabel("⬅️ Geri")
+            .setLabel(emoji.kbdDiscordLink + " Geri")
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(page === 0),
           new ButtonBuilder()
             .setCustomId("next")
-            .setLabel("İleri ➡️")
+            .setLabel("İleri " + emoji.kbdDiscordLink)
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(page >= totalPages - 1),
           new ButtonBuilder()
             .setCustomId("close")
-            .setLabel("❌ Kapat")
+            .setLabel(emoji.carpi + " Kapat")
             .setStyle(ButtonStyle.Danger)
         );
       };
@@ -121,7 +122,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setColor("Red")
-              .setTitle("⚠️ Hata Oluştu")
+              .setTitle(emoji.kbdWarn + " Hata Oluştu")
               .setDescription("Ban listesi alınırken bir hata oluştu.")
           ],
           ephemeral: true

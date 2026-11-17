@@ -1,5 +1,7 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("croxydb");
+const config = require("../config.json");
 
 module.exports = {
   name: "bump",
@@ -8,12 +10,22 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
-      // Tanıtım kanalı kontrolü
       const guildId = interaction.guild.id;
+
+      // Bump sistemi kurulu/etkin mi kontrolü
+      const bumpAktif = db.get(`bumpSistemi_${guildId}`);
+      if (bumpAktif !== "acik") {
+        return await interaction.reply({
+          content: emoji.carpi + " | Bump sistemi bu sunucuda kurulu değildir veya etkin değil! Lütfen önce `/bump-kur` komutu ile bump sistemini kurun.",
+          ephemeral: true
+        });
+      }
+
+      // Tanıtım kanalı kontrolü
       const tanıtımKanalId = db.get(`tanıtChannel_${guildId}`);
       if (!tanıtımKanalId) {
         return await interaction.reply({
-          content: "<a:carpi:1227670096462221363> | Tanıtım kanalı ayarlanmamış! Lütfen önce `/Bump-kanal-ayarla` komutu ile tanıtım kanalını ayarlayın.",
+          content: emoji.carpi + " | Tanıtım kanalı ayarlanmamış! Lütfen önce `/bump-kanal-ayarla` komutu ile tanıtım kanalını ayarlayın.",
           ephemeral: true
         });
       }
@@ -21,7 +33,7 @@ module.exports = {
       // Yetki kontrolü
       if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
         return await interaction.reply({
-          content: "<a:carpi:1227670096462221363> | Bu komutu kullanmak için yönetici yetkisine sahip olmalısınız!",
+          content: emoji.carpi + " | Bu komutu kullanmak için yönetici yetkisine sahip olmalısınız!",
           ephemeral: true
         });
       }
@@ -66,17 +78,17 @@ module.exports = {
           new ButtonBuilder()
             .setLabel('Sunucuya Git')
             .setURL(inviteLink)
-            .setEmoji('<:reklam:1378369360363655229>')
+            .setEmoji(emoji.kbdReklam)
             .setStyle(ButtonStyle.Link),
           new ButtonBuilder()
             .setLabel('Botu Ekle')
-            .setURL('https://discord.com/oauth2/authorize?client_id=1245719534200033446&permissions=8&scope=bot%20applications.commands')
-            .setEmoji('<:bot:1378669863735660584>')
+            .setURL(config["bot-davet"])
+            .setEmoji(emoji.kbdBot)
             .setStyle(ButtonStyle.Link),
           new ButtonBuilder()
             .setLabel('Destek Sunucusu')
-            .setURL('https://discord.gg/nMeEdX7KuY')
-             .setEmoji('<:Discord_Link81:1378369406798794832>')
+            .setURL(config["desteksunucu"])
+             .setEmoji(emoji.kbdDiscordLink)
             .setStyle(ButtonStyle.Link)
         );
 
@@ -86,15 +98,15 @@ module.exports = {
         .setColor("#f1c40f")
         .setThumbnail(currentGuildIcon)
         .setDescription(
-          `**<:zil:1392409783373660252> Öne Çıkaran:**\n<@${interaction.user.id}> \`(${interaction.user.id})\`\n\n` +
-          `**<:tac:1392410061254693008>  Sunucu Sahibi:**\n<@${currentGuild.ownerId}> \`(${currentGuild.ownerId})\`\n\n` +
-          `**<:api:1384833335314092116> Bir Sonraki Öne Çıkartma:**\n1 saat sonra\n\n` +
-          `**<:partner:1285292615956168724>  Sunucu Açıklaması:**\n${guildDescription}\n\n` +
-          `**<a:bumkedi:1274003024897114122> Üye Sayısı:**\n${currentGuild.memberCount}\n\n` +
-          `**<:news:1382677125986779198>  Kuruluş Tarihi:**\n${yearsDiff} yıl önce (${createdDate.toLocaleDateString()})`
+          `**${emoji.kbdZil} Öne Çıkaran:**\n<@${interaction.user.id}> \`(${interaction.user.id})\`\n\n` +
+          `**${emoji.kbdTac}  Sunucu Sahibi:**\n<@${currentGuild.ownerId}> \`(${currentGuild.ownerId})\`\n\n` +
+          `**${emoji.kbdApi} Bir Sonraki Öne Çıkartma:**\n1 saat sonra\n\n` +
+          `**${emoji.kbdPartner}  Sunucu Açıklaması:**\n${guildDescription}\n\n` +
+          `**${emoji.kbdBumpkedi} Üye Sayısı:**\n${currentGuild.memberCount}\n\n` +
+          `**${emoji.kbdNews}  Kuruluş Tarihi:**\n${yearsDiff} yıl önce (${createdDate.toLocaleDateString()})`
         )
         .setFooter({ text: "Sunucuya katılmak için aşağıdaki butona tıklayın!" })
-        .setImage("https://cdn.discordapp.com/avatars/1245719534200033446/bff7fafb5aecf4dec0c6b8f45fc3713a.webp");
+        .setImage(client.user.displayAvatarURL({ dynamic: true, size: 1024 }));
 
       // Tüm sunuculara gönder
       const allGuilds = client.guilds.cache;
@@ -115,7 +127,7 @@ module.exports = {
           });
           sentCount++;
         } catch (err) {
-          console.error(`❌ ${guild.name} sunucusuna gönderilemedi.`, err);
+          console.error(`${emoji.carpi} ${guild.name} sunucusuna gönderilemedi.`, err);
           errorCount++;
         }
       }
@@ -128,12 +140,12 @@ module.exports = {
       console.error("Bump komutunda hata:", error);
       if (!interaction.replied && !interaction.deferred) {
         await interaction.reply({
-          content: "❌ Bump gönderilirken bir hata oluştu!",
+          content: emoji.carpi + " Bump gönderilirken bir hata oluştu!",
           ephemeral: true
         });
       } else {
         await interaction.editReply({
-          content: "❌ Bump gönderilirken bir hata oluştu!",
+          content: emoji.carpi + " Bump gönderilirken bir hata oluştu!",
         });
       }
     }

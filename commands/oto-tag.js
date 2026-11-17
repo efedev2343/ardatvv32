@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -17,7 +18,7 @@ module.exports = {
     
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageNicknames)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363>  | İsimleri Yönet yetkiniz yok!",
+        content: emoji.carpi + "  | İsimleri Yönet yetkiniz yok!",
         ephemeral: true,
       });
     }
@@ -32,7 +33,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor("Blue")
       .setTitle("Oto-Tag Sistemi Başarıyla Ayarlandı!")
-      .setDescription(`<a:yeilonay:1221172106637611169>  | Sunucuya yeni katılan üyelere başarıyla "${tag}" tag'ı verilecek!`)
+      .setDescription(`${emoji.tik}  | Sunucuya yeni katılan üyelere başarıyla "${tag}" tag'ı verilecek!`)
       .setFooter({
         text: "Yeni katılan üyeler, bu tag ile etiketlenecektir.",
       });

@@ -1,4 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const config = require("../config.json");
+const emoji = require("../emoji.js");
 
 module.exports = {
     name: "avatar",
@@ -49,16 +51,24 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle(`${user.tag} Avatarı`)
             .setDescription(bannerUrl ? 
-                "Görüntülemek istediğiniz içeriği seçin.\n\n[Hata veya Sorun Bildir](https://discord.gg/nMeEdX7KuY)" :
-                "Bu kullanıcının bannerı bulunmuyor.\n\n[Hata veya Sorun Bildir](https://discord.gg/nMeEdX7KuY)")
+                "Görüntülemek istediğiniz içeriği seçin.\n\n[Hata veya Sorun Bildir](" + config["desteksunucu"] + ")" :
+                "Bu kullanıcının bannerı bulunmuyor.\n\n[Hata veya Sorun Bildir](" + config["desteksunucu"] + ")")
             .setImage(avatarUrl)
             .setColor(0x00AE86);
 
-        const reply = await interaction.reply({
-            embeds: [embed],
-            components: [buttonsRow, selectRow],
-            fetchReply: true
-        });
+        try {
+            const reply = await interaction.reply({
+                embeds: [embed],
+                components: [buttonsRow, selectRow],
+                fetchReply: true
+            });
+        } catch (error) {
+            if (error.code === 10062) {
+                return;
+            }
+            console.error('Avatar reply hata:', error);
+            return;
+        }
 
         const filter = (i) => true; // Herkesin etkileşimini yakala
         const collector = reply.createMessageComponentCollector({
@@ -72,7 +82,7 @@ module.exports = {
         collector.on('collect', async (i) => {
             if (i.user.id !== interaction.user.id) {
                 return i.reply({
-                    content: "<a:carpi:1227670096462221363> Bu menüyü sadece komutu kullanan kişi kullanabilir!",
+                    content: `${emoji.carpi} Bu menüyü sadece komutu kullanan kişi kullanabilir!`,
                     ephemeral: true
                 });
             }
@@ -94,7 +104,7 @@ module.exports = {
 
                 const updatedEmbed = new EmbedBuilder()
                     .setTitle(`${user.tag} ${currentType === 'avatar' ? 'Avatarı' : 'Bannerı'}`)
-                    .setDescription(`**Seçilen Boyut:** ${currentSize}x${currentSize}\n\n[Hata veya Sorun Bildir](https://discord.gg/nMeEdX7KuY)`)
+                    .setDescription(`**Seçilen Boyut:** ${currentSize}x${currentSize}\n\n[Hata veya Sorun Bildir](${config["desteksunucu"]})`)
                     .setImage(imageUrl)
                     .setColor(0x00AE86);
 
@@ -103,11 +113,18 @@ module.exports = {
                     components: [buttonsRow, selectRow]
                 });
             } catch (error) {
+                if (error.code === 10062) {
+                    return;
+                }
                 console.error('Hata:', error);
-                await i.reply({
-                    content: "Bir hata oluştu! Lütfen daha sonra tekrar deneyin.",
-                    ephemeral: true
-                });
+                try {
+                    await i.reply({
+                        content: "Bir hata oluştu! Lütfen daha sonra tekrar deneyin.",
+                        ephemeral: true
+                    });
+                } catch (err) {
+                    if (err.code !== 10062) console.error('İkincil hata:', err);
+                }
             }
         });
 
@@ -122,9 +139,13 @@ module.exports = {
                 selectRow.components[0].setDisabled(true)
             );
 
-            interaction.editReply({
-                components: [disabledButtonsRow, disabledSelectRow]
-            }).catch(() => {});
+            if (interaction.replied || interaction.deferred) {
+                interaction.editReply({
+                    components: [disabledButtonsRow, disabledSelectRow]
+                }).catch((err) => {
+                    if (err.code !== 10062) console.error('Collector end hata:', err);
+                });
+            }
         });
     }
 };

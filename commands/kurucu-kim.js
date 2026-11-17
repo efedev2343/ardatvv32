@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
       const owner = await interaction.guild.fetchOwner();
 
       const embed = new EmbedBuilder()
-        .setTitle("👑 Sunucu Kurucusu")
+        .setTitle(emoji.kbdTac + " Sunucu Kurucusu")
         .setDescription(`Sunucu sahibi: <@${owner.id}> (${owner.user.tag})`)
         .setColor("Gold");
 
@@ -23,7 +24,7 @@ module.exports = {
     } catch (err) {
       console.error("Kurucu komutunda hata:", err);
       await interaction.reply({
-        content: "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
+        content: emoji.carpi + " Bir hata oluştu. Lütfen tekrar deneyin.",
         ephemeral: true,
       });
     }

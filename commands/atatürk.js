@@ -1,4 +1,5 @@
 const { Client, EmbedBuilder } = require("discord.js");
+const emoji = require("../emoji.js");
 
 // Sabit Atatürk resimlerini içeren dizi
 function getAtaturkResimleri() {
@@ -34,7 +35,7 @@ module.exports = {
       console.error("Bir hata oluştu:", err);
 
       interaction.reply({
-        content: "<a:carpi:1227670096462221363>  | Atatürk resmi alınırken bir hata oluştu.",
+        content: `${emoji.carpi}  | Atatürk resmi alınırken bir hata oluştu.`,
         ephemeral: true,
       });
     }

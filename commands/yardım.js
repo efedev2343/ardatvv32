@@ -1,8 +1,10 @@
 const { Client, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const emoji = require("../emoji.js");
+const config = require("../config.json");
 
 module.exports = {
   name: "yardım",
-  description: "Gelişmiş Yardım Menüsü",
+  description: "Yardım Menüsü",
   type: 1,
   options: [],
 
@@ -14,7 +16,7 @@ module.exports = {
 
       const baseEmbed = new EmbedBuilder()
         .setColor("#5865F2")
-        .setTitle("Gelişmiş Yardım Menüsü")
+        .setTitle("Yardım Menüsü")
         .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
         .setDescription(`
         **Merhaba ${interaction.user.username}!** 
@@ -23,9 +25,9 @@ module.exports = {
         Her kategori, ilgili komutlar hakkında detaylı bilgi ve kullanım örnekleri içerir.
         
         **Bot İstatistikleri:**
-        > <:komutlar:1382374215105253537> **Komut Sayısı:** ${commands.length}
-        > <:ping:1382374348664602765> **Ping:** ${client.ws.ping}ms
-        > <:calisma:1382375444158091358> **Çalışma Süresi:** ${formatUptime(process.uptime())}
+        > ${emoji.kbdCommands} **Komut Sayısı:** ${commands.length}
+        > ${emoji.kbdPing} **Ping:** ${client.ws.ping}ms
+        > ${emoji.kbdUptime} **Çalışma Süresi:** ${formatUptime(process.uptime())}
         `)
         .setFooter({
           text: `${client.user.username} • v2.1.0`,
@@ -45,37 +47,37 @@ module.exports = {
           {
             label: "Moderasyon",
             value: "moderasyon",
-            emoji: "<:admin:1296904503966044190>",
+            emoji: emoji.admin,
             description: "Sunucu yönetim araçları",
           },
           {
             label: "Kullanıcı",
             value: "kullanıcı",
-            emoji: "<:kullanici:1382373832144326656>",
+            emoji: emoji.kullanici,
             description: "Kullanıcı komutları",
           },
           {
             label: "Eğlence",
             value: "eglence",
-            emoji: "<:oyun:1382373583527088188>",
+            emoji: emoji.oyun,
             description: "Eğlenceli komutlar",
           },
           {
             label: "Sunucu",
             value: "sunucu",
-            emoji: "<:ayarlar:1382373295990640713>",
+            emoji: emoji.ayarlar,
             description: "Sunucu yönetimi",
           },
           {
             label: "Bot",
             value: "bot",
-            emoji: "<:bot:1382376704265424941>",
+            emoji: emoji.bot2,
             description: "Bot kontrol komutları",
           },
           {
             label: "Yetkili",
             value: "yetkili",
-            emoji: "<:calisma:1382375444158091358>",
+            emoji: emoji.calisma,
             description: "Yetkili komutları",
           },
         ]);
@@ -86,25 +88,23 @@ module.exports = {
         new ButtonBuilder()
           .setLabel("Davet Et")
           .setStyle(ButtonStyle.Link)
-          .setURL(
-            "https://discord.com/oauth2/authorize?client_id=1245719534200033446&permissions=8&scope=bot%20applications.commands"
-          )
-          .setEmoji("<:davet:1382376241079914541>"),
+          .setURL(config["bot-davet"])
+          .setEmoji(emoji.davet),
         new ButtonBuilder()
           .setLabel("Website")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://ardatvv.vercel.app")
-          .setEmoji("<:website:1382376051736313969>"),
+          .setURL(config["website"])
+          .setEmoji(emoji.website),
         new ButtonBuilder()
           .setLabel("Destek")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://discord.gg/nMeEdX7KuY")
-          .setEmoji("<:destek:1382375654556958730>"),
+          .setURL(config["desteksunucu"])
+          .setEmoji(emoji.destek),
         new ButtonBuilder()
           .setLabel("Komut Listesi")
           .setStyle(ButtonStyle.Secondary)
           .setCustomId(`komut_listesi_${interaction.id}`)
-          .setEmoji("<:komutlar:1382374215105253537>")
+          .setEmoji(emoji.komutlar)
       );
 
       const message = await interaction.followUp({
@@ -142,14 +142,14 @@ module.exports = {
                 Her kategori, ilgili komutlar hakkında detaylı bilgi ve kullanım örnekleri içerir.
                 
                 📊 **Bot İstatistikleri:**
-                > <:komutlar:1382374215105253537> **Komut Sayısı:** ${commands.length}
-                > <:ping:1382374348664602765> **Ping:** ${client.ws.ping}ms
-                > <:calisma:1382375444158091358> **Çalışma Süresi:** ${formatUptime(process.uptime())}
+                > ${emoji.kbdCommands} **Komut Sayısı:** ${commands.length}
+                > ${emoji.kbdPing} **Ping:** ${client.ws.ping}ms
+                > ${emoji.kbdUptime} **Çalışma Süresi:** ${formatUptime(process.uptime())}
                 `,
                 color: "#5865F2",
               },
               moderasyon: {
-                title: "<:admin:1296904503966044190> Moderasyon Komutları",
+                title: `${emoji.admin} Moderasyon Komutları`,
                 description: `
                 **Sunucu yönetimi için güçlü moderasyon araçları:**
                 
@@ -171,7 +171,7 @@ module.exports = {
                 color: "#ED4245",
               },
               kullanıcı: {
-                title: "<:kullanici:1382373832144326656> Kullanıcı Komutları",
+                title: `${emoji.kullanici} Kullanıcı Komutları`,
                 description: `
                 **Kullanıcılar için faydalı araçlar:**
                 
@@ -193,7 +193,7 @@ module.exports = {
                 color: "#57F287",
               },
               eglence: {
-                title: "<:oyun:1382373583527088188> Eğlence Komutları",
+                title: `${emoji.oyun} Eğlence Komutları`,
                 description: `
                 **Eğlenceli vakit geçirmeniz için komutlar:**
                 
@@ -214,7 +214,7 @@ module.exports = {
                 color: "#FEE75C",
               },
               sunucu: {
-                title: "<:ayarlar:1382373295990640713> Sunucu Yönetimi",
+                title: `${emoji.ayarlar} Sunucu Yönetimi`,
                 description: `
                 **Sunucunuzu yönetmek için araçlar:**
                 
@@ -235,7 +235,7 @@ module.exports = {
                 color: "#EB459E",
               },
               bot: {
-                title: "<:bot:1382376704265424941> Bot Komutları",
+                title: `${emoji.bot2} Bot Komutları`,
                 description: `
                 **Bot kontrol ve bilgi komutları:**
                 
@@ -256,7 +256,7 @@ module.exports = {
                 color: "#5865F2",
               },
               yetkili: {
-                title: "<:calisma:1382375444158091358> Yetkili Komutları",
+                title: `${emoji.calisma} Yetkili Komutları`,
                 description: `
                 **Sadece yetkililer için özel komutlar:**
                 

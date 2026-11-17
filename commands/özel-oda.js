@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder,UserSelectMenuBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const db = require("croxydb");
 const config = require('../config.json');
@@ -33,7 +34,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("#0099ff")
-      .setTitle("🎉 Özel Oda Sistemi")
+      .setTitle(emoji.kbdOyun + " Özel Oda Sistemi")
       .setDescription(`Özel odanızı oluşturmak için aşağıdaki butona tıklayın.\nOdalar "${category.name}" kategorisi altında oluşturulacak.`)
       .setFooter({ text: "Özel odanızı oluşturun ve yönetin!" });
 
@@ -41,7 +42,7 @@ module.exports = {
       .setCustomId("private_room_create")
       .setLabel("Özel Oda Aç")
       .setStyle(ButtonStyle.Primary)
-      .setEmoji("🔒");
+      .setEmoji(emoji.kbdKilit);
 
     const row = new ActionRowBuilder().addComponents(button);
 
@@ -129,7 +130,7 @@ async function createPrivateRoom(interaction) {
   });
 
   const channel = await guild.channels.create({
-    name: `🔒 ${user.username}'nin Odası`,
+    name: `${emoji.kbdKilit} ${user.username}'nin Odası`,
     type: ChannelType.GuildVoice,
     parent: category,
     permissionOverwrites: permissionOverwrites,
@@ -163,25 +164,25 @@ async function sendControlPanel(channel, user) {
 
   const controlPanel = new EmbedBuilder()
     .setColor("#0099ff")
-    .setTitle("🎛️ Kontrol Paneli")
+    .setTitle(emoji.kbdOyun + " Kontrol Paneli")
     .setDescription("Odanızı yönetmek için aşağıdaki butonları kullanın.")
     .setFooter({ text: "Özel odanızı dilediğiniz gibi özelleştirin!" });
 
   const buttons1 = new ActionRowBuilder()
     .addComponents(
-      new ButtonBuilder().setCustomId("room_lock").setStyle(ButtonStyle.Success).setEmoji("🔒"),
-      new ButtonBuilder().setCustomId("room_eyes").setStyle(ButtonStyle.Success).setEmoji("👁️"),
-      new ButtonBuilder().setCustomId("room_mute").setStyle(ButtonStyle.Success).setEmoji("🎙️"),
-      new ButtonBuilder().setCustomId("room_video").setStyle(ButtonStyle.Success).setEmoji("📷"),
-      new ButtonBuilder().setCustomId("room_events").setStyle(ButtonStyle.Success).setEmoji("🚀")
+      new ButtonBuilder().setCustomId("room_lock").setStyle(ButtonStyle.Success).setEmoji(emoji.kbdKilit),
+      new ButtonBuilder().setCustomId("room_eyes").setStyle(ButtonStyle.Success).setEmoji(emoji.kbdUser),
+      new ButtonBuilder().setCustomId("room_mute").setStyle(ButtonStyle.Success).setEmoji(emoji.kbdZil),
+      new ButtonBuilder().setCustomId("room_video").setStyle(ButtonStyle.Success).setEmoji(emoji.kbdNews),
+      new ButtonBuilder().setCustomId("room_events").setStyle(ButtonStyle.Success).setEmoji(emoji.kbdOyun)
         );
 
   const buttons2 = new ActionRowBuilder()
     .addComponents(
-      new ButtonBuilder().setCustomId("room_name").setStyle(ButtonStyle.Secondary).setEmoji("✒"),
-      new ButtonBuilder().setCustomId("room_limit").setStyle(ButtonStyle.Secondary).setEmoji("🔢"),
-      new ButtonBuilder().setCustomId("room_manage").setStyle(ButtonStyle.Primary).setEmoji("👥"),
-      new ButtonBuilder().setCustomId("room_time").setStyle(ButtonStyle.Secondary).setEmoji("⏰")
+      new ButtonBuilder().setCustomId("room_name").setStyle(ButtonStyle.Secondary).setEmoji(emoji.kbdNews),
+      new ButtonBuilder().setCustomId("room_limit").setStyle(ButtonStyle.Secondary).setEmoji(emoji.kbdApi),
+      new ButtonBuilder().setCustomId("room_manage").setStyle(ButtonStyle.Primary).setEmoji(emoji.kbdUser),
+      new ButtonBuilder().setCustomId("room_time").setStyle(ButtonStyle.Secondary).setEmoji(emoji.kbdSaat)
     );
 
   await channel.send({ 
@@ -312,7 +313,7 @@ async function showManageUsersMenu(interaction) {
     .setCustomId('private_room_user_search')
     .setLabel('Kullanıcı ID ile Ara')
     .setStyle(ButtonStyle.Primary)
-    .setEmoji('🔍');
+    .setEmoji(emoji.kbdCalisma);
 
   const buttonRow = new ActionRowBuilder().addComponents(searchButton);
 
@@ -369,19 +370,19 @@ async function showUserManagementMenu(interaction, member) {
       .setCustomId(`user_manage_${member.id}_${isAdmin ? 'removeAdmin' : 'makeAdmin'}`)
       .setLabel(isAdmin ? 'Yetkileri Kaldır' : 'Yönetici Yap')
       .setStyle(isAdmin ? ButtonStyle.Danger : ButtonStyle.Success)
-      .setEmoji(isAdmin ? '🚫' : '🛡️'),
+      .setEmoji(isAdmin ? [emoji.carpi] : emoji.kbdCalisma),
 
     new ButtonBuilder()
       .setCustomId(`user_manage_${member.id}_${canView ? 'denyView' : 'allowView'}`)
       .setLabel(canView ? 'Görmeyi Kaldır' : 'Görme İzni Ver')
       .setStyle(canView ? ButtonStyle.Danger : ButtonStyle.Success)
-      .setEmoji(canView ? '🚫' : '👀'),
+      .setEmoji(canView ? [emoji.carpi] : emoji.kbdUser),
 
     new ButtonBuilder()
       .setCustomId(`user_manage_${member.id}_${canSendMessages ? 'denySendMessages' : 'allowSendMessages'}`)
       .setLabel(canSendMessages ? 'Mesaj Gönderme İzni Kaldır' : 'Mesaj Gönderme İzni Ver')
       .setStyle(canSendMessages ? ButtonStyle.Danger : ButtonStyle.Success)
-      .setEmoji(canSendMessages ? '🚫' : '✉️')
+      .setEmoji(canSendMessages ? [emoji.carpi] : emoji.kbdNews)
   );
 
   const manageButtons2 = new ActionRowBuilder().addComponents(
@@ -389,19 +390,19 @@ async function showUserManagementMenu(interaction, member) {
       .setCustomId(`user_manage_${member.id}_${canConnect ? 'denyConnect' : 'allowConnect'}`)
       .setLabel(canConnect ? 'Bağlanma İzni Kaldır' : 'Bağlanma İzni Ver')
       .setStyle(canConnect ? ButtonStyle.Danger : ButtonStyle.Success)
-      .setEmoji(canConnect ? '🚫' : '🔗'),
+      .setEmoji(canConnect ? [emoji.carpi] : emoji.kbdDiscordLink),
 
     new ButtonBuilder()
       .setCustomId(`user_manage_${member.id}_transfer`)
       .setLabel('Oda Sahipliğini Devret')
       .setStyle(ButtonStyle.Primary)
-      .setEmoji('👑'),
+      .setEmoji(emoji.kbdTac),
 
     new ButtonBuilder()
       .setCustomId(`user_manage_${member.id}_kick`)
       .setLabel('Sesten At')
       .setStyle(ButtonStyle.Danger)
-      .setEmoji('👢')
+      .setEmoji(emoji.kbdUser)
   );
 
   await interaction.update({ 
@@ -532,7 +533,7 @@ async function showChannelTime(interaction) {
 
   const timeEmbed = new EmbedBuilder()
     .setColor('#0099ff')
-    .setTitle('⏱️ Oda Süresi')
+    .setTitle(emoji.kbdSaat + ' Oda Süresi')
     .setDescription(`Bu oda ${timeString} süredir açık.`)
     .setFooter({ text: 'Özel odanızı keyifle kullanın!' });
 

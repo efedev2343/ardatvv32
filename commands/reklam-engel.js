@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb")
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
 
   run: async(client, interaction) => {
     const { user, guild, options } = interaction;
-    if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) return interaction.reply({content: "<a:carpi:1227670096462221363>  | Rolleri Yönet Yetkin Yok!", ephemeral: true})
+    if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) return interaction.reply({content: emoji.carpi + "  | Rolleri Yönet Yetkin Yok!", ephemeral: true})
  
     const reklamEngelSystemTrue = options.getString("seçenek");
     const reklamEngelSystem = db.fetch(`reklamengel_${interaction.guild.id}`)
@@ -37,7 +38,7 @@ module.exports = {
         
         if (reklamEngelSystem && reklamEngelSystemDate) {
             const date = new EmbedBuilder()
-            .setDescription(`<a:carpi:1227670096462221363>  | Bu sistem <t:${parseInt(reklamEngelSystemDate.date / 1000)}:R> önce açılmış!`)
+            .setDescription(`${emoji.carpi}  | Bu sistem <t:${parseInt(reklamEngelSystemDate.date / 1000)}:R> önce açılmış!`)
             .setColor("Red")
 
         return interaction.reply({ embeds: [date] })
@@ -46,7 +47,7 @@ module.exports = {
         db.set(`reklamengel_${interaction.guild.id}`, true)
 		db.set(`reklamengelDate_${interaction.guild.id}`, { date: Date.now() })
         const embed = new EmbedBuilder()
-        .setDescription(`<a:yeilonay:1221172106637611169>  | Başarılı bir şekilde sistem açıldı!`)
+        .setDescription(`${emoji.tik}  | Başarılı bir şekilde sistem açıldı!`)
         .setImage("https://media.tenor.com/XeIdtr6QSjIAAAAM/shuna.gif")
         .setColor("Green")
 
@@ -54,12 +55,12 @@ module.exports = {
       }
   
       case "kapat": {
-        if(!reklamEngelSystem) return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Bu sistem zaten kapalı?" });
+        if(!reklamEngelSystem) return interaction.reply({ content: emoji.carpi + "  | Bu sistem zaten kapalı?" });
   
         db.delete(`reklamengel_${interaction.guild.id}`)
 		db.delete(`reklamengelDate_${interaction.guild.id}`)
         const embed = new EmbedBuilder()
-        .setDescription(`<a:yeilonay:1221172106637611169>  | Başarılı bir şekilde sistem kapatıldı!`)
+        .setDescription(`${emoji.tik}  | Başarılı bir şekilde sistem kapatıldı!`)
         .setImage("https://media.tenor.com/XeIdtr6QSjIAAAAM/shuna.gif")
         .setColor("Green")
 

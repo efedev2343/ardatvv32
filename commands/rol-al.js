@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -23,7 +24,7 @@ module.exports = {
 
         // Kullanıcının "Rolleri Yönet" yetkisi olup olmadığını kontrol ediyoruz
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
-            return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Rolleri Yönet Yetkiniz Yok!", ephemeral: true });
+            return interaction.reply({ content: emoji.carpi + "  | Rolleri Yönet Yetkiniz Yok!", ephemeral: true });
         }
 
         const rol = interaction.options.getRole('rol');  // Hedef rolü alıyoruz
@@ -36,7 +37,7 @@ module.exports = {
         // Eğer botun rolü, hedef rolün üstündeyse işlem yapabiliyoruz
         if (targetRole.position >= botRole.position) {
             return interaction.reply({ 
-                content: "<a:carpi:1227670096462221363>  | Rolüm, bu işlemi gerçekleştirebilmek için yeterince yüksek değil. Lütfen rolümü yükseltir misiniz?",
+                content: emoji.carpi + "  | Rolüm, bu işlemi gerçekleştirebilmek için yeterince yüksek değil. Lütfen rolümü yükseltir misiniz?",
                 ephemeral: true 
             });
         }
@@ -46,7 +47,7 @@ module.exports = {
             await targetMember.roles.remove(targetRole);
             const embed = new EmbedBuilder()
                 .setColor("Green")
-                .setDescription(`<a:yeilonay:1221172106637611169>  | Başarıyla **${user.user.username}** kullanıcısının **${rol.name}** rolü alındı!`);
+                .setDescription(`${emoji.tik}  | Başarıyla **${user.user.username}** kullanıcısının **${rol.name}** rolü alındı!`);
 
             return interaction.reply({ embeds: [embed] });
         } catch (error) {
@@ -54,7 +55,7 @@ module.exports = {
             console.error('Rol çıkarma sırasında bir hata oluştu:', error);
             const embed = new EmbedBuilder()
                 .setColor("Red")
-                .setDescription(`<a:carpi:1227670096462221363>  | Rol çıkarma işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin veya botun yetkilerini kontrol edin.`);
+                .setDescription(`${emoji.carpi}  | Rol çıkarma işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin veya botun yetkilerini kontrol edin.`);
 
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }

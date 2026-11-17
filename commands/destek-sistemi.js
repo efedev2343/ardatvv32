@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
     EmbedBuilder,
     ApplicationCommandType,
@@ -53,7 +54,7 @@ module.exports = {
     run: async (client, interaction) => {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
             return interaction.reply({
-                content: "❌ | Bu komutu kullanmak için `Kanalları Yönet` yetkisine sahip olmalısınız!",
+                content: emoji.carpi + " | Bu komutu kullanmak için `Kanalları Yönet` yetkisine sahip olmalısınız!",
                 ephemeral: true,
             });
         }
@@ -63,9 +64,9 @@ module.exports = {
         const logKanal = interaction.options.getChannel("logkanal");
         const yetkiliRol = interaction.options.getRole("yetkilirol");
 
-        if (!kanal || !logKalan) {
+        if (!kanal || !logKanal) {
             return interaction.reply({
-                content: "❌ | Belirtilen kanallar bulunamadı. Lütfen geçerli bir kanal seçin.",
+                content: emoji.carpi + " | Belirtilen kanallar bulunamadı. Lütfen geçerli bir kanal seçin.",
                 ephemeral: true,
             });
         }
@@ -83,7 +84,7 @@ module.exports = {
             .setDescription(embedMesaj.length > 4096 ? embedMesaj.substring(0, 4093) + "..." : embedMesaj)
             .setColor("#00ff00")
             .addFields({
-                name: "ℹ️ Nasıl Çalışır?",
+                name: emoji.kbdNews + " Nasıl Çalışır?",
                 value: "Aşağıdaki butona tıklayarak destek talebi açabilirsiniz. Size özel bir kanal oluşturulacak ve ekibimizle iletişim kurabileceksiniz.",
                 inline: false,
             })
@@ -98,7 +99,7 @@ module.exports = {
                 .setCustomId("destek_ac")
                 .setLabel("Destek Talebi Aç")
                 .setStyle(ButtonStyle.Primary)
-                .setEmoji("📬")
+                .setEmoji(emoji.kbdNews)
         );
 
         try {
@@ -110,14 +111,14 @@ module.exports = {
             db.set(`destek_sistemi_${interaction.guild.id}.mesajId`, mesaj.id);
 
             await interaction.reply({
-                content: `✅ | Destek sistemi başarıyla ${kanal} kanalına kuruldu! Loglar ${logKanal}'a gönderilecek.` +
+                content: `${emoji.tik} | Destek sistemi başarıyla ${kanal} kanalına kuruldu! Loglar ${logKanal}'a gönderilecek.` +
                     (yetkiliRol ? ` Yetkili rolü: ${yetkiliRol}` : ""),
                 ephemeral: true,
             });
         } catch (error) {
             console.error("Destek sistemi kurulurken hata:", error);
             await interaction.reply({
-                content: "❌ | Destek sistemi kurulurken bir hata oluştu. Lütfen kanal izinlerini kontrol edin.",
+                content: emoji.carpi + " | Destek sistemi kurulurken bir hata oluştu. Lütfen kanal izinlerini kontrol edin.",
                 ephemeral: true,
             });
         }
@@ -136,7 +137,7 @@ client.on("interactionCreate", async (interaction) => {
                 const kanal = interaction.guild.channels.cache.get(mevcutKanal.kanalId);
                 if (kanal) {
                     return interaction.reply({
-                        content: `❌ | Zaten açık bir destek talebiniz var: ${kanal}!`,
+                        content: `${emoji.carpi} | Zaten açık bir destek talebiniz var: ${kanal}!`,
                         ephemeral: true,
                     });
                 } else {
@@ -182,14 +183,14 @@ client.on("interactionCreate", async (interaction) => {
             const sistemVeri = db.get(`destek_sistemi_${interaction.guild.id}`);
             if (!sistemVeri || !sistemVeri.logKanal) {
                 return interaction.editReply({
-                    content: "❌ | Destek sistemi düzgün yapılandırılmamış. Lütfen yetkililere bildirin.",
+                    content: emoji.carpi + " | Destek sistemi düzgün yapılandırılmamış. Lütfen yetkililere bildirin.",
                 });
             }
 
             const logKanal = interaction.guild.channels.cache.get(sistemVeri.logKanal);
             if (!logKanal) {
                 return interaction.editReply({
-                    content: "❌ | Log kanalı bulunamadı. Lütfen yetkililere bildirin.",
+                    content: emoji.carpi + " | Log kanalı bulunamadı. Lütfen yetkililere bildirin.",
                 });
             }
 
@@ -281,7 +282,7 @@ client.on("interactionCreate", async (interaction) => {
             } catch (error) {
                 console.error("Kanal oluşturulurken hata:", error);
                 return interaction.editReply({
-                    content: "❌ | Destek kanalı oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.",
+                    content: emoji.carpi + " | Destek kanalı oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.",
                 });
             }
 
@@ -294,13 +295,13 @@ client.on("interactionCreate", async (interaction) => {
             });
 
             const kanalEmbed = new EmbedBuilder()
-                .setTitle("📬 | Yeni Destek Talebi")
+                .setTitle(emoji.kbdNews + " | Yeni Destek Talebi")
                 .setDescription(`Merhaba ${interaction.user}, destek talebiniz oluşturuldu! Ekibimiz en kısa sürede size yardımcı olacak.`)
                 .addFields(
-                    { name: "📝 Konu", value: `\`${konu}\``, inline: true },
-                    { name: "📄 Açıklama", value: aciklama, inline: false },
+                    { name: emoji.kbdNews + " Konu", value: `\`${konu}\``, inline: true },
+                    { name: emoji.kbdNews + " Açıklama", value: aciklama, inline: false },
                     {
-                        name: "👤 Kullanıcı",
+                        name: emoji.kbdUser + " Kullanıcı",
                         value: `${interaction.user.tag} (${interaction.user.id})`,
                         inline: true,
                     }
@@ -321,7 +322,7 @@ client.on("interactionCreate", async (interaction) => {
                 )
                 .addFields(
                     {
-                        name: "🔔 Etiketlenen Yetkililer",
+                        name: emoji.kbdZil + " Etiketlenen Yetkililer",
                         value: etiketlenecekYetkililer.length > 0 ? 
                             etiketlenecekYetkililer.map(id => `<@${id}>`).join(' ') : 
                             "Etiketlenen yetkili yok"
@@ -340,37 +341,37 @@ client.on("interactionCreate", async (interaction) => {
                             label: "Talebi Kapat",
                             description: "Destek talebini kapatır ve kanalı siler",
                             value: "kapat",
-                            emoji: "🔒",
+                            emoji: emoji.kbdKilit,
                         },
                         {
                             label: "Kanalı Kilitle",
                             description: "Kullanıcının yazmasını engeller",
                             value: "kilitle",
-                            emoji: "<:calisma:1382375444158091358>",
+                            emoji: emoji.kbdCalisma,
                         },
                         {
                             label: "Kanalın Kilidini Aç",
                             description: "Kullanıcının tekrar yazmasını sağlar",
                             value: "kilit_ac",
-                            emoji: "🔓",
+                            emoji: emoji.acik,
                         },
                         {
                             label: "Üye Ekle",
                             description: "Kanal başka bir üye ekler",
                             value: "uye_ekle",
-                            emoji: "➕",
+                            emoji: emoji.tik,
                         },
                         {
                             label: "Üye Çıkar",
                             description: "Kanalda bir üyeyi çıkarır",
                             value: "uye_cikar",
-                            emoji: "➖",
+                            emoji: emoji.carpi,
                         },
                         {
                             label: "Talep Bilgisi",
                             description: "Talep detaylarını gösterir",
                             value: "bilgi",
-                            emoji: "ℹ️",
+                            emoji: emoji.kbdNews,
                         },
                     ])
             );
@@ -391,17 +392,17 @@ client.on("interactionCreate", async (interaction) => {
                 });
 
                 const logEmbed = new EmbedBuilder()
-                    .setTitle("📋 | Yeni Destek Talebi")
+                    .setTitle(emoji.kbdNews + " | Yeni Destek Talebi")
                     .setDescription(`Yeni bir destek talebi açıldı.`)
                     .addFields(
                         {
-                            name: "👤 Kullanıcı",
+                            name: emoji.kbdUser + " Kullanıcı",
                             value: `${interaction.user.tag} (${interaction.user.id})`,
                             inline: true,
                         },
-                        { name: "📝 Konu", value: `\`${konu}\``, inline: true },
-                        { name: "📄 Açıklama", value: aciklama, inline: false },
-                        { name: "📍 Kanal", value: `<#${destekKanal.id}>`, inline: true },
+                        { name: emoji.kbdNews + " Konu", value: `\`${konu}\``, inline: true },
+                        { name: emoji.kbdNews + " Açıklama", value: aciklama, inline: false },
+                        { name: emoji.kbdNews + " Kanal", value: `<#${destekKanal.id}>`, inline: true },
                         {
                             name: "🟢 Aktif Yetkililer",
                             value: aktifYetkililer.length > 0 ? 
@@ -410,7 +411,7 @@ client.on("interactionCreate", async (interaction) => {
                             inline: false,
                         },
                         {
-                            name: "🔔 Etiketlenenler",
+                            name: emoji.kbdZil + " Etiketlenenler",
                             value: etiketMesaji || "Etiketlenen yetkili yok",
                             inline: false,
                         }
@@ -422,12 +423,12 @@ client.on("interactionCreate", async (interaction) => {
                 db.set(`destek_cooldown_${interaction.guild.id}_${interaction.user.id}`, Date.now());
 
                 await interaction.editReply({
-                    content: `✅ | Destek talebiniz başarıyla oluşturuldu! Lütfen <#${destekKanal.id}> kanalına göz atın.`,
+                    content: `${emoji.tik} | Destek talebiniz başarıyla oluşturuldu! Lütfen <#${destekKanal.id}> kanalına göz atın.`,
                 });
             } catch (error) {
                 console.error("Mesaj gönderilirken hata:", error);
                 await interaction.editReply({
-                    content: "❌ | Destek talebi oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.",
+                    content: emoji.carpi + " | Destek talebi oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.",
                 });
                 if (destekKanal) {
                     await destekKanal.delete().catch(console.error);
@@ -450,7 +451,7 @@ client.on("interactionCreate", async (interaction) => {
 
             if (!kullanıcıId) {
                 return interaction.reply({
-                    content: "❌ | Bu kanal bir destek talebine bağlı değil.",
+                    content: emoji.carpi + " | Bu kanal bir destek talebine bağlı değil.",
                     ephemeral: true,
                 });
             }
@@ -471,7 +472,7 @@ client.on("interactionCreate", async (interaction) => {
 
             if (!isYetkili && interaction.user.id !== kullanıcıId) {
                 return interaction.reply({
-                    content: "❌ | Bu işlemi gerçekleştirmek için yetkiniz yok!",
+                    content: emoji.carpi + " | Bu işlemi gerçekleştirmek için yetkiniz yok!",
                     ephemeral: true,
                 });
             }
@@ -481,7 +482,7 @@ client.on("interactionCreate", async (interaction) => {
                 await interaction.deferReply({ ephemeral: true });
 
                 const closingMessage = await interaction.channel.send({
-                    content: "🔒 | Destek talebi kapatılıyor, lütfen bekleyin...",
+                    content: emoji.kbdKilit + " | Destek talebi kapatılıyor, lütfen bekleyin...",
                 }).catch(console.error);
 
                 const kanalAdi = interaction.channel.name;
@@ -501,7 +502,7 @@ client.on("interactionCreate", async (interaction) => {
                         await kullanıcı.send({
                             embeds: [
                                 new EmbedBuilder()
-                                    .setTitle("🔒 | Destek Talebiniz Kapatıldı")
+                                    .setTitle(emoji.kbdKilit + " | Destek Talebiniz Kapatıldı")
                                     .setDescription(
                                         "Destek talebiniz kapatıldı. Yeni bir talep oluşturabilirsiniz!\n\nAşağıda bu destek talebinin tam transkriptini bulabilirsiniz."
                                     )
@@ -524,27 +525,27 @@ client.on("interactionCreate", async (interaction) => {
 
                     if (logKanal) {
                         const logEmbed = new EmbedBuilder()
-                            .setTitle("🔒 | Destek Talebi Kapatıldı")
+                            .setTitle(emoji.kbdKilit + " | Destek Talebi Kapatıldı")
                             .setDescription(`Bir destek talebi kapatıldı. Transkript ektedir.`)
                             .addFields(
                                 {
-                                    name: "👤 İşlem Yapan",
+                                    name: emoji.kbdUser + " İşlem Yapan",
                                     value: `${interaction.user.tag} (${interaction.user.id})`,
                                     inline: true,
                                 },
                                 {
-                                    name: "👤 Kullanıcı",
+                                    name: emoji.kbdUser + " Kullanıcı",
                                     value: `<@${kullanıcıId}>`,
                                     inline: true,
                                 },
-                                { name: "📍 Kanal", value: kanalAdi, inline: true },
+                                { name: emoji.kbdNews + " Kanal", value: kanalAdi, inline: true },
                                 {
-                                    name: "⏰ Süre",
+                                    name: emoji.kbdSaat + " Süre",
                                     value: `<t:${Math.floor(talep.acilisZamani / 1000)}:R> açıldı`,
                                     inline: true,
                                 },
                                 {
-                                    name: "📝 Konu",
+                                    name: emoji.kbdNews + " Konu",
                                     value: talep.konu?.length > 256 ? talep.konu.substring(0, 253) + "..." : talep.konu || "Belirtilmemiş",
                                     inline: true,
                                 }
@@ -559,17 +560,17 @@ client.on("interactionCreate", async (interaction) => {
                     }
 
                     await interaction.channel.send({
-                        content: "✅ | Destek talebi başarıyla kapatıldı. Kanal kısa süre içinde silinecek.",
+                        content: emoji.tik + " | Destek talebi başarıyla kapatıldı. Kanal kısa süre içinde silinecek.",
                     }).catch(console.error);
 
                     await interaction.editReply({
-                        content: "✅ | Destek talebi başarıyla kapatıldı.",
+                        content: emoji.tik + " | Destek talebi başarıyla kapatıldı.",
                     });
 
                     await interaction.channel.delete().catch(async (error) => {
                         console.error("Kanal silinirken hata:", error);
                         await interaction.channel.send({
-                            content: "❌ | Kanal silinirken bir hata oluştu. Lütfen kanalı manuel olarak silin.",
+                            content: emoji.carpi + " | Kanal silinirken bir hata oluştu. Lütfen kanalı manuel olarak silin.",
                         }).catch(console.error);
                     });
 
@@ -577,7 +578,7 @@ client.on("interactionCreate", async (interaction) => {
                 } catch (error) {
                     console.error("Destek talebi kapatılırken hata:", error);
                     await interaction.editReply({
-                        content: "❌ | Destek talebi kapatılırken bir hata oluştu. Lütfen tekrar deneyin.",
+                        content: emoji.carpi + " | Destek talebi kapatılırken bir hata oluştu. Lütfen tekrar deneyin.",
                     });
                 }
                 return;
@@ -590,22 +591,22 @@ client.on("interactionCreate", async (interaction) => {
                 });
 
                 await interaction.editReply({
-                    content: "<:calisma:1382375444158091358> | Destek kanalı kilitlendi. Kullanıcı artık yazamaz.",
+                    content: emoji.kbdCalisma + " | Destek kanalı kilitlendi. Kullanıcı artık yazamaz.",
                 });
 
                 if (logKanal) {
                     const logEmbed = new EmbedBuilder()
-                        .setTitle("<:calisma:1382375444158091358> | Destek Kanalı Kilitlendi")
+                        .setTitle(emoji.kbdCalisma + " | Destek Kanalı Kilitlendi")
                         .setDescription(`Destek kanalı kilitlendi.`)
                         .addFields(
                             {
-                                name: "👤 Yetkili",
+                                name: emoji.kbdUser + " Yetkili",
                                 value: `${interaction.user.tag} (${interaction.user.id})`,
                                 inline: true,
                             },
-                            { name: "👤 Kullanıcı", value: `<@${kullanıcıId}>`, inline: true },
+                            { name: emoji.kbdUser + " Kullanıcı", value: `<@${kullanıcıId}>`, inline: true },
                             {
-                                name: "📍 Kanal",
+                                name: emoji.kbdNews + " Kanal",
                                 value: `<#${interaction.channel.id}>`,
                                 inline: true,
                             }
@@ -623,22 +624,22 @@ client.on("interactionCreate", async (interaction) => {
                 });
 
                 await interaction.editReply({
-                    content: "🔓 | Destek kanalı kilidi açıldı. Kullanıcı artık yazabilir.",
+                    content: emoji.acik + " | Destek kanalı kilidi açıldı. Kullanıcı artık yazabilir.",
                 });
 
                 if (logKanal) {
                     const logEmbed = new EmbedBuilder()
-                        .setTitle("🔓 | Destek Kanalı Kilidi Açıldı")
+                        .setTitle(emoji.acik + " | Destek Kanalı Kilidi Açıldı")
                         .setDescription(`Destek kanalı kilidi açıldı.`)
                         .addFields(
                             {
-                                name: "👤 Yetkili",
+                                name: emoji.kbdUser + " Yetkili",
                                 value: `${interaction.user.tag} (${interaction.user.id})`,
                                 inline: true,
                             },
-                            { name: "👤 Kullanıcı", value: `<@${kullanıcıId}>`, inline: true },
+                            { name: emoji.kbdUser + " Kullanıcı", value: `<@${kullanıcıId}>`, inline: true },
                             {
-                                name: "📍 Kanal",
+                                name: emoji.kbdNews + " Kanal",
                                 value: `<#${interaction.channel.id}>`,
                                 inline: true,
                             }
@@ -670,7 +671,7 @@ client.on("interactionCreate", async (interaction) => {
                 const talep = db.get(`destek_kanal_${interaction.guild.id}_${kullanıcıId}`);
                 if (!talep || !talep.yetkililer || talep.yetkililer.length === 0) {
                     return interaction.reply({
-                        content: "❌ | Kanalda çıkarılacak üye bulunamadı.",
+                        content: emoji.carpi + " | Kanalda çıkarılacak üye bulunamadı.",
                         ephemeral: true,
                     });
                 }
@@ -696,33 +697,33 @@ client.on("interactionCreate", async (interaction) => {
                 const talep = db.get(`destek_kanal_${interaction.guild.id}_${kullanıcıId}`);
                 if (!talep) {
                     return interaction.reply({
-                        content: "❌ | Talep bilgileri bulunamadı.",
+                        content: emoji.carpi + " | Talep bilgileri bulunamadı.",
                         ephemeral: true,
                     });
                 }
 
                 const bilgiEmbed = new EmbedBuilder()
-                    .setTitle("ℹ️ | Destek Talebi Bilgileri")
+                    .setTitle(emoji.kbdNews + " | Destek Talebi Bilgileri")
                     .setDescription(`Destek talebi detayları aşağıda yer alıyor.`)
                     .addFields(
-                        { name: "👤 Kullanıcı", value: `<@${kullanıcıId}>`, inline: true },
+                        { name: emoji.kbdUser + " Kullanıcı", value: `<@${kullanıcıId}>`, inline: true },
                         {
-                            name: "📝 Konu",
+                            name: emoji.kbdNews + " Konu",
                             value: `\`${talep.konu?.length > 256 ? talep.konu.substring(0, 253) + "..." : talep.konu || "Belirtilmemiş"}\``,
                             inline: true,
                         },
                         {
-                            name: "📄 Açıklama",
+                            name: emoji.kbdNews + " Açıklama",
                             value: talep.aciklama?.length > 1024 ? talep.aciklama.substring(0, 1021) + "..." : talep.aciklama || "Belirtilmemiş",
                             inline: false,
                         },
                         {
-                            name: "⏰ Açılış Zamanı",
+                            name: emoji.kbdSaat + " Açılış Zamanı",
                             value: `<t:${Math.floor(talep.acilisZamani / 1000)}:R>`,
                             inline: true,
                         },
                         {
-                            name: "<:kullanici:1382373832144326656> Eklenen Üyeler",
+                            name: emoji.kbdUser + " Eklenen Üyeler",
                             value: talep.yetkililer?.length > 0 ?
                                 talep.yetkililer.map(id => `<@${id}>`).join(", ") :
                                 "Eklenen üye yok",
@@ -760,7 +761,7 @@ client.on("interactionCreate", async (interaction) => {
                     const uye = await interaction.guild.members.fetch(uyeId).catch(() => null);
                     if (!uye) {
                         return interaction.editReply({
-                            content: "❌ | Geçersiz kullanıcı ID'si veya kullanıcı sunucuda bulunamadı.",
+                            content: emoji.carpi + " | Geçersiz kullanıcı ID'si veya kullanıcı sunucuda bulunamadı.",
                         });
                     }
 
@@ -778,31 +779,31 @@ client.on("interactionCreate", async (interaction) => {
                     }
 
                     await interaction.editReply({
-                        content: `✅ | ${uye} kullanıcısı başarıyla kanala eklendi!`,
+                        content: `${emoji.tik} | ${uye} kullanıcısı başarıyla kanala eklendi!`,
                     });
 
                     if (logKanal) {
                         const logEmbed = new EmbedBuilder()
-                            .setTitle("➕ | Destek Kanalına Üye Eklendi")
+                            .setTitle(emoji.tik + " | Destek Kanalına Üye Eklendi")
                             .setDescription(`Destek kanalına yeni bir üye eklendi.`)
                             .addFields(
                                 {
-                                    name: "👤 Yetkili",
+                                    name: emoji.kbdUser + " Yetkili",
                                     value: `${interaction.user.tag} (${interaction.user.id})`,
                                     inline: true,
                                 },
                                 {
-                                    name: "👤 Kullanıcı",
+                                    name: emoji.kbdUser + " Kullanıcı",
                                     value: `<@${kullanıcıId}>`,
                                     inline: true,
                                 },
                                 {
-                                    name: "<:kullanici:1382373832144326656> Eklenen Üye",
+                                    name: emoji.kbdUser + " Eklenen Üye",
                                     value: `<@${uyeId}>`,
                                     inline: true,
                                 },
                                 {
-                                    name: "📍 Kanal",
+                                    name: emoji.kbdNews + " Kanal",
                                     value: `<#${interaction.channel.id}>`,
                                     inline: true,
                                 }
@@ -818,7 +819,7 @@ client.on("interactionCreate", async (interaction) => {
                 } catch (error) {
                     console.error("Üye eklenirken hata:", error);
                     await interaction.editReply({
-                        content: "❌ | Üye eklenirken bir hata oluştu. Lütfen tekrar deneyin.",
+                        content: emoji.carpi + " | Üye eklenirken bir hata oluştu. Lütfen tekrar deneyin.",
                     });
                 }
             }
@@ -848,7 +849,7 @@ client.on("interactionCreate", async (interaction) => {
                     const uye = await interaction.guild.members.fetch(uyeId).catch(() => null);
                     if (!uye) {
                         return interaction.editReply({
-                            content: "❌ | Geçersiz kullanıcı ID'si veya kullanıcı sunucuda bulunamadı.",
+                            content: emoji.carpi + " | Geçersiz kullanıcı ID'si veya kullanıcı sunucuda bulunamadı.",
                         });
                     }
 
@@ -861,31 +862,31 @@ client.on("interactionCreate", async (interaction) => {
                     }
 
                     await interaction.editReply({
-                        content: `✅ | ${uye} kullanıcısı başarıyla kanaldan çıkarıldı!`,
+                        content: `${emoji.tik} | ${uye} kullanıcısı başarıyla kanaldan çıkarıldı!`,
                     });
 
                     if (logKanal) {
                         const logEmbed = new EmbedBuilder()
-                            .setTitle("➖ | Destek Kanalından Üye Çıkarıldı")
+                            .setTitle(emoji.carpi + " | Destek Kanalından Üye Çıkarıldı")
                             .setDescription(`Destek kanalından bir üye çıkarıldı.`)
                             .addFields(
                                 {
-                                    name: "👤 Yetkili",
+                                    name: emoji.kbdUser + " Yetkili",
                                     value: `${interaction.user.tag} (${interaction.user.id})`,
                                     inline: true,
                                 },
                                 {
-                                    name: "👤 Kullanıcı",
+                                    name: emoji.kbdUser + " Kullanıcı",
                                     value: `<@${kullanıcıId}>`,
                                     inline: true,
                                 },
                                 {
-                                    name: "<:kullanici:1382373832144326656> Çıkarılan Üye",
+                                    name: emoji.kbdUser + " Çıkarılan Üye",
                                     value: `<@${uyeId}>`,
                                     inline: true,
                                 },
                                 {
-                                    name: "📍 Kanal",
+                                    name: emoji.kbdNews + " Kanal",
                                     value: `<#${interaction.channel.id}>`,
                                     inline: true,
                                 }
@@ -901,7 +902,7 @@ client.on("interactionCreate", async (interaction) => {
                 } catch (error) {
                     console.error("Üye çıkarılırken hata:", error);
                     await interaction.editReply({
-                        content: "❌ | Üye çıkarılırken bir hata oluştu. Lütfen tekrar deneyin.",
+                        content: emoji.carpi + " | Üye çıkarılırken bir hata oluştu. Lütfen tekrar deneyin.",
                     });
                 }
             }
@@ -911,12 +912,12 @@ client.on("interactionCreate", async (interaction) => {
         console.error("Destek sistemi işlenirken hata:", error);
         if (!interaction.replied && !interaction.deferred) {
             await interaction.reply({
-                content: "❌ | İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+                content: emoji.carpi + " | İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.",
                 ephemeral: true,
             }).catch(console.error);
         } else if (interaction.deferred) {
             await interaction.editReply({
-                content: "❌ | İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+                content: emoji.carpi + " | İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.",
             }).catch(console.error);
         }
     }

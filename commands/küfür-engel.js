@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -27,7 +28,7 @@ module.exports = {
   run: async (client, interaction) => {
     const { user, guild, options } = interaction;
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Rolleri Yönet Yetkin Yok!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Rolleri Yönet Yetkin Yok!", ephemeral: true });
     }
 
     const kufurEngelSystemTrue = options.getString("seçenek");
@@ -38,7 +39,7 @@ module.exports = {
       case "ac": {
         if (kufurEngelSystem && kufurengelDate) {
           const date = new EmbedBuilder()
-            .setDescription(`<a:carpi:1227670096462221363>  | Bu sistem <t:${parseInt(kufurengelDate.date / 1000)}:R> önce açılmış!`);
+            .setDescription(`${emoji.carpi}  | Bu sistem <t:${parseInt(kufurengelDate.date / 1000)}:R> önce açılmış!`);
 
           return interaction.reply({ embeds: [date] });
         }
@@ -48,7 +49,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
           .setColor("Green")
-          .setDescription("<a:yeilonay:1221172106637611169>  | Küfür engel sistemi başarıyla açıldı!")
+          .setDescription(emoji.tik + "  | Küfür engel sistemi başarıyla açıldı!")
           .addFields(
             { name: "Açan Kullanıcı", value: user.tag, inline: true },
             { name: "Sunucu", value: guild.name, inline: true },
@@ -61,7 +62,7 @@ module.exports = {
 
       case "kapat": {
         if (!kufurEngelSystem) {
-          return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Küfür engel sistemi zaten kapalı." });
+          return interaction.reply({ content: emoji.carpi + "  | Küfür engel sistemi zaten kapalı." });
         }
 
         db.delete(`kufurengel_${interaction.guild.id}`);
@@ -69,7 +70,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
           .setColor("Red")
-          .setDescription("<a:yeilonay:1221172106637611169>  | Küfür engel sistemi başarıyla kapatıldı!")
+          .setDescription(emoji.tik + "  | Küfür engel sistemi başarıyla kapatıldı!")
           .addFields(
             { name: "Kapatan Kullanıcı", value: user.tag, inline: true },
             { name: "Sunucu", value: guild.name, inline: true },

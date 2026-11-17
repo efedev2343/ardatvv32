@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { AttachmentBuilder } = require('discord.js');
 const { createCanvas } = require('canvas');
 const weather = require('weather-js');
@@ -84,10 +85,10 @@ const cityData = {
 
 // Hava durumu ikonları
 const weatherIcons = {
-  'Sunny': '☀️', 'Clear': '🌙', 'Mostly Sunny': '⛅',
-  'Partly Sunny': '⛅', 'Mostly Cloudy': '☁️', 'Cloudy': '☁️',
-  'Rain': '🌧️', 'Rain Showers': '🌧️', 'Light Rain': '🌦️',
-  'Thunderstorm': '⛈️', 'Snow': '❄️', 'Fog': '🌫️'
+  'Sunny': emoji.kbdNews, 'Clear': emoji.kbdNews, 'Mostly Sunny': emoji.kbdNews,
+  'Partly Sunny': emoji.kbdNews, 'Mostly Cloudy': emoji.kbdNews, 'Cloudy': emoji.kbdNews,
+  'Rain': emoji.kbdNews, 'Rain Showers': emoji.kbdNews, 'Light Rain': emoji.kbdNews,
+  'Thunderstorm': emoji.kbdNews, 'Snow': emoji.kbdNews, 'Fog': emoji.kbdNews
 };
 
 function normalizeCityName(city) {
@@ -180,7 +181,7 @@ module.exports = {
         ctx.font = '24px Arial';
         ctx.fillText(`Plaka: ${cityInfo.plaka}`, 50, 85);
 
-        const weatherIcon = weatherIcons[current.skytext] || '🌤️';
+        const weatherIcon = weatherIcons[current.skytext] || emoji.kbdNews;
         ctx.font = 'bold 48px Arial';
         ctx.fillText(`${weatherIcon} ${current.temperature}°C`, 550, 70);
         ctx.font = '20px Arial';

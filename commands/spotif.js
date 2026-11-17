@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, ActivityType } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 
@@ -87,15 +88,15 @@ module.exports = {
       ctx.textAlign = 'center';
 
       // Şarkı ismi
-      ctx.fillText(`🎵 Şarkı: ${songTitle}`, canvas.width / 2, 500);
+      ctx.fillText(`${emoji.kbdOyun} Şarkı: ${songTitle}`, canvas.width / 2, 500);
 
       // Sanatçı ismi
       ctx.fillStyle = '#1DB954'; // Spotify yeşili
-      ctx.fillText(`🎤 Sanatçı: ${artistName}`, canvas.width / 2, 570);
+      ctx.fillText(`${emoji.kbdOyun} Sanatçı: ${artistName}`, canvas.width / 2, 570);
 
       // Albüm ismi
       ctx.fillStyle = '#FFFFFF';
-      ctx.fillText(`💽 Albüm: ${albumName}`, canvas.width / 2, 640);
+      ctx.fillText(`${emoji.kbdNews} Albüm: ${albumName}`, canvas.width / 2, 640);
 
       // İlerleme çubuğu
       const progressBarWidth = 800;

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, EmbedBuilder } = require("discord.js");
 const Discord = require('discord.js')
 const db = require("croxydb")
@@ -10,7 +11,7 @@ module.exports = {
     options: [],
   run: async(client, interaction) => {
 
-    if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) return interaction.reply({content: "<a:carpi:1227670096462221363>  | Kanalları Yönet Yetkin Yok!", ephemeral: true})
+    if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) return interaction.reply({content: emoji.carpi + "  | Kanalları Yönet Yetkin Yok!", ephemeral: true})
     const row1 = new Discord.ActionRowBuilder()
 
     .addComponents(

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder } = require("discord.js");
 const db = require("croxydb");
 
@@ -130,14 +131,14 @@ module.exports = {
       const guess = msg.content.toLowerCase();
 
       if (guessedLetters.includes(guess)) {
-        msg.reply("❌ Bu harfi zaten tahmin ettiniz!");
+        msg.reply(emoji.carpi + " Bu harfi zaten tahmin ettiniz!");
         return;
       }
 
     
       if (guess === chosenWord) {
         embed.setDescription(
-          `🎉 Tebrikler, kelimeyi doğru tahmin ettiniz!\nKelime: \`${chosenWord}\``
+          `${emoji.kbdOyun} Tebrikler, kelimeyi doğru tahmin ettiniz!\nKelime: \`${chosenWord}\``
         );
         interaction.editReply({ embeds: [embed] });
         collector.stop();
@@ -159,7 +160,7 @@ module.exports = {
 
         if (!displayWord.includes("_")) {
           embed.setDescription(
-            `🎉 Tebrikler, kelimeyi doğru tahmin ettiniz!\nKelime: \`${displayWord}\``
+            `${emoji.kbdOyun} Tebrikler, kelimeyi doğru tahmin ettiniz!\nKelime: \`${displayWord}\``
           );
           interaction.editReply({ embeds: [embed] });
           collector.stop();
@@ -170,7 +171,7 @@ module.exports = {
 
         if (remainingAttempts === 0) {
           embed.setDescription(
-            `${hangmanStages[6]}\n💀 Maalesef, tüm haklarınızı kaybettiniz!\nKelime: \`${chosenWord}\``
+            `${hangmanStages[6]}\n${emoji.carpi} Maalesef, tüm haklarınızı kaybettiniz!\nKelime: \`${chosenWord}\``
           );
           interaction.editReply({ embeds: [embed] });
           collector.stop();
@@ -187,7 +188,7 @@ module.exports = {
     collector.on("end", (collected, reason) => {
       if (reason === "time") {
         embed.setDescription(
-          `${hangmanStages[6]}\n⏰ Süre doldu! Kelime: \`${chosenWord}\``
+          `${hangmanStages[6]}\n${emoji.kbdSaat} Süre doldu! Kelime: \`${chosenWord}\``
         );
         interaction.editReply({ embeds: [embed] });
       }

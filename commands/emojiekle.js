@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const axios = require('axios');
 
@@ -24,7 +25,7 @@ module.exports = {
     // Kullanıcının yetkilerini kontrol et
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageEmojisAndStickers)) {
       return interaction.reply({
-        content: '<a:carpi:1227670096462221363>  **Emoji ekleyemezsiniz!**\n> Gerekli yetki: `Emojileri ve Çıkartmaları Yönet`',
+        content: emoji.carpi + '  **Emoji ekleyemezsiniz!**\n> Gerekli yetki: `Emojileri ve Çıkartmaları Yönet`',
         ephemeral: true
       });
     }
@@ -32,7 +33,7 @@ module.exports = {
     // Botun yetkilerini kontrol et
     if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageEmojisAndStickers)) {
       return interaction.reply({
-        content: '<a:carpi:1227670096462221363>  **Emoji ekleyemiyorum!**\n> Botta gerekli yetki yok: `Emojileri ve Çıkartmaları Yönet`\n> Lütfen yetkileri kontrol edin.',
+        content: emoji.carpi + '  **Emoji ekleyemiyorum!**\n> Botta gerekli yetki yok: `Emojileri ve Çıkartmaları Yönet`\n> Lütfen yetkileri kontrol edin.',
         ephemeral: true
       });
     }
@@ -43,7 +44,7 @@ module.exports = {
     // Emoji isim kontrolü
     if (!/^[a-zA-Z0-9_]+$/.test(emojiName)) {
       return interaction.reply({
-        content: '<a:carpi:1227670096462221363>  **Geçersiz emoji ismi!**\n> Sadece harf, sayı ve alt çizgi kullanabilirsiniz.',
+        content: emoji.carpi + '  **Geçersiz emoji ismi!**\n> Sadece harf, sayı ve alt çizgi kullanabilirsiniz.',
         ephemeral: true
       });
     }
@@ -56,7 +57,7 @@ module.exports = {
       emojiUrl = `https://cdn.discordapp.com/emojis/${emojiCode}.${emojiInput.startsWith('<a:') ? 'gif' : 'png'}`;
     } else {
       return interaction.reply({
-        content: '<a:carpi:1227670096462221363>  **Geçersiz emoji formatı!**\n> Lütfen geçerli bir emoji kodu veya URL girin.',
+        content: emoji.carpi + '  **Geçersiz emoji formatı!**\n> Lütfen geçerli bir emoji kodu veya URL girin.',
         ephemeral: true
       });
     }
@@ -72,7 +73,7 @@ module.exports = {
       const contentLength = parseInt(response.headers['content-length']);
       if (contentLength > 256 * 1024) {
         return interaction.reply({
-          content: '<a:carpi:1227670096462221363>  **Emoji boyutu çok büyük!**\n> Maksimum boyut: 256KB',
+          content: '❌  **Emoji boyutu çok büyük!**\n> Maksimum boyut: 256KB',
           ephemeral: true
         });
       }
@@ -84,7 +85,7 @@ module.exports = {
       });
 
       const embed = new EmbedBuilder()
-        .setTitle('<a:yeilonay:1221172106637611169>  Emoji Başarıyla Eklendi!')
+        .setTitle('✅  Emoji Başarıyla Eklendi!')
         .setDescription(`**${emojiName}** adlı emoji oluşturuldu!\n${addedEmoji} \`${addedEmoji}\``)
         .setThumbnail(addedEmoji.url)
         .setColor('#00ff00')
@@ -98,7 +99,7 @@ module.exports = {
     } catch (error) {
       console.error('Emoji ekleme hatası:', error);
 
-      let errorMessage = '<a:carpi:1227670096462221363>  **Emoji eklenemedi!**\n';
+      let errorMessage = '❌  **Emoji eklenemedi!**\n';
       
       if (error.message.includes('Invalid Form Body')) {
         errorMessage += '> Geçersiz emoji formatı veya boyutu';

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, EmbedBuilder } = require("discord.js");
 const db = require("croxydb");
 
@@ -10,7 +11,7 @@ module.exports = {
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
       return interaction.reply({ 
-        content: "<a:carpi:1227670096462221363>  | Bu komutu kullanabilmek için **Kanalları Yönet** yetkisine sahip olmalısın!", 
+        content: emoji.carpi + "  | Bu komutu kullanabilmek için **Kanalları Yönet** yetkisine sahip olmalısın!", 
         ephemeral: true 
       });
     }
@@ -19,7 +20,7 @@ module.exports = {
     
     if (!kanalID) {
       return interaction.reply({ 
-        content: "<a:uyari:1225959324426174475>  | Giriş çıkış sistemi zaten kapalı!", 
+        content: emoji.kbdWarn + "  | Giriş çıkış sistemi zaten kapalı!", 
         ephemeral: true 
       });
     }
@@ -29,8 +30,8 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("Random")
-      .setTitle("🔧 Giriş Çıkış Sistemi Kapatıldı!")
-      .setDescription(`<a:yeilonay:1221172106637611169>  | **${interaction.guild.name}** sunucusunda giriş çıkış mesajları kapatıldı!`)
+      .setTitle(emoji.kbdCalisma + " Giriş Çıkış Sistemi Kapatıldı!")
+      .setDescription(`${emoji.tik}  | **${interaction.guild.name}** sunucusunda giriş çıkış mesajları kapatıldı!`)
       .setFooter({ text: "Sistemi tekrar açmak için giriş-çıkış-ayarla komutunu kullanabilirsiniz." });
 
     interaction.reply({ embeds: [embed] });

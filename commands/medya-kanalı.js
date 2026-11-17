@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, EmbedBuilder } = require("discord.js");
 const db = require("croxydb");
 
@@ -18,7 +19,7 @@ module.exports = {
     // Yetki kontrolü
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363>  | Kanalları Yönet Yetkin Yok!",
+        content: emoji.carpi + "  | Kanalları Yönet Yetkin Yok!",
         ephemeral: true,
       });
     }
@@ -28,7 +29,7 @@ module.exports = {
     // Kanal metin kanalı mı kontrol et
     if (kanal.type !== 0) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363>  | Lütfen bir metin kanalı seçin!",
+        content: emoji.carpi + "  | Lütfen bir metin kanalı seçin!",
         ephemeral: true,
       });
     }
@@ -38,7 +39,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("Random")
-      .setDescription(`<a:yeilonay:1221172106637611169>  | <#${kanal.id}> kanalında sadece resim ve GIF paylaşımlarına izin verilecek, diğer içerikler silinecek!`);
+      .setDescription(`${emoji.tik}  | <#${kanal.id}> kanalında sadece resim ve GIF paylaşımlarına izin verilecek, diğer içerikler silinecek!`);
 
     interaction.reply({ embeds: [embed] });
   },

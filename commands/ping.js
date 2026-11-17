@@ -1,4 +1,6 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder } = require("discord.js");
+const config = require("../config.json");
 
 module.exports = {
   name: "ping",
@@ -10,10 +12,10 @@ module.exports = {
     
     const yükleniyorEmbed = new EmbedBuilder()
       .setColor("#ffa500")
-      .setTitle("🏓 Ping Ölçülüyor...")
+      .setTitle(emoji.kbdOyun + " Ping Ölçülüyor...")
       .setDescription("Lütfen bekleyin, ping verileri hesaplanıyor.")
       .setThumbnail(client.user.displayAvatarURL())
-      .setFooter({ text: "ARDATVV Ping Sistemi" });
+      .setFooter({ text: `${config["bot-adi"]} Ping Sistemi` });
 
     const reply = await interaction.reply({
       embeds: [yükleniyorEmbed],
@@ -31,11 +33,11 @@ module.exports = {
 
     const pingEmbed = new EmbedBuilder()
       .setColor(renk)
-      .setTitle("📶 ARDATVV Bot Ping")
+      .setTitle(emoji.kbdZil + ` ${config["bot-adi"]} Bot Ping`)
       .setThumbnail(client.user.displayAvatarURL())
       .addFields(
-        { name: "📡 Mesaj Gecikmesi", value: `\`${mesajGecikme}ms\``, inline: true },
-        { name: "🛰️ API Gecikmesi", value: `\`${apiGecikme}ms\``, inline: true }
+        { name: emoji.kbdZil + " Mesaj Gecikmesi", value: `\`${mesajGecikme}ms\``, inline: true },
+        { name: emoji.kbdZil + " API Gecikmesi", value: `\`${apiGecikme}ms\``, inline: true }
       )
       .setFooter({
         text: `Saat: ${new Date().toLocaleTimeString("tr-TR", {

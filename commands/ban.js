@@ -9,6 +9,7 @@ const {
   ButtonBuilder,
   ButtonStyle
 } = require("discord.js");
+const emoji = require("../emoji.js");
 
 module.exports = {
   name: "ban",
@@ -28,7 +29,7 @@ module.exports = {
       // Yetki kontrolü
       if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
         return interaction.reply({
-          content: "<a:carpi:1227670096462221363>  | Üyeleri yasaklama yetkin yok!",
+          content: emoji.carpi + "  | Üyeleri yasaklama yetkin yok!",
           ephemeral: true
         });
       }
@@ -38,14 +39,14 @@ module.exports = {
 
       if (!member) {
         return interaction.reply({
-          content: "<a:carpi:1227670096462221363>  | Bu kullanıcı sunucuda bulunmuyor.",
+          content: emoji.carpi + "  | Bu kullanıcı sunucuda bulunmuyor.",
           ephemeral: true
         });
       }
 
       if (!member.bannable) {
         return interaction.reply({
-          content: "<a:carpi:1227670096462221363>  | Kullanıcıyı yasaklamak için yeterli yetkim yok.",
+          content: emoji.carpi + "  | Kullanıcıyı yasaklamak için yeterli yetkim yok.",
           ephemeral: true
         });
       }
@@ -76,7 +77,7 @@ module.exports = {
 
       if (!submitted) {
         return interaction.followUp({
-          content: "<a:carpi:1227670096462221363>  | Ban işlemi zaman aşımına uğradı veya iptal edildi.",
+          content: emoji.carpi + "  | Ban işlemi zaman aşımına uğradı veya iptal edildi.",
           ephemeral: true
         });
       }
@@ -85,9 +86,9 @@ module.exports = {
 
       // Kullanıcıya özel mesaj gönder
       try {
-        await user.send(`⛔ **${interaction.guild.name}** sunucusundan yasaklandınız!\nSebep: ${reason}`);
+        await user.send(`${emoji.carpi} **${interaction.guild.name}** sunucusundan yasaklandınız!\nSebep: ${reason}`);
       } catch {
-        console.warn("⚠️ Kullanıcıya DM gönderilemedi.");
+        console.warn(emoji.kbdWarn + " Kullanıcıya DM gönderilemedi.");
       }
 
       // Yasaklama işlemi
@@ -109,7 +110,7 @@ module.exports = {
 
       const deleteButton = new ButtonBuilder()
         .setCustomId(`delete-${interaction.id}`)
-        .setEmoji("🗑️")
+        .setEmoji(emoji.kbdNews)
         .setStyle(ButtonStyle.Danger);
 
       const row = new ActionRowBuilder().addComponents(unbanButton, deleteButton);
@@ -126,7 +127,7 @@ module.exports = {
       collector.on("collect", async (i) => {
         if (i.user.id !== interaction.user.id) {
           return i.reply({
-            content: "<a:carpi:1227670096462221363>  | Bu butonları sadece komutu kullanan kişi yönetebilir!",
+            content: emoji.carpi + "  | Bu butonları sadece komutu kullanan kişi yönetebilir!",
             ephemeral: true
           });
         }
@@ -135,12 +136,12 @@ module.exports = {
           try {
             await interaction.guild.bans.remove(user.id);
             await i.reply({
-              content: `<a:yeilonay:1221172106637611169>  | **${user.tag}** adlı kullanıcının yasağı kaldırıldı.`,
+              content: `${emoji.tik}  | **${user.tag}** adlı kullanıcının yasağı kaldırıldı.`,
               ephemeral: true
             });
           } catch (err) {
             await i.reply({
-              content: "<a:carpi:1227670096462221363>  | Kullanıcının yasağını kaldıramadım.",
+              content: emoji.carpi + "  | Kullanıcının yasağını kaldıramadım.",
               ephemeral: true
             });
           }
@@ -152,10 +153,10 @@ module.exports = {
       });
 
     } catch (error) {
-      console.error("❌ Ban komutunda hata:", error);
+      console.error(emoji.carpi + " Ban komutunda hata:", error);
       if (!interaction.replied && !interaction.deferred) {
         interaction.reply({
-          content: "<a:carpi:1227670096462221363>  | Bir hata oluştu, lütfen tekrar dene.",
+          content: emoji.carpi + "  | Bir hata oluştu, lütfen tekrar dene.",
           ephemeral: true
         });
       }

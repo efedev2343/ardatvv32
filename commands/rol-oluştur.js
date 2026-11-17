@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require("discord.js");
 
 module.exports = {
@@ -14,13 +15,13 @@ module.exports = {
     ],
     run: async (client, interaction) => {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
-            return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Rolleri Yönet Yetkiniz Yok!", ephemeral: true }).catch(console.error);
+            return interaction.reply({ content: emoji.carpi + "  | Rolleri Yönet Yetkiniz Yok!", ephemeral: true }).catch(console.error);
         }
 
         const isim = interaction.options.getString("isim").trim();
 
         if (!isim) {
-            return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Lütfen geçerli bir rol adı girin.", ephemeral: true }).catch(console.error);
+            return interaction.reply({ content: emoji.carpi + "  | Lütfen geçerli bir rol adı girin.", ephemeral: true }).catch(console.error);
         }
 
         // Renk seçimi için menü
@@ -35,14 +36,14 @@ module.exports = {
                 new StringSelectMenuOptionBuilder().setLabel("🟣 Mor").setValue("#800080"),
                 new StringSelectMenuOptionBuilder().setLabel("⚫ Siyah").setValue("#000000"),
                 new StringSelectMenuOptionBuilder().setLabel("⚪ Beyaz").setValue("#ffffff"),
-                new StringSelectMenuOptionBuilder().setLabel("🎲 Rastgele Renk").setValue("random"),
+                new StringSelectMenuOptionBuilder().setLabel(emoji.kbdOyun + " Rastgele Renk").setValue("random"),
             ]);
 
         const row = new ActionRowBuilder().addComponents(renkSecimMenusu);
 
         const embed = new EmbedBuilder()
             .setColor("Blue")
-            .setDescription(`🛠 | **${isim}** adlı rol oluşturulacak. Lütfen bir renk seçin.`);
+            .setDescription(`${emoji.kbdCalisma} | **${isim}** adlı rol oluşturulacak. Lütfen bir renk seçin.`);
 
         await interaction.reply({ embeds: [embed], components: [row], ephemeral: true }).catch(console.error);
 
@@ -67,15 +68,15 @@ module.exports = {
 
                     const embedSuccess = new EmbedBuilder()
                         .setColor(secilenRenk)
-                        .setDescription(`<a:yeilonay:1221172106637611169>  | **${isim}** rolü oluşturuldu! 🎨 Seçilen renk: **${secilenRenk}**`);
+                        .setDescription(`${emoji.tik}  | **${isim}** rolü oluşturuldu! ${emoji.kbdOyun} Seçilen renk: **${secilenRenk}**`);
 
                     await i.update({ embeds: [embedSuccess], components: [] }).catch(console.error);
                 } catch (error) {
                     console.error("Rol oluşturulurken bir hata oluştu:", error);
 
-                    let hataMesaji = "<a:carpi:1227670096462221363>  | Rol oluşturulurken bir hata oluştu.";
-                    if (error.status === 503) hataMesaji = "<a:carpi:1227670096462221363>  | Discord API şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.";
-                    if (error.code === 50013) hataMesaji = "<a:carpi:1227670096462221363>  | Botun yeterli yetkisi yok. Lütfen botun rolünü kontrol edin.";
+                    let hataMesaji = emoji.carpi + "  | Rol oluşturulurken bir hata oluştu.";
+                    if (error.status === 503) hataMesaji = emoji.carpi + "  | Discord API şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.";
+                    if (error.code === 50013) hataMesaji = emoji.carpi + "  | Botun yeterli yetkisi yok. Lütfen botun rolünü kontrol edin.";
 
                     await i.update({ content: hataMesaji, components: [], ephemeral: true }).catch(console.error);
                 }
@@ -86,7 +87,7 @@ module.exports = {
 
         collector.on("end", async (collected, reason) => {
             if (reason === "time") {
-                await interaction.editReply({ content: "<a:carpi:1227670096462221363>  | Zaman aşımına uğradı. Komutu tekrar kullanın.", components: [], ephemeral: true }).catch(console.error);
+                await interaction.editReply({ content: emoji.carpi + "  | Zaman aşımına uğradı. Komutu tekrar kullanın.", components: [], ephemeral: true }).catch(console.error);
             }
         });
     },

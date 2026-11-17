@@ -1,5 +1,6 @@
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
+const emoji = require("../emoji.js");
 
 module.exports = {
   name: "capslock-engel",
@@ -20,7 +21,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Rolleri Yönet Yetkin Yok!", ephemeral: true });
+      return interaction.reply({ content: `${emoji.carpi}  | Rolleri Yönet Yetkin Yok!`, ephemeral: true });
     }
 
     const seçenek = interaction.options.getString("seçenek");
@@ -32,7 +33,7 @@ module.exports = {
         if (capslockSystemDate) {
           return interaction.reply({
             embeds: [
-              new EmbedBuilder().setDescription(`<a:carpi:1227670096462221363>  | Bu sistem <t:${parseInt(capslockSystemDate / 1000)}:R> önce açılmış!`)
+              new EmbedBuilder().setDescription(`${emoji.carpi}  | Bu sistem <t:${parseInt(capslockSystemDate / 1000)}:R> önce açılmış!`)
             ]
           });
         }
@@ -43,7 +44,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor("Random")
-            .setDescription("<a:yeilonay:1221172106637611169>  | Başarılı bir şekilde sistem açıldı!")
+            .setDescription(emoji.tik + "  | Başarılı bir şekilde sistem açıldı!")
             .setImage("https://i.hizliresim.com/gkrz199.gif")
         ]
       });
@@ -51,7 +52,7 @@ module.exports = {
 
     if (seçenek === "kapat") {
       if (!capslockSystem) {
-        return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Bu sistem zaten kapalı!", ephemeral: true });
+        return interaction.reply({ content: emoji.carpi + "  | Bu sistem zaten kapalı!", ephemeral: true });
       }
       db.delete(`capslockengel_${interaction.guild.id}`);
       db.delete(`capslockSystemDate_${interaction.guild.id}`);
@@ -59,7 +60,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor("Random")
-            .setDescription("<a:yeilonay:1221172106637611169>  | Başarılı bir şekilde sistem kapatıldı!")
+            .setDescription(emoji.tik + "  | Başarılı bir şekilde sistem kapatıldı!")
         ]
       });
     }

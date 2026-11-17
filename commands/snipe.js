@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 
 module.exports = {
@@ -6,7 +7,7 @@ module.exports = {
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
       return interaction.reply({
-        content: "🚫 Bu komutu kullanabilmek için **Mesajları Yönet** yetkisine sahip olmalısınız!",
+        content: emoji.carpi + " Bu komutu kullanabilmek için **Mesajları Yönet** yetkisine sahip olmalısınız!",
         ephemeral: true
       });
     }
@@ -16,7 +17,7 @@ module.exports = {
 
     if (userSnipes.length === 0) {
       return interaction.reply({
-        content: "📭 Bu kanalda silinen kullanıcı mesajı bulunamadı!",
+        content: emoji.kbdNews + " Bu kanalda silinen kullanıcı mesajı bulunamadı!",
         ephemeral: true
       });
     }
@@ -28,12 +29,12 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor("#ff5252")
       .setAuthor({ name: snipe.author.tag, iconURL: snipe.author.displayAvatarURL({ dynamic: true }) })
-      .setDescription(snipe.content || "*📝 Mesaj içeriği boştu.*")
+      .setDescription(snipe.content || "*" + emoji.kbdNews + " Mesaj içeriği boştu.*")
       .addFields(
-        { name: "🕒 Mesaj Atılma Zamanı", value: sentTime, inline: true },
-        { name: "⏳ Silinme Süresi", value: timeAgo, inline: true }
+        { name: emoji.kbdSaat + " Mesaj Atılma Zamanı", value: sentTime, inline: true },
+        { name: emoji.kbdSaat + " Silinme Süresi", value: timeAgo, inline: true }
       )
-      .setFooter({ text: `🆔 Kullanıcı ID: ${snipe.author.id}` })
+      .setFooter({ text: `${emoji.kbdApi} Kullanıcı ID: ${snipe.author.id}` })
       .setTimestamp();
 
     // Eğer birden fazla snipe varsa, kullanıcı seçim yapabilsin:
@@ -47,7 +48,7 @@ module.exports = {
       const row = new ActionRowBuilder().addComponents(
         new StringSelectMenuBuilder()
           .setCustomId("snipe_select")
-          .setPlaceholder("🔍 Farklı bir silinen mesajı seç...")
+          .setPlaceholder(emoji.kbdCalisma + " Farklı bir silinen mesajı seç...")
           .addOptions(options)
       );
 
@@ -65,12 +66,12 @@ module.exports = {
         const newEmbed = new EmbedBuilder()
           .setColor("#ff5252")
           .setAuthor({ name: chosen.author.tag, iconURL: chosen.author.displayAvatarURL({ dynamic: true }) })
-          .setDescription(chosen.content || "*📝 Mesaj içeriği boştu.*")
+          .setDescription(chosen.content || "*" + emoji.kbdNews + " Mesaj içeriği boştu.*")
           .addFields(
-            { name: "🕒 Mesaj Atılma Zamanı", value: `<t:${Math.floor(chosen.timestamp / 1000)}:f>`, inline: true },
-            { name: "⏳ Silinme Süresi", value: `<t:${Math.floor(chosen.timestamp / 1000)}:R>`, inline: true }
+            { name: emoji.kbdSaat + " Mesaj Atılma Zamanı", value: `<t:${Math.floor(chosen.timestamp / 1000)}:f>`, inline: true },
+            { name: emoji.kbdSaat + " Silinme Süresi", value: `<t:${Math.floor(chosen.timestamp / 1000)}:R>`, inline: true }
           )
-          .setFooter({ text: `🆔 Kullanıcı ID: ${chosen.author.id}` })
+          .setFooter({ text: `${emoji.kbdApi} Kullanıcı ID: ${chosen.author.id}` })
           .setTimestamp();
 
         await i.update({ embeds: [newEmbed] });

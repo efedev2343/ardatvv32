@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField } = require("discord.js");
 const { EmbedBuilder } = require("discord.js");
 const db = require("croxydb");
@@ -23,7 +24,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Üyeleri Yasakla Yetkin Yok!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Üyeleri Yasakla Yetkin Yok!", ephemeral: true });
     }
 
     const id = interaction.options.getString("id");
@@ -34,7 +35,7 @@ module.exports = {
 
       const embed = new EmbedBuilder()
         .setColor("Random")
-        .setDescription(`${id} <a:yeilonay:1221172106637611169>  | ID'li kullanıcı başarıyla yasaklandı!\n**Sebep:** ${sebep}`);
+        .setDescription(`${id} ${emoji.tik}  | ID'li kullanıcı başarıyla yasaklandı!\n**Sebep:** ${sebep}`);
       interaction.reply({ embeds: [embed] });
 
       // Modlog kanalına mesaj gönderme
@@ -44,7 +45,7 @@ module.exports = {
           const modLogChannel = client.channels.cache.get(modLogChannelId);
           if (modLogChannel) {
             const logEmbed = new EmbedBuilder()
-              .setTitle('🚫 Kullanıcı Yasaklandı')
+              .setTitle(emoji.carpi + ' Kullanıcı Yasaklandı')
               .addFields(
                 { name: 'Yasaklanan Kullanıcı ID', value: `${id}` },
                 { name: 'Yasaklayan Yetkili', value: `${interaction.user}` },
@@ -60,11 +61,11 @@ module.exports = {
       }
 
     } catch (error) {
-      let errorMessage = "<a:carpi:1227670096462221363>  | Kullanıcı yasaklanırken bir hata oluştu!";
+      let errorMessage = emoji.carpi + "  | Kullanıcı yasaklanırken bir hata oluştu!";
       if (error.code === 50013) {
-        errorMessage = "<a:carpi:1227670096462221363>  | Kullanıcıyı yasaklamak için yeterli yetkim yok!";
+        errorMessage = emoji.carpi + "  | Kullanıcıyı yasaklamak için yeterli yetkim yok!";
       } else if (error.code === 10013) {
-        errorMessage = "<a:carpi:1227670096462221363>  | Geçersiz kullanıcı ID'si!";
+        errorMessage = emoji.carpi + "  | Geçersiz kullanıcı ID'si!";
       }
 
       const errorEmbed = new EmbedBuilder()

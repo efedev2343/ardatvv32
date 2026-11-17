@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder } = require("discord.js");
 const db = require("croxydb");
 
@@ -32,7 +33,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     const { options } = interaction;
-    if (!interaction.member.permissions.has("MANAGE_ROLES")) return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Rolleri Yönet Yetkin Yok!", ephemeral: true });
+    if (!interaction.member.permissions.has("MANAGE_ROLES")) return interaction.reply({ content: emoji.carpi + "  | Rolleri Yönet Yetkin Yok!", ephemeral: true });
 
     const kanal4 = options.getChannel("kanal");
     const hesapkorumaSystemTrue = options.getString("seçenek");
@@ -43,23 +44,23 @@ module.exports = {
         const hesapkorumaSystemDate = db.fetch(`hesapkorumaDate_${interaction.guild.id}`);
         if (hesapkorumaSystem && hesapkorumaSystemDate) {
           const date = new EmbedBuilder()
-            .setDescription(`<a:carpi:1227670096462221363>  | Bu sistem <t:${parseInt(hesapkorumaSystemDate.date / 1000)}:R> önce açılmış!`);
+            .setDescription(`${emoji.carpi}  | Bu sistem <t:${parseInt(hesapkorumaSystemDate.date / 1000)}:R> önce açılmış!`);
           return interaction.reply({ embeds: [date] });
         }
 
         db.set(`hesapkoruma_${interaction.guild.id}`, true);
         db.set(`hesapkorumaDate_${interaction.guild.id}`, { date: Date.now() });
         db.set(`hesapkoruma1_${interaction.guild.id}`, { channel: kanal4.id });
-        return interaction.reply({ content: "<a:yeilonay:1221172106637611169>  | Başarılı bir şekilde sistem açıldı!" });
+        return interaction.reply({ content: emoji.tik + "  | Başarılı bir şekilde sistem açıldı!" });
       }
 
       case "kapat": {
-        if (!hesapkorumaSystem) return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Bu sistem zaten kapalı?" });
+        if (!hesapkorumaSystem) return interaction.reply({ content: emoji.carpi + "  | Bu sistem zaten kapalı?" });
 
         db.delete(`hesapkoruma_${interaction.guild.id}`);
         db.delete(`hesapkorumaDate_${interaction.guild.id}`);
         db.delete(`hesapkoruma1_${interaction.guild.id}`);
-        return interaction.reply({ content: "<a:yeilonay:1221172106637611169>  | Başarılı bir şekilde sistem kapatıldı!" });
+        return interaction.reply({ content: emoji.tik + "  | Başarılı bir şekilde sistem kapatıldı!" });
       }
     }
   }

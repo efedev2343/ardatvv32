@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
   EmbedBuilder,
   ApplicationCommandType,
@@ -59,35 +60,35 @@ module.exports = {
       
       if (!member) {
         return interaction.editReply({
-          content: "⚠️ Bu kullanıcı sunucuda bulunamadı!",
+          content: emoji.kbdWarn + " Bu kullanıcı sunucuda bulunamadı!",
           ephemeral: true,
         });
       }
 
       if (member.id === interaction.user.id) {
         return interaction.editReply({
-          content: "⚠️ Kendinizi susturamazsınız!",
+          content: emoji.kbdWarn + " Kendinizi susturamazsınız!",
           ephemeral: true,
         });
       }
 
       if (member.id === client.user.id) {
         return interaction.editReply({
-          content: "⚠️ Beni susturamazsınız!",
+          content: emoji.kbdWarn + " Beni susturamazsınız!",
           ephemeral: true,
         });
       }
 
       if (member.id === interaction.guild.ownerId) {
         return interaction.editReply({
-          content: "⚠️ Sunucu sahibini susturamazsınız!",
+          content: emoji.kbdWarn + " Sunucu sahibini susturamazsınız!",
           ephemeral: true,
         });
       }
 
       if (!member.moderatable) {
         return interaction.editReply({
-          content: "⚠️ Bu kullanıcıyı susturamam! Ya yetkim yok ya da kullanıcı benden daha yüksek bir role sahip.",
+          content: emoji.kbdWarn + " Bu kullanıcıyı susturamam! Ya yetkim yok ya da kullanıcı benden daha yüksek bir role sahip.",
           ephemeral: true,
         });
       }
@@ -97,7 +98,7 @@ module.exports = {
         interaction.user.id !== interaction.guild.ownerId
       ) {
         return interaction.editReply({
-          content: "⚠️ Bu kullanıcıyı susturamazsınız çünkü sizinle aynı veya daha yüksek bir role sahip!",
+          content: emoji.kbdWarn + " Bu kullanıcıyı susturamazsınız çünkü sizinle aynı veya daha yüksek bir role sahip!",
           ephemeral: true,
         });
       }
@@ -118,27 +119,27 @@ module.exports = {
       // Düzeltme: client.config.embedColor yerine sabit bir renk kodu kullanıyoruz
       const embed = new EmbedBuilder()
         .setColor(0xFF0000) // Kırmızı renk (isteğe göre değiştirebilirsiniz)
-        .setTitle("🔇 | Kullanıcı Susturuldu")
+        .setTitle(emoji.kapal + " | Kullanıcı Susturuldu")
         .setDescription(`**${user.tag}** başarıyla susturuldu!`)
         .addFields([
-          { name: "⏱️ Süre", value: timeString, inline: true },
-          { name: "📝 Sebep", value: reason, inline: true },
-          { name: "👤 Yetkili", value: `${interaction.user}`, inline: true },
+          { name: emoji.kbdSaat + " Süre", value: timeString, inline: true },
+          { name: emoji.kbdNews + " Sebep", value: reason, inline: true },
+          { name: emoji.kbdUser + " Yetkili", value: `${interaction.user}`, inline: true },
         ])
         .setThumbnail(user.displayAvatarURL())
-        .setFooter({ text: "© 2024 Sunucu Yönetimi" }) // client.config.footer yerine sabit metin
+        .setFooter({ text: emoji.kbdDiscordLink + " 2024 Sunucu Yönetimi" }) // client.config.footer yerine sabit metin
         .setTimestamp();
 
       await interaction.editReply({ embeds: [embed] });
     } catch (error) {
       console.error("Mute komutunda hata:", error);
       
-      let errorMessage = "⚠️ Kullanıcı susturulurken bir hata oluştu.";
+      let errorMessage = emoji.kbdWarn + " Kullanıcı susturulurken bir hata oluştu.";
       
       if (error.code === 50013) {
-        errorMessage = "⚠️ Bu işlem için gerekli yetkilere sahip değilim!";
+        errorMessage = emoji.kbdWarn + " Bu işlem için gerekli yetkilere sahip değilim!";
       } else if (error.code === 50001) {
-        errorMessage = "⚠️ Kullanıcıyı görmek için yetkim yok!";
+        errorMessage = emoji.kbdWarn + " Kullanıcıyı görmek için yetkim yok!";
       }
       
       await interaction.editReply({

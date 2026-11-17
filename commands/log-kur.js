@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, ChannelType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require('croxydb');
 const Discord = require('discord.js');
@@ -11,7 +12,7 @@ module.exports = {
         await interaction.deferReply();
 
         if(interaction.user.id !== interaction.guild.ownerId) {
-            return interaction.editReply('❌ | Bu komutu sadece **sunucu sahibi** kullanabilir!');
+            return interaction.editReply(emoji.carpi + ' | Bu komutu sadece **sunucu sahibi** kullanabilir!');
         }
 
         const row = new ActionRowBuilder()
@@ -80,7 +81,7 @@ module.exports = {
 
         collector.on('end', collected => {
             if (collected.size === 0) {
-                interaction.editReply({content: `❌ | Zaman aşımına uğradı, işlem iptal edildi.`, embeds: [], components: []});
+                interaction.editReply({content: `${emoji.carpi} | Zaman aşımına uğradı, işlem iptal edildi.`, embeds: [], components: []});
             }
         });
     }

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -35,7 +36,7 @@ module.exports = {
   run: async (client, interaction) => {
     // Kullanıcı yetkisi kontrolü
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Bu komutu kullanabilmek için yeterli yetkiye sahip değilsiniz.", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Bu komutu kullanabilmek için yeterli yetkiye sahip değilsiniz.", ephemeral: true });
     }
 
     // Parametreleri alıyoruz
@@ -53,7 +54,7 @@ module.exports = {
     // Embed mesajı ile yanıt gönderiyoruz
     const embed = new EmbedBuilder()
       .setColor("Aqua")
-      .setTitle("<a:yeilonay:1221172106637611169>  Uyarı Ayarları Güncellendi")
+      .setTitle(emoji.tik + "  Uyarı Ayarları Güncellendi")
       .setDescription("Uyarı ayarları başarıyla güncellendi.")
       .addFields(
         { name: "Mute Rolü", value: `<@&${muteRole.id}>`, inline: true },

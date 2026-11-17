@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const Discord = require("discord.js");
 const db = require("croxydb");
 const config = require("../config.json"); // Make sure this path is correct
@@ -61,7 +62,7 @@ module.exports = {
                 embeds: [new Discord.EmbedBuilder()
                     .setColor("Red")
                     .setTitle("Yetersiz Yetki!")
-                    .setDescription("❌ | Bu komutu kullanabilmek için `Yönetici` yetkisine sahip olmalısın!")
+                    .setDescription(emoji.carpi + " | Bu komutu kullanabilmek için `Yönetici` yetkisine sahip olmalısın!")
                     .setFooter({ text: `${config["bot-adi"]}` })
                 ], ephemeral: true
             });
@@ -99,15 +100,26 @@ module.exports = {
             );
 
         const successEmbed = new Discord.EmbedBuilder()
-            .setColor("Green")
-            .setTitle("✅ | Başarıyla Ayarlandı!")
-            .setDescription("✅ | Botlist sistemi başarıyla ayarlandı!")
-            .setImage("https://i.imgur.com/Yfz9IQA.gif")
-            .setFooter({ text: `${config["bot-adi"]}` });
+            .setColor("#00FF00")
+            .setAuthor({
+                name: `${config["bot-adi"]} - Botlist Sistemi`,
+                iconURL: interaction.client.user.displayAvatarURL(),
+            })
+            .setTitle(emoji.tik + " | Başarıyla Ayarlandı!")
+            .setDescription(
+                `> Botlist sistemi bu sunucu için başarıyla **etkinleştirildi**!\n\n${emoji.kbdNews} **Yapılandırılan Ayarlar:**\n• ${emoji.kbdNews} Log Kanalı: <#${logChannel.id}>\n• ${emoji.kbdBot} Bot Rolü: <@&${botRole.id}>\n• ${emoji.kbdUser} Geliştirici Rolü: <@&${devRole.id}>\n• ${emoji.kbdCalisma} Yetkili Rolü: <@&${adminRole.id}>\n• ${emoji.tik} Onay Kanalı: <#${approvalChannel.id}>\n• ${emoji.tik} Bot Ekle Kanalı: <#${addBotChannel.id}>\n• ${emoji.kapal} Ayrıldı Log Kanalı: <#${leaveLogChannel.id}>`
+            )
+            .setThumbnail(interaction.client.user.displayAvatarURL())
+            .setThumbnail(interaction.client.user.displayAvatarURL())
+            .setFooter({
+                text: `${config["bot-adi"]} • Botlist Sistemi`,
+                iconURL: interaction.client.user.displayAvatarURL(),
+            })
+            .setTimestamp();
 
         const menuEmbed = new Discord.EmbedBuilder()
             .setColor("Random")
-            .setTitle("❔ | Botumu Nasıl Eklerim?")
+            .setTitle(emoji.kbdNews + " | Botumu Nasıl Eklerim?")
             .setDescription("> Aşağıdaki **Bot Ekle** butonuna basarak botunu ekleyebilirsin!")
             .setFooter({ text: `${config["bot-adi"]}` });
 
@@ -151,7 +163,7 @@ client.on('interactionCreate', async interaction => {
             const botlistKurulu = db.fetch(`botlist_kurulu_${interaction.guild.id}`);
             if (!botlistKurulu) {
                 return interaction.reply({
-                    content: '❌ Botlist sistemi kurulu değil! Lütfen yetkililere `/botlist-ayarla` komutu ile botlist sistemini kurmalarını söyleyin.',
+                    content: emoji.carpi + ' Botlist sistemi kurulu değil! Lütfen yetkililere `/botlist-ayarla` komutu ile botlist sistemini kurmalarını söyleyin.',
                     ephemeral: true
                 });
             }
@@ -548,7 +560,7 @@ client.on('interactionCreate', async interaction => {
             const botlistKurulu = db.fetch(`botlist_kurulu_${interaction.guild.id}`);
             if (!botlistKurulu) {
                 return interaction.reply({
-                    content: '❌ Botlist sistemi kurulu değil! Lütfen yetkililere `/botlist-ayarla` komutu ile botlist sistemini kurmalarını söyleyin.',
+                    content: emoji.carpi + ' Botlist sistemi kurulu değil! Lütfen yetkililere `/botlist-ayarla` komutu ile botlist sistemini kurmalarını söyleyin.',
                     ephemeral: true
                 });
             }

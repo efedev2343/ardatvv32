@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -30,7 +31,7 @@ module.exports = {
 
         // Kullanıcıya kanalları yönetme yetkisi yoksa hata mesajı gönder
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
-            return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Kanalları Yönet Yetkin Yok!", ephemeral: true });
+            return interaction.reply({ content: emoji.carpi + "  | Kanalları Yönet Yetkin Yok!", ephemeral: true });
         }
 
         const subCommand = interaction.options.getSubcommand();
@@ -40,7 +41,7 @@ module.exports = {
 
             // Kanal türünün doğru olduğundan emin ol
             if (kanal2.type !== 0) {  // Eğer kanal bir metin kanalı değilse
-                return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Lütfen bir metin kanalı seçin!", ephemeral: true });
+                return interaction.reply({ content: emoji.carpi + "  | Lütfen bir metin kanalı seçin!", ephemeral: true });
             }
 
             // Mod log kanalını veritabanına kaydet
@@ -48,7 +49,7 @@ module.exports = {
 
             // Log kanalına bir bilgilendirme mesajı gönder
             kanal2.send({
-                content: `🔧 | Mod log kanalı olarak <#${kanal2.id}> ayarlandı!`
+                content: `${emoji.kbdCalisma} | Mod log kanalı olarak <#${kanal2.id}> ayarlandı!`
             }).catch(err => {
                 console.error('Kanal mesajı gönderilemedi:', err);
             });
@@ -56,7 +57,7 @@ module.exports = {
             // Kullanıcıya başarıyla ayarlandığını bildiren bir embed gönder
             const embed = new EmbedBuilder()
                 .setColor("Random")
-                .setDescription(`<a:yeilonay:1221172106637611169>  | Moderasyon kanalı <#${kanal2.id}> olarak ayarlandı!`);
+                .setDescription(`${emoji.tik}  | Moderasyon kanalı <#${kanal2.id}> olarak ayarlandı!`);
 
             interaction.reply({ embeds: [embed] });
 
@@ -67,7 +68,7 @@ module.exports = {
             // Kullanıcıya başarıyla sıfırlandığını bildiren bir embed gönder
             const embed = new EmbedBuilder()
                 .setColor("Random")
-                .setDescription(`<a:yeilonay:1221172106637611169>  | Moderasyon kanalı sıfırlandı!`);
+                .setDescription(`${emoji.tik}  | Moderasyon kanalı sıfırlandı!`);
 
             interaction.reply({ embeds: [embed] });
         }

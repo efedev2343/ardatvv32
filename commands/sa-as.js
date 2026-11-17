@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -29,7 +30,7 @@ module.exports = {
     
     if (!member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363>  | Rolleri Yönet Yetkin Yok!",
+        content: emoji.carpi + "  | Rolleri Yönet Yetkin Yok!",
         ephemeral: true
       });
     }
@@ -40,26 +41,26 @@ module.exports = {
     if (saasSystemTrue === "ac") {
       if (saasSystem) {
         return interaction.reply({
-          content: "<a:carpi:1227670096462221363> | Bu sistem zaten açık!"
+          content: emoji.carpi + " | Bu sistem zaten açık!"
         });
       }
 
       db.set(`saas_${guild.id}`, true);
       return interaction.reply({
-        content: "<a:yeilonay:1221172106637611169>  | Başarılı bir şekilde sistem açıldı!"
+        content: emoji.tik + "  | Başarılı bir şekilde sistem açıldı!"
       });
     }
 
     if (saasSystemTrue === "kapat") {
       if (!saasSystem) {
         return interaction.reply({
-          content: "<a:carpi:1227670096462221363>  | Bu sistem zaten kapalı!"
+          content: emoji.carpi + "  | Bu sistem zaten kapalı!"
         });
       }
 
       db.delete(`saas_${guild.id}`);
       return interaction.reply({
-        content: "<a:yeilonay:1221172106637611169> | Başarılı bir şekilde sistem kapatıldı!"
+        content: emoji.tik + " | Başarılı bir şekilde sistem kapatıldı!"
       });
     }
   }

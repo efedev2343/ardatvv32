@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setColor("#FF0000")
-              .setTitle("<a:carpi:1227670096462221363>  | Hata")
+              .setTitle(emoji.carpi + "  | Hata")
               .setDescription("Kanalları yönet yetkin yok!"),
           ],
           ephemeral: true,
@@ -48,7 +49,7 @@ module.exports = {
             embeds: [
               new EmbedBuilder()
                 .setColor("#FFD700")
-                .setTitle("<:kilit:1372649443353952316> | Uyarı")
+                .setTitle(emoji.kbdKilit + " | Uyarı")
                 .setDescription("Kanal zaten mesaj gönderimine kapalı!"),
             ],
             ephemeral: true,
@@ -63,7 +64,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setColor("#00FF00")
-              .setTitle("<a:yeilonay:1221172106637611169>  | Başarılı")
+              .setTitle(emoji.tik + "  | Başarılı")
               .setDescription("Kanal başarıyla mesaj gönderimine kapatıldı!"),
           ],
         });
@@ -73,7 +74,7 @@ module.exports = {
             embeds: [
               new EmbedBuilder()
                 .setColor("#FFD700")
-                .setTitle("🔓 | Uyarı")
+                .setTitle(emoji.acik + " | Uyarı")
                 .setDescription("Kanal zaten mesaj gönderimine açık!"),
             ],
             ephemeral: true,
@@ -88,7 +89,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setColor("#00FF00")
-              .setTitle("<a:yeilonay:1221172106637611169>  | Başarılı")
+              .setTitle(emoji.tik + "  | Başarılı")
               .setDescription("Kanal başarıyla mesaj gönderimine açıldı!"),
           ],
         });
@@ -97,7 +98,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setColor("#FF0000")
-              .setTitle("<a:carpi:1227670096462221363>  | Hata")
+              .setTitle(emoji.carpi + "  | Hata")
               .setDescription("Geçersiz bir durum belirttiniz!"),
           ],
           ephemeral: true,
@@ -109,7 +110,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor("#FF0000")
-            .setTitle("<a:carpi:1227670096462221363>  | Hata")
+            .setTitle(emoji.carpi + "  | Hata")
             .setDescription("Bir hata oluştu, lütfen daha sonra tekrar deneyin."),
         ],
         ephemeral: true,

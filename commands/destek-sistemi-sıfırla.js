@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
     EmbedBuilder,
     ApplicationCommandType,
@@ -16,7 +17,7 @@ const {
       try {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
           return await interaction.reply({
-            content: "❌ | Bu komutu kullanmak için `Yönetici` yetkisine sahip olmalısınız!",
+            content: emoji.carpi + " | Bu komutu kullanmak için `Yönetici` yetkisine sahip olmalısınız!",
             ephemeral: true,
           });
         }
@@ -64,7 +65,7 @@ const {
         }
   
         const embed = new EmbedBuilder()
-          .setTitle("✅ Destek Sistemi Sıfırlandı")
+          .setTitle(emoji.tik + " Destek Sistemi Sıfırlandı")
           .setDescription(`Destek sistemi başarıyla sıfırlandı.`)
           .addFields([
             { name: "Silinen Destek Kanalları", value: `${deletedChannels}`, inline: true },
@@ -80,7 +81,7 @@ const {
         console.error("Destek sıfırlama sırasında ana hata:", mainError);
         if (!interaction.replied) {
           await interaction.editReply({
-            content: "❌ | Sistem sıfırlanırken bir hata oluştu. Lütfen konsolu kontrol edin.",
+            content: emoji.carpi + " | Sistem sıfırlanırken bir hata oluştu. Lütfen konsolu kontrol edin.",
           });
         }
       }

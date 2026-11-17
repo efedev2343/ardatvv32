@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
@@ -5,7 +6,7 @@ const path = require("path");
 const BAKIM_JSON_PATH = path.join(__dirname, "..", "bakim.json");
 
 // Komutu GÖREBİLECEK ve KULLANABİLECEK kullanıcı ID'leri
-const YETKILI_IDLER = ["808741421229539348", "SAHIP_ID_2"]; // Sadece bu ID'ler komutu görebilecek
+const YETKILI_IDLER = [require("../config.json")["sahip"]]; // Sadece config'deki sahip komutu görebilir
 
 module.exports = {
   name: "bakım",
@@ -39,7 +40,7 @@ module.exports = {
     
     if (!YETKILI_IDLER.includes(interaction.user.id)) {
       return interaction.reply({
-        content: "❌ Bu komut sadece bot sahiplerine özeldir!",
+        content: emoji.carpi + " Bu komut sadece bot sahiplerine özeldir!",
         ephemeral: true,
       });
     }
@@ -57,10 +58,10 @@ module.exports = {
 
       const embed = new EmbedBuilder()
         .setColor("#FF0000")
-        .setTitle("🔧 **BAKIM MODU AKTİF**")
+        .setTitle(emoji.kbdCalisma + " **BAKIM MODU AKTİF**")
         .setDescription(
           `**Sebep:** ${sebep}\n\n` +
-          `> ⚠️ **Bot şu anda bakım modunda!**\n` +
+          `> ${emoji.kbdWarn} **Bot şu anda bakım modunda!**\n` +
           `> Sadece yetkili kişiler komutları kullanabilir.\n\n` +
           `**Başlangıç:** <t:${Math.floor(Date.now()/1000)}:R>`
         )
@@ -70,7 +71,7 @@ module.exports = {
 
       client.user.setPresence({
         status: "dnd",
-        activities: [{ name: "🔧 Bakım Modu Aktif", type: 3 }],
+        activities: [{ name: emoji.kbdCalisma + " Bakım Modu Aktif", type: 3 }],
       });
 
     } else if (durum === "kapat") {
@@ -82,7 +83,7 @@ module.exports = {
 
       const embed = new EmbedBuilder()
         .setColor("#00FF00")
-        .setTitle("✅ **BAKIM MODU KAPATILDI**")
+        .setTitle(emoji.tik + " **BAKIM MODU KAPATILDI**")
         .setDescription("Bot artık normal şekilde çalışıyor.")
         .setFooter({ text: `Bakım süresi: ${Math.floor((Date.now() - new Date(require(BAKIM_JSON_PATH).baslangic).getTime())/60000)} dakika` })
         .setTimestamp();

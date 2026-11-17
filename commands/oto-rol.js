@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -23,7 +24,7 @@ module.exports = {
    
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363>  | Rolleri Yönet yetkiniz yok!",
+        content: emoji.carpi + "  | Rolleri Yönet yetkiniz yok!",
         ephemeral: true,
       });
     }
@@ -40,7 +41,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor("Green")
       .setTitle("Oto-Rol Sistemi Başarıyla Ayarlandı!")
-      .setDescription(`<a:yeilonay:1221172106637611169>  | Oto-rol başarıyla ${rol} olarak ayarlandı.\nBot rolü ise ${bot} olarak ayarlandı!`)
+      .setDescription(`${emoji.tik}  | Oto-rol başarıyla ${rol} olarak ayarlandı.\nBot rolü ise ${bot} olarak ayarlandı!`)
       .setFooter({
         text: "Yeni gelen üyeler, belirtilen rollerle karşılanacaktır.",
       });

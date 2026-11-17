@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 module.exports = {
@@ -14,8 +15,8 @@ module.exports = {
   ],
 
   run: async (client, interaction) => {
-    const noPermEmoji = "<a:carpi:1227670096462221363>";
-    const successEmoji = "<a:yeilonay:1221172106637611169>";
+    const noPermEmoji = emoji.carpi;
+    const successEmoji = emoji.tik;
     const user = interaction.options.getMember("user");
 
     // Kullanıcının yetkisi var mı kontrol et
@@ -70,7 +71,7 @@ module.exports = {
 
       const errorEmbed = new EmbedBuilder()
         .setColor("Red")
-        .setTitle("❌ Hata!")
+        .setTitle(emoji.carpi + " Hata!")
         .setDescription(errorMessage)
         .setFooter({ text: `İşlemi yapan: ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
         .setTimestamp();

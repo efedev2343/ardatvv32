@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder } = require("discord.js");
 
 module.exports = {
@@ -28,7 +29,7 @@ module.exports = {
    
     const sifreEmbed = new EmbedBuilder()
       .setColor("Random")
-      .setTitle("🔑 Rastgele Şifre Oluşturuldu!")
+      .setTitle(emoji.kbdKilit + " Rastgele Şifre Oluşturuldu!")
       .setDescription(`İşte oluşturduğunuz rastgele şifre: **${sifre}**`)
       .setFooter({ text: "Bu şifreyi güvende tutun!" });
 

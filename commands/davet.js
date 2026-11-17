@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 const config = require("../config.json");
 
@@ -10,17 +11,18 @@ module.exports = {
   run: async (client, interaction) => {
     try {
       // URL değerlerini kontrol et ve varsayılan değer ata
-      const botDavetURL = config["bot-davet"] || "https://discord.com/oauth2/authorize?client_id=1245719534200033446&permissions=8&integration_type=0&scope=bot+applications.commands";
-      const destekURL = config["desteksunucusu"] || "https://discord.gg/nMeEdX7KuY";
+      const botAdi = (config["bot-adi"] || "Bot").trim();
+      const botDavetURL = config["bot-davet"] || `https://discord.com/oauth2/authorize?client_id=${config["bot-id"]}&permissions=8&integration_type=0&scope=bot+applications.commands`;
+      const destekURL = config["desteksunucu"];
 
       // Butonları oluştur
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-          .setLabel("ARDATVV BOTU DAVET")
+          .setLabel(`${botAdi.toLocaleUpperCase("tr-TR")} BOTU DAVET`)
           .setStyle(5)
           .setURL(botDavetURL),
         new ButtonBuilder()
-          .setLabel("🔧 Yardım Al!")
+          .setLabel(emoji.kbdCalisma + " Yardım Al!")
           .setStyle(5)
           .setURL(destekURL)
       );
@@ -28,15 +30,15 @@ module.exports = {
       // Embed oluştur
       const embed = new EmbedBuilder()
         .setAuthor({
-          name: `Merhaba! Ben ${config["bot-adi"] || "Bot İsmi"}!`,
+          name: `Merhaba! Ben ${botAdi}!`,
           iconURL: client.user.displayAvatarURL()
         })
-        .setTitle("<:oyun:1382373583527088188> Yeni Bir Başlangıç İçin Hazır Mısın?")
+        .setTitle(emoji.kbdOyun + " Yeni Bir Başlangıç İçin Hazır Mısın?")
         .setDescription(
           "Hadi botumu sunucuna ekleyerek herkesin hayatını kolaylaştır! " +
           "Ayrıca, **destek sunucuma** katılarak her zaman yardımcı olabileceğim!\n\n" +
-          "**🔗 Botu davet et:** 'Başla' butonuna tıklayarak hemen!\n" +
-          "**🌟 Yardım Al:** Sıkıntı yaşarsan, **Destek Sunucumuzu** ziyaret et."
+          "**" + emoji.kbdDiscordLink + " Botu davet et:** 'Başla' butonuna tıklayarak hemen!\n" +
+          "**" + emoji.kbdTac + " Yardım Al:** Sıkıntı yaşarsan, **Destek Sunucumuzu** ziyaret et."
         )
         .setImage(config["bot-banner"] || "https://cdn.discordapp.com/attachments/1263190896644591626/1264149337496358954/IMG_20240720_121748.jpg")
         .setColor("#F1C40F")

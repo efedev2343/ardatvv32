@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const googleTTS = require('google-tts-api');
 const { 
@@ -36,7 +37,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor('#ff0000')
-            .setDescription('<a:carpi:1227670096462221363>  Sesli bir kanalda olmanız gerekiyor!')
+            .setDescription(emoji.carpi + '  Sesli bir kanalda olmanız gerekiyor!')
         ],
         ephemeral: true 
       });
@@ -47,7 +48,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor('#ff0000')
-            .setDescription('<a:carpi:1227670096462221363>  Metin 200 karakterden uzun olamaz!')
+            .setDescription(emoji.carpi + '  Metin 200 karakterden uzun olamaz!')
         ],
         ephemeral: true 
       });
@@ -107,7 +108,7 @@ module.exports = {
       console.error('Hata:', error);
       const errorEmbed = new EmbedBuilder()
         .setColor('#ff0000')
-        .setDescription('<a:carpi:1227670096462221363>  Bir hata oluştu, lütfen daha sonra tekrar deneyin.');
+        .setDescription(emoji.carpi + '  Bir hata oluştu, lütfen daha sonra tekrar deneyin.');
       
       await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }

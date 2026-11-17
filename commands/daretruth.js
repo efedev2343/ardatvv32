@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("croxydb");
 
@@ -7,20 +8,20 @@ module.exports = {
     type: 1,
     run: async (client, interaction) => {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
-            return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Bu komutu kullanma yetkiniz yok!", ephemeral: true });
+            return interaction.reply({ content: emoji.carpi + "  | Bu komutu kullanma yetkiniz yok!", ephemeral: true });
         }
 
         const startEmbed = new EmbedBuilder()
-            .setTitle("<:oyun:1382373583527088188> Doğruluk Cesaret Oyunu <:oyun:1382373583527088188>")
+            .setTitle(emoji.kbdOyun + " Doğruluk Cesaret Oyunu " + emoji.kbdOyun)
             .setDescription("Oyun 10 Saniye İçinde Başlıyor...\n\nNasıl Oynanır?\n• Bu oyunu bilmeyen bence Discord'u kapatıp hava almaya çıksın.\n• Her neyse, katılımcılar aşağıdaki :bell: tepkisine tıklasın.\n\n**Not: Oyunun başlaması için en az iki oyuncu gereklidir.**")
             .setColor("Random")
             .setTimestamp();
 
         const startMessage = await interaction.reply({ embeds: [startEmbed], fetchReply: true });
 
-        await startMessage.react('🔔');
+        await startMessage.react(emoji.kbdZil);
 
-        const filter = (reaction, user) => reaction.emoji.name === '🔔' && !user.bot;
+        const filter = (reaction, user) => reaction.emoji.name === emoji.kbdZil && !user.bot;
         const collector = startMessage.createReactionCollector({ filter, time: 10000 });
 
         collector.on('end', async collected => {
@@ -28,7 +29,7 @@ module.exports = {
 
             if (players.size < 2) {
                 const notEnoughPlayersEmbed = new EmbedBuilder()
-                    .setTitle("<a:carpi:1227670096462221363>  Yetersiz Katılımcı")
+                    .setTitle(emoji.carpi + "  Yetersiz Katılımcı")
                     .setDescription("Bu oyun en az 2 kişi ile oynanabilir.")
                     .setColor("Random")
                     .setTimestamp();

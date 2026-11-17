@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, EmbedBuilder } = require("discord.js");
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
     // Kullanıcı ses kanalında mı?
     if (!targetMember || !targetMember.voice.channel) {
       return interaction.reply({
-        content: "❌ | Bu komut sadece **ses kanalında olan kullanıcılar** için kullanılabilir.",
+        content: emoji.carpi + " | Bu komut sadece **ses kanalında olan kullanıcılar** için kullanılabilir.",
         ephemeral: true
       });
     }
@@ -27,7 +28,7 @@ module.exports = {
     // Kullanıcının kulaklığı açık mı?
     if (!targetMember.voice.deaf) {
       return interaction.reply({
-        content: "ℹ️ | Kullanıcının kulaklığı açık, uyandırmaya gerek yok.",
+        content: emoji.kbdNews + " | Kullanıcının kulaklığı açık, uyandırmaya gerek yok.",
         ephemeral: true
       });
     }
@@ -44,18 +45,18 @@ module.exports = {
 
     if (voiceChannels.length < 1) {
       return interaction.reply({
-        content: "❌ | Kullanıcıyı taşıyabileceğim başka bir ses kanalı bulamıyorum.",
+        content: emoji.carpi + " | Kullanıcıyı taşıyabileceğim başka bir ses kanalı bulamıyorum.",
         ephemeral: true
       });
     }
 
-    await interaction.reply(`🔄 | ${targetMember} kullanıcısı uyandırılıyor...`);
+    await interaction.reply(`${emoji.kbdDiscordLink} | ${targetMember} kullanıcısı uyandırılıyor...`);
 
     for (const channel of voiceChannels) {
       try {
         if (!targetMember.voice.channel) {
           return interaction.followUp({
-            content: "❌ | Kullanıcı artık bir sesli kanalda değil.",
+            content: emoji.carpi + " | Kullanıcı artık bir sesli kanalda değil.",
             ephemeral: true
           });
         }
@@ -64,7 +65,7 @@ module.exports = {
         await new Promise(resolve => setTimeout(resolve, 1000));
       } catch {
         return interaction.followUp({
-          content: "❌ | Kullanıcı bir sesli kanalda değil.",
+          content: emoji.carpi + " | Kullanıcı bir sesli kanalda değil.",
           ephemeral: true
         });
       }
@@ -76,14 +77,14 @@ module.exports = {
       }
     } catch {
       return interaction.followUp({
-        content: "❌ | Kullanıcı geri taşınamadı çünkü bir sesli kanalda değil.",
+        content: emoji.carpi + " | Kullanıcı geri taşınamadı çünkü bir sesli kanalda değil.",
         ephemeral: true
       });
     }
 
     const embed = new EmbedBuilder()
       .setColor("Green")
-      .setTitle("🔊 Kullanıcı Uyandırıldı")
+      .setTitle(emoji.kbdZil + " Kullanıcı Uyandırıldı")
       .setDescription(`${targetMember} kullanıcısı başarıyla ses kanallarında dolaştırıldı ve geri getirildi.`)
       .setFooter({ text: `İşlemi yapan: ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
       .setTimestamp();

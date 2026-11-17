@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, CommandInteraction, PermissionsBitField, EmbedBuilder } = require("discord.js");
 
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
     
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363> Bu komutu kullanmak için `Kanalları Yönet` yetkisine sahip olmalısınız.",
+        content: emoji.carpi + " Bu komutu kullanmak için `Kanalları Yönet` yetkisine sahip olmalısınız.",
         ephemeral: true,
       });
     }
@@ -19,7 +20,7 @@ module.exports = {
     const botPermissions = interaction.guild.members.me.permissions;
     if (!botPermissions.has(PermissionsBitField.Flags.ManageChannels)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363> Bu komutu kullanabilmem için `Kanalları Yönet` yetkisine ihtiyacım var. Lütfen botun yetkilerini kontrol edin.",
+        content: emoji.carpi + " Bu komutu kullanabilmem için `Kanalları Yönet` yetkisine ihtiyacım var. Lütfen botun yetkilerini kontrol edin.",
         ephemeral: true,
       });
     }
@@ -46,7 +47,7 @@ module.exports = {
 
      
       await interaction.reply({
-        content: `⚠️ **${channel.name}** kanalını nukelemek istediğinize emin misiniz? Bu işlem geri alınamaz! (10 saniye içinde "Evet" yazın)`,
+        content: `${emoji.kbdWarn} **${channel.name}** kanalını nukelemek istediğinize emin misiniz? Bu işlem geri alınamaz! (10 saniye içinde "Evet" yazın)`,
         ephemeral: false
       });
 
@@ -62,7 +63,7 @@ module.exports = {
           } catch (deleteError) {
             if (deleteError.code === 50074) {
               return interaction.followUp({
-                content: "<a:carpi:1227670096462221363> Bu kanal topluluk sunucusu için gerekli bir kanal olduğundan silinemez!",
+                content: emoji.carpi + " Bu kanal topluluk sunucusu için gerekli bir kanal olduğundan silinemez!",
                 ephemeral: true
               });
             }
@@ -74,7 +75,7 @@ module.exports = {
 
           
           const embed = new EmbedBuilder()
-            .setTitle("💥 KALKIŞA HAZIR OLUN!")
+            .setTitle(emoji.carpi + " KALKIŞA HAZIR OLUN!")
             .setColor("#FF0000")
             .setDescription(`**${channelData.name}** kanalı başarıyla nukelandı!`)
             .addFields(
@@ -94,7 +95,7 @@ module.exports = {
         } catch (error) {
           console.error("Nuke hatası:", error);
           interaction.followUp({
-            content: `<a:carpi:1227670096462221363> Kanal nukelenirken bir hata oluştu! Hata: ${error.message}`,
+            content: `${emoji.carpi} Kanal nukelenirken bir hata oluştu! Hata: ${error.message}`,
             ephemeral: true
           });
         }
@@ -103,7 +104,7 @@ module.exports = {
       collector.on('end', collected => {
         if (collected.size === 0) {
           interaction.followUp({
-            content: "<a:carpi:1227670096462221363> Nuke işlemi zaman aşımına uğradı veya iptal edildi.",
+            content: emoji.carpi + " Nuke işlemi zaman aşımına uğradı veya iptal edildi.",
             ephemeral: true
           });
         }
@@ -112,7 +113,7 @@ module.exports = {
     } catch (error) {
       console.error("Hata:", error);
       interaction.reply({
-        content: `<a:carpi:1227670096462221363> Bir hata oluştu! Hata: ${error.message}`,
+        content: `${emoji.carpi} Bir hata oluştu! Hata: ${error.message}`,
         ephemeral: true
       });
     }

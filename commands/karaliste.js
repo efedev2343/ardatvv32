@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder } = require("discord.js");
 const fs = require("fs").promises;
 const path = require("path");
@@ -6,7 +7,7 @@ const path = require("path");
 const KARALISTE_JSON_PATH = path.join(__dirname, "..", "karaliste.json");
 
 // Authorized user IDs who can use the command
-const YETKILI_IDLER = ["808741421229539348", "SAHIP_ID_2"];
+const YETKILI_IDLER = [require("../config.json")["sahip"]];
 
 module.exports = {
   name: "karaliste",
@@ -50,7 +51,7 @@ module.exports = {
     // Check if the user is authorized
     if (!YETKILI_IDLER.includes(interaction.user.id)) {
       return interaction.editReply({
-        content: "❌ Bu komut sadece bot sahiplerine özeldir!",
+        content: emoji.carpi + " Bu komut sadece bot sahiplerine özeldir!",
       });
     }
 
@@ -75,7 +76,7 @@ module.exports = {
     if (islem === "liste") {
       if (karaliste.length === 0) {
         return interaction.editReply({
-          content: "📋 Kara liste şu anda boş!",
+          content: emoji.kbdNews + " Kara liste şu anda boş!",
         });
       }
 
@@ -116,7 +117,7 @@ module.exports = {
     if (islem === "ekle" || islem === "cikar") {
       if (!kullaniciID) {
         return interaction.editReply({
-          content: "❌ Ekleme veya çıkarma işlemi için kullanıcı ID'si gerekli!",
+          content: emoji.carpi + " Ekleme veya çıkarma işlemi için kullanıcı ID'si gerekli!",
         });
       }
       try {
@@ -124,7 +125,7 @@ module.exports = {
       } catch (err) {
         console.error("Kullanıcı alınamadı:", err);
         return interaction.editReply({
-          content: "❌ Geçersiz kullanıcı ID'si veya kullanıcı bulunamadı!",
+          content: emoji.carpi + " Geçersiz kullanıcı ID'si veya kullanıcı bulunamadı!",
         });
       }
     }
@@ -133,7 +134,7 @@ module.exports = {
     if (islem === "ekle") {
       if (karaliste.find(u => u.id === kullaniciID)) {
         return interaction.editReply({
-          content: "❌ Bu kullanıcı zaten kara listede!",
+          content: emoji.carpi + " Bu kullanıcı zaten kara listede!",
         });
       }
 
@@ -149,7 +150,7 @@ module.exports = {
       } catch (err) {
         console.error("karaliste.json yazılamadı:", err);
         return interaction.editReply({
-          content: "❌ Kara listeye eklenirken bir hata oluştu!",
+          content: emoji.carpi + " Kara listeye eklenirken bir hata oluştu!",
         });
       }
 
@@ -227,7 +228,7 @@ module.exports = {
       const userData = karaliste.find(u => u.id === kullaniciID);
       if (!userData) {
         return interaction.editReply({
-          content: "❌ Bu kullanıcı kara listede değil!",
+          content: emoji.carpi + " Bu kullanıcı kara listede değil!",
         });
       }
 
@@ -238,7 +239,7 @@ module.exports = {
       } catch (err) {
         console.error("karaliste.json yazılamadı:", err);
         return interaction.editReply({
-          content: "❌ Kara listeden çıkarılırken bir hata oluştu!",
+          content: emoji.carpi + " Kara listeden çıkarılırken bir hata oluştu!",
         });
       }
 

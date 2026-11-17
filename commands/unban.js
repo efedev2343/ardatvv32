@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
         if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) {
             console.log("Hata: Botun BanMembers yetkisi yok.");
             return interaction.reply({ 
-                content: "<a:carpi:1227670096462221363> | Botun üyeleri yasaklama yetkisi yok!", 
+                content: emoji.carpi + " | Botun üyeleri yasaklama yetkisi yok!", 
                 ephemeral: true 
             });
         }
@@ -28,7 +29,7 @@ module.exports = {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
             console.log("Hata: Kullanıcının BanMembers yetkisi yok.");
             return interaction.reply({ 
-                content: "<a:carpi:1227670096462221363> | Üyeleri yasaklama yetkin yok!", 
+                content: emoji.carpi + " | Üyeleri yasaklama yetkin yok!", 
                 ephemeral: true 
             });
         }
@@ -40,7 +41,7 @@ module.exports = {
         if (!/^\d{17,20}$/.test(userId)) {
             console.log("Hata: Geçersiz kullanıcı ID formatı.");
             return interaction.reply({ 
-                content: "<a:carpi:1227670096462221363> | Geçersiz kullanıcı ID formatı! Lütfen 17-20 haneli bir ID girin.", 
+                content: emoji.carpi + " | Geçersiz kullanıcı ID formatı! Lütfen 17-20 haneli bir ID girin.", 
                 ephemeral: true 
             });
         }
@@ -53,7 +54,7 @@ module.exports = {
             if (!ban) {
                 console.log(`Hata: Kullanıcı (${userId}) yasaklı değil.`);
                 return interaction.reply({ 
-                    content: "<a:carpi:1227670096462221363> | Belirtilen ID'ye sahip kullanıcı yasaklı değil!", 
+                    content: emoji.carpi + " | Belirtilen ID'ye sahip kullanıcı yasaklı değil!", 
                     ephemeral: true 
                 });
             }
@@ -64,7 +65,7 @@ module.exports = {
 
             const successEmbed = new EmbedBuilder()
                 .setColor("Green")
-                .setDescription(`<a:yeilonay:1221172106637611169> | Başarıyla <@${userId}> adlı kullanıcının yasağını kaldırdım.`)
+                .setDescription(`${emoji.tik} | Başarıyla <@${userId}> adlı kullanıcının yasağını kaldırdım.`)
                 .setImage("https://media1.tenor.com/m/vai_KB4fOVEAAAAC/tensei.gif");
 
             console.log("Başarı embed'i gönderildi.");
@@ -75,7 +76,7 @@ module.exports = {
 
             const errorEmbed = new EmbedBuilder()
                 .setColor("Red")
-                .setDescription("<a:carpi:1227670096462221363> | Yasağı kaldırmaya çalışırken bir hata oluştu.")
+                .setDescription(emoji.carpi + " | Yasağı kaldırmaya çalışırken bir hata oluştu.")
                 .setFooter({ text: `Hata: ${error.code === 10026 ? "Kullanıcı yasaklı değil veya geçersiz ID" : error.message}` });
 
             await interaction.reply({ embeds: [errorEmbed], ephemeral: true });

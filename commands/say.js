@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
   Client,
   EmbedBuilder,
@@ -30,12 +31,12 @@ module.exports = {
       })
       .setThumbnail(guildIcon)
       .setDescription(
-        `> <:kullanici:1382373832144326656> **Toplam Üye Sayısı**: \`${totalMembers}\`\n` +
-        `> 🧍‍♂️ **Gerçek Kullanıcılar**: \`${realMembers}\`\n` +
-        `> <:bot:1382376704265424941> **Botlar**: \`${botCount}\`\n` +
-        `> <:admin:1296904503966044190>**Yönetici Yetkisi Olanlar**: \`${adminMembers}\`\n\n` +
-        `❗ **Sahte Üye Sayısı**: \`${fakeMembers}\`\n` +
-        `📌 *Sahte üyeler: Son 15 gün içinde açılmış hesaplar olarak değerlendirilir.*`
+        `> ${emoji.kbdUser} **Toplam Üye Sayısı**: \`${totalMembers}\`\n` +
+        `> ${emoji.kbdUser} **Gerçek Kullanıcılar**: \`${realMembers}\`\n` +
+        `> ${emoji.kbdBot2} **Botlar**: \`${botCount}\`\n` +
+        `> ${emoji.admin}**Yönetici Yetkisi Olanlar**: \`${adminMembers}\`\n\n` +
+        `${emoji.kbdNews} **Sahte Üye Sayısı**: \`${fakeMembers}\`\n` +
+        `${emoji.kbdNews} *Sahte üyeler: Son 15 gün içinde açılmış hesaplar olarak değerlendirilir.*`
       )
       .setFooter({
         text: `${interaction.user.tag} tarafından istendi • ${config["bot-adi"]}`,

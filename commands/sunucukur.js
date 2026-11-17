@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, ChannelType, EmbedBuilder } = require("discord.js");
 const db = require('croxydb');
 const Discord = require('discord.js');
@@ -10,7 +11,7 @@ module.exports = {
     options: [],
     run: async(client, interaction) => {
 
-        if(interaction.user.id !== interaction.guild.ownerId) return interaction.reply('<a:carpi:1227670096462221363>  | Bu komutu sadece **sunucu sahibi** kullanabilir!')
+        if(interaction.user.id !== interaction.guild.ownerId) return interaction.reply(emoji.carpi + '  | Bu komutu sadece **sunucu sahibi** kullanabilir!')
 
         if (interaction.guild.features.includes('COMMUNITY')) {
             const errorEmbed = new EmbedBuilder()

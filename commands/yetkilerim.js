@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 module.exports = {
@@ -26,7 +27,7 @@ module.exports = {
 
     // Botun yetkilerini kontrol et
     const yetkiListesi = yetkiler
-      .map((yetki) => `${permissions.has(yetki.kontrol) ? "<:acik:1394342391384772622>" : "<:kapal:1394342349357711532>"} | ${yetki.isim}`)
+      .map((yetki) => `${permissions.has(yetki.kontrol) ? emoji.acik + "" : emoji.kapal + ""} | ${yetki.isim}`)
       .join("\n");
 
     // Embed oluştur

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 module.exports = {
@@ -16,7 +17,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("#3498db")
-      .setTitle("📜 Sunucu Kuralları")
+      .setTitle(emoji.kbdNews + " Sunucu Kuralları")
       .setDescription(`
 **1. Saygılı Olun:** Tüm üyeler birbirine saygı göstermeli ve hoşgörülü olmalıdır.  
 **2. Hakaret Yasaktır:** Hakaret etmek veya küfürlü dil kullanmak yasaktır.  

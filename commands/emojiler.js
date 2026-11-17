@@ -1,3 +1,4 @@
+const emj = require("../emoji.js");
 const { Client, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require("discord.js");
 
 module.exports = {
@@ -67,12 +68,12 @@ module.exports = {
       const buttons = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId("previous")
-          .setLabel("◀️ Önceki")
+          .setLabel(emj.kbdDiscordLink + " Önceki")
           .setStyle(ButtonStyle.Primary)
           .setDisabled(true),
         new ButtonBuilder()
           .setCustomId("next")
-          .setLabel("Sonraki ▶️")
+          .setLabel("Sonraki " + emj.kbdDiscordLink)
           .setStyle(ButtonStyle.Primary)
       );
 
@@ -119,12 +120,12 @@ module.exports = {
       console.error("Emojiler alınırken bir hata oluştu:", err);
       if (interaction.deferred || interaction.replied) {
         await interaction.editReply({
-          content: "<a:carpi:1227670096462221363>  | Emojiler alınırken bir hata oluştu.",
+          content: emj.carpi + "  | Emojiler alınırken bir hata oluştu.",
           flags: MessageFlags.FLAGS.EPHEMERAL
         }).catch(console.error);
       } else {
         await interaction.reply({
-          content: "<a:carpi:1227670096462221363>  | Emojiler alınırken bir hata oluştu.",
+          content: emj.carpi + "  | Emojiler alınırken bir hata oluştu.",
           flags: MessageFlags.FLAGS.EPHEMERAL
         }).catch(console.error);
       }

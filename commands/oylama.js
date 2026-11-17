@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const db = require("croxydb");
 
@@ -16,14 +17,14 @@ module.exports = {
   run: async (client, interaction) => {
     
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageNicknames)) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Yetkiniz yok!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Yetkiniz yok!", ephemeral: true });
     }
 
    
     const süre = interaction.options.getString('süre');
     const süreMs = parseDuration(süre);
     if (!süreMs) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Geçersiz süre formatı! Lütfen doğru bir süre girin (örneğin: 1m, 1h, 1d).", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Geçersiz süre formatı! Lütfen doğru bir süre girin (örneğin: 1m, 1h, 1d).", ephemeral: true });
     }
 
     const modal = new ModalBuilder()
@@ -50,12 +51,12 @@ module.exports = {
             new ButtonBuilder()
               .setStyle(ButtonStyle.Success)
               .setLabel("(0) Evet")
-              .setEmoji("<a:yeilonay:1221172106637611169> ")
+              .setEmoji(emoji.tik)
               .setCustomId("evetoylama"),
             new ButtonBuilder()
               .setStyle(ButtonStyle.Danger)
               .setLabel("(0) Hayır")
-              .setEmoji("<a:carpi:1227670096462221363> ")
+              .setEmoji(emoji.carpi)
               .setCustomId("hayıroylama")
           );
 
@@ -130,12 +131,12 @@ module.exports = {
               new ButtonBuilder()
                 .setStyle(ButtonStyle.Success)
                 .setLabel(`(${oylamaData.evet}) Evet`)
-                .setEmoji("<a:yeilonay:1221172106637611169> ")
+                .setEmoji(emoji.tik)
                 .setCustomId("evetoylama"),
               new ButtonBuilder()
                 .setStyle(ButtonStyle.Danger)
                 .setLabel(`(${oylamaData.hayir}) Hayır`)
-                .setEmoji("<a:carpi:1227670096462221363> ")
+                .setEmoji(emoji.carpi)
                 .setCustomId("hayıroylama")
             );
 
@@ -148,7 +149,7 @@ module.exports = {
       })
       .catch(err => {
         console.error('Modal gönderimi zaman aşımına uğradı veya başarısız oldu:', err);
-        interaction.followUp({ content: "<a:carpi:1227670096462221363>  | Mesaj yazma işlemi sırasında bir hata oluştu veya işlem zaman aşımına uğradı.", ephemeral: true });
+        interaction.followUp({ content: emoji.carpi + "  | Mesaj yazma işlemi sırasında bir hata oluştu veya işlem zaman aşımına uğradı.", ephemeral: true });
       });
   },
 };

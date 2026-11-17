@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder } = require("discord.js");
 
 module.exports = {
@@ -52,13 +53,13 @@ module.exports = {
         break;
       case "bolme":
         if (sayi2 === 0) {
-          return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Sıfıra bölme hatası!" });
+          return interaction.reply({ content: emoji.carpi + "  | Sıfıra bölme hatası!" });
         }
         sonuc = sayi1 / sayi2;
         break;
       case "modul":
         if (sayi2 === 0) {
-          return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Sıfıra modül hatası!" });
+          return interaction.reply({ content: emoji.carpi + "  | Sıfıra modül hatası!" });
         }
         sonuc = sayi1 % sayi2;
         break;
@@ -66,7 +67,7 @@ module.exports = {
         sonuc = Math.pow(sayi1, sayi2);  // Üs alma işlemi
         break;
       default:
-        return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Geçersiz işlem!" });
+        return interaction.reply({ content: emoji.carpi + "  | Geçersiz işlem!" });
     }
 
     // Embed oluşturma

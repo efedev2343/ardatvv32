@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -16,48 +17,48 @@ module.exports = {
 
     run: async (client, interaction) => {
         let data = db.get(`timeoutSistemi_${interaction.guild.id}`);
-        if (!data) return interaction.reply({ content: "<a:carpi:1227670096462221363>  | **Timeout Sistemi** ayarlanmamış.", ephemeral: true });
+        if (!data) return interaction.reply({ content: emoji.carpi + "  | **Timeout Sistemi** ayarlanmamış.", ephemeral: true });
 
         let yetkili = data.yetkili;
         let kanal = data.log;
         let channel = client.channels.cache.get(kanal);
-        if (!channel) return interaction.reply({ content: `<a:carpi:1227670096462221363>  | **Timeout Sistemi** log kanalı bulunamadı.`, ephemeral: true });
+        if (!channel) return interaction.reply({ content: `${emoji.carpi}  | **Timeout Sistemi** log kanalı bulunamadı.`, ephemeral: true });
 
         const uyeYetki = new EmbedBuilder()
             .setColor("Red")
-            .setDescription(`<a:carpi:1227670096462221363>  | Bu komutu kullanabilmek için <@&${yetkili}> rolüne sahip olmalısın!`);
+            .setDescription(`${emoji.carpi}  | Bu komutu kullanabilmek için <@&${yetkili}> rolüne sahip olmalısın!`);
 
         const botYetki = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Bunu yapabilmek için yeterli yetkiye sahip değilim.");
+            .setDescription(emoji.carpi + "  | Bunu yapabilmek için yeterli yetkiye sahip değilim.");
 
         const uyeBulunamadi = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Belirttiğin üyeyi bulamadım.");
+            .setDescription(emoji.carpi + "  | Belirttiğin üyeyi bulamadım.");
 
         const pozisyon = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Kullanıcının rolü benim rolümden yüksek.");
+            .setDescription(emoji.carpi + "  | Kullanıcının rolü benim rolümden yüksek.");
 
         const pozisyon2 = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Kullanıcının rolü senin rolünden yüksek.");
+            .setDescription(emoji.carpi + "  | Kullanıcının rolü senin rolünden yüksek.");
 
         const sunucuSahibi = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Sunucu sahibini susturamazsın, nasıl kaldıracaksın?");
+            .setDescription(emoji.carpi + "  | Sunucu sahibini susturamazsın, nasıl kaldıracaksın?");
 
         const kendiniSusturma = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Kendi timeoutunu kaldıramazsın, zaten yok.");
+            .setDescription(emoji.carpi + "  | Kendi timeoutunu kaldıramazsın, zaten yok.");
 
         const botuSusturma = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Benim susturmam yok ki? Susturamazsınız zaten :call_me:");
+            .setDescription(emoji.carpi + "  | Benim susturmam yok ki? Susturamazsınız zaten :call_me:");
 
         const hata = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("<a:carpi:1227670096462221363>  | Komutu kullanırken bir hata oluştu.");
+            .setDescription(emoji.carpi + "  | Komutu kullanırken bir hata oluştu.");
 
         const kullanıcı = interaction.options.getMember("kullanıcı");
 
@@ -84,14 +85,14 @@ module.exports = {
             await kullanıcı.timeout(0);  // Timeout'u kaldırma işlemi
             const logMessage = new EmbedBuilder()
                 .setColor("Green")
-                .setTitle("<a:yeilonay:1221172106637611169>  | Bir Üye'nin Susturması Kaldırıldı!")
+                .setTitle(emoji.tik + "  | Bir Üye'nin Susturması Kaldırıldı!")
                 .setDescription(`<@${interaction.user.id}> adlı yetkili, <@${kullanıcı.id}> adlı kişinin susturmasını kaldırdı!`)
                 .setTimestamp()
                 .setThumbnail(kullanıcı.avatarURL({ dynamic: true }));
 
             const basarili = new EmbedBuilder()
                 .setColor("Green")
-                .setDescription(`<a:yeilonay:1221172106637611169>  | ${kullanıcı} adlı üyenin susturmasını başarıyla kaldırdım.`);
+                .setDescription(`${emoji.tik}  | ${kullanıcı} adlı üyenin susturmasını başarıyla kaldırdım.`);
 
             channel.send({ embeds: [logMessage] }).catch((e) => { });
             return interaction.reply({ embeds: [basarili], ephemeral: true }).catch((e) => { });

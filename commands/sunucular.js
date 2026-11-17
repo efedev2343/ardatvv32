@@ -1,6 +1,7 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
-const OWNER_IDS = ["808741421229539348","983793704701681674"]; // Bot sahiplerinin ID'leri
+const OWNER_IDS = [require("../config.json")["sahip"]]; // Bot sahibi config.json'dan
 const ITEMS_PER_PAGE = 10; // Her sayfada gösterilecek sunucu sayısı
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
   run: async (client, interaction) => {
     if (!OWNER_IDS.includes(interaction.user.id)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363>  Bu komutu sadece bot sahipleri kullanabilir!",
+        content: emoji.carpi + "  Bu komutu sadece bot sahipleri kullanabilir!",
         ephemeral: true,
       });
     }
@@ -21,7 +22,7 @@ module.exports = {
 
       if (guilds.length === 0) {
         return interaction.reply({
-          content: "<a:carpi:1227670096462221363>  Bot hiçbir sunucuda bulunmuyor.",
+          content: emoji.carpi + "  Bot hiçbir sunucuda bulunmuyor.",
           ephemeral: true,
         });
       }
@@ -36,7 +37,7 @@ module.exports = {
 
         const embedDescription = await Promise.all(
           currentPageGuilds.map(async (guild) => {
-            let inviteLink = "<a:carpi:1227670096462221363>  **Davet bağlantısı oluşturulamıyor.** (Yetki eksikliği)";
+            let inviteLink = emoji.carpi + "  **Davet bağlantısı oluşturulamıyor.** (Yetki eksikliği)";
             try {
               if (guild.members.me.permissions.has("CreateInstantInvite")) {
                 const invites = await guild.invites.fetch().catch(() => null);
@@ -60,12 +61,12 @@ module.exports = {
               console.error(`Sunucu (${guild.name}) için davet linki alınamadı:`, err);
             }
 
-            return `**${guild.name}** (${guild.id}) - Üye Sayısı: **${guild.memberCount}**\n[🔗 Davet Linki](${inviteLink})`;
+            return `**${guild.name}** (${guild.id}) - Üye Sayısı: **${guild.memberCount}**\n[${emoji.kbdDiscordLink} Davet Linki](${inviteLink})`;
           })
         );
 
         return new EmbedBuilder()
-          .setTitle("📂 Botun Bulunduğu Sunucular")
+          .setTitle(emoji.kbdNews + " Botun Bulunduğu Sunucular")
           .setColor("#00FF00")
           .setDescription(embedDescription.join("\n\n") || "Bot hiçbir sunucuda bulunmuyor.")
           .setFooter({ text: `Toplam Sunucu Sayısı: ${guilds.length} | Sayfa ${page + 1} / ${totalPages}` });
@@ -74,12 +75,12 @@ module.exports = {
       const buttons = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId("previous")
-          .setLabel("◀️ Önceki")
+          .setLabel(emoji.kbdDiscordLink + " Önceki")
           .setStyle(ButtonStyle.Primary)
           .setDisabled(page === 0),
         new ButtonBuilder()
           .setCustomId("next")
-          .setLabel("▶️ Sonraki")
+          .setLabel(emoji.kbdDiscordLink + " Sonraki")
           .setStyle(ButtonStyle.Primary)
           .setDisabled(page === totalPages - 1)
       );
@@ -106,12 +107,12 @@ module.exports = {
             new ActionRowBuilder().addComponents(
               new ButtonBuilder()
                 .setCustomId("previous")
-                .setLabel("◀️ Önceki")
+                .setLabel(emoji.kbdDiscordLink + " Önceki")
                 .setStyle(ButtonStyle.Primary)
                 .setDisabled(page === 0),
               new ButtonBuilder()
                 .setCustomId("next")
-                .setLabel("▶️ Sonraki")
+                .setLabel(emoji.kbdDiscordLink + " Sonraki")
                 .setStyle(ButtonStyle.Primary)
                 .setDisabled(page === totalPages - 1)
             ),
@@ -125,12 +126,12 @@ module.exports = {
             new ActionRowBuilder().addComponents(
               new ButtonBuilder()
                 .setCustomId("previous")
-                .setLabel("◀️ Önceki")
+                .setLabel(emoji.kbdDiscordLink + " Önceki")
                 .setStyle(ButtonStyle.Primary)
                 .setDisabled(true),
               new ButtonBuilder()
                 .setCustomId("next")
-                .setLabel("▶️ Sonraki")
+                .setLabel(emoji.kbdDiscordLink + " Sonraki")
                 .setStyle(ButtonStyle.Primary)
                 .setDisabled(true)
             ),
@@ -140,7 +141,7 @@ module.exports = {
     } catch (error) {
       console.error("Sunucular listelenirken hata oluştu:", error);
       interaction.reply({
-        content: "<a:carpi:1227670096462221363>  Sunucular listelenirken bir hata oluştu!",
+        content: emoji.carpi + "  Sunucular listelenirken bir hata oluştu!",
         ephemeral: true,
       });
     }

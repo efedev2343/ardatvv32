@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField } = require("discord.js");
 const db = require("croxydb")
 const { EmbedBuilder } = require("discord.js");
@@ -25,7 +26,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels))
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Kanalları Yönet Yetkin Yok!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Kanalları Yönet Yetkin Yok!", ephemeral: true });
 
     const kanal2 = interaction.options.getChannel("giriskanal");
     db.set(`hgbb_${interaction.guild.id}`, { channel: kanal2.id });
@@ -35,7 +36,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("Random")
-      .setDescription(`<a:yeilonay:1221172106637611169>  | Hoşgeldin kanalı <#${kanal2.id}> Görüşürüz kanalı <#${kanal3.id}> olarak ayarlandı!`)
+      .setDescription(`${emoji.tik}  | Hoşgeldin kanalı <#${kanal2.id}> Görüşürüz kanalı <#${kanal3.id}> olarak ayarlandı!`)
       .setImage("https://i.imgur.com/43jv10x.gif")
 
     interaction.reply({ embeds: [embed] });

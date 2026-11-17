@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -10,7 +11,7 @@ module.exports = {
  
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
       return interaction.reply({
-        content: "<a:carpi:1227670096462221363>  | Rolleri Yönet yetkiniz yok!",
+        content: emoji.carpi + "  | Rolleri Yönet yetkiniz yok!",
         ephemeral: true,
       });
     }
@@ -21,7 +22,7 @@ module.exports = {
 
     if (!otoRolVerisi || !botRolVerisi) {
       return interaction.reply({
-        content: "<a:uyari:1225959324426174475>  | Oto-rol sistemi zaten kapalı veya veriler bulunamadı.",
+        content: emoji.kbdWarn + "  | Oto-rol sistemi zaten kapalı veya veriler bulunamadı.",
         ephemeral: true,
       });
     }
@@ -33,7 +34,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor("Green")
       .setTitle("Oto-Rol Sistemi Kapatıldı!")
-      .setDescription("<a:yeilonay:1221172106637611169>  | Oto-Rol başarıyla devre dışı bırakıldı ve tüm ayarlar silindi.")
+      .setDescription(emoji.tik + "  | Oto-Rol başarıyla devre dışı bırakıldı ve tüm ayarlar silindi.")
       .setFooter({
         text: "Oto-rol sistemi hakkında daha fazla bilgi için yardım komutlarına bakabilirsiniz.",
       });

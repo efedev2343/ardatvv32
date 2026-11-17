@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
   EmbedBuilder,
   ApplicationCommandType,
@@ -77,7 +78,7 @@ module.exports = {
 
     if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
       return interaction.editReply({
-        content: "⛔ Bu komutu kullanmak için **Mesajları Yönet** yetkisine sahip olmalısınız!",
+        content: emoji.carpi + " Bu komutu kullanmak için **Mesajları Yönet** yetkisine sahip olmalısınız!",
       });
     }
 
@@ -88,7 +89,7 @@ module.exports = {
 
     if (usageCount >= 2) {
       return interaction.editReply({
-        content: "⛔ Bu komutu günde en fazla 2 kez kullanabilirsiniz. Lütfen yarın tekrar deneyin.",
+        content: emoji.carpi + " Bu komutu günde en fazla 2 kez kullanabilirsiniz. Lütfen yarın tekrar deneyin.",
       });
     }
 
@@ -120,13 +121,13 @@ module.exports = {
 
     if (!channel.isTextBased()) {
       return interaction.editReply({
-        content: "⚠️ Belirtilen kanal bir metin kanalı değil!",
+        content: emoji.kbdWarn + " Belirtilen kanal bir metin kanalı değil!",
       });
     }
 
     if (!channel.permissionsFor(client.user).has(PermissionFlagsBits.SendMessages)) {
       return interaction.editReply({
-        content: "⚠️ Bu kanala mesaj gönderme yetkim yok!",
+        content: emoji.kbdWarn + " Bu kanala mesaj gönderme yetkim yok!",
       });
     }
 
@@ -135,7 +136,7 @@ module.exports = {
       if (mention) {
         if (!mention.match(/^<@!?(\d+)>|(\d+)$/)) {
           return interaction.editReply({
-            content: "⚠️ Geçersiz etiket formatı! Lütfen bir kullanıcı/rol etiketi veya ID girin.",
+            content: emoji.kbdWarn + " Geçersiz etiket formatı! Lütfen bir kullanıcı/rol etiketi veya ID girin.",
           });
         }
         content += mention + " ";
@@ -167,12 +168,12 @@ module.exports = {
       }, 86400000);
 
       await interaction.editReply({
-        content: `✅ Mesaj başarıyla ${channel} kanalına gönderildi. (Renk: ${colorName})\nKalan kullanım hakkınız: ${1 - usageCount}/2`,
+        content: `${emoji.tik} Mesaj başarıyla ${channel} kanalına gönderildi. (Renk: ${colorName})\nKalan kullanım hakkınız: ${1 - usageCount}/2`,
       });
     } catch (error) {
       console.error("Mesaj gönderilirken hata:", error);
       await interaction.editReply({
-        content: "⚠️ Mesaj gönderilirken bir hata oluştu: " + error.message,
+        content: emoji.kbdWarn + " Mesaj gönderilirken bir hata oluştu: " + error.message,
       });
     }
   },

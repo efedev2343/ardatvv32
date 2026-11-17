@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -16,17 +17,17 @@ module.exports = {
 
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Bu komutu kullanmak için yönetici yetkisine sahip olmalısınız!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Bu komutu kullanmak için yönetici yetkisine sahip olmalısınız!", ephemeral: true });
     }
 
     const channel = interaction.options.getChannel('kanal');
     if (!channel || channel.type !== 0) {
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Lütfen geçerli bir metin kanalı seçin!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Lütfen geçerli bir metin kanalı seçin!", ephemeral: true });
     }
 
     // Sunucuya özel kanal ID'sini veritabanında kaydediyoruz
     db.set(`tanıtChannel_${interaction.guild.id}`, channel.id);
 
-    interaction.reply({ content: `<a:yeilonay:1221172106637611169>  | Tanıtım kanalı başarıyla **${channel.name}** olarak ayarlandı! Bu kanal bu sunucuda kullanılacak.`, ephemeral: true });
+    interaction.reply({ content: `${emoji.tik}  | Tanıtım kanalı başarıyla **${channel.name}** olarak ayarlandı! Bu kanal bu sunucuda kullanılacak.`, ephemeral: true });
   },
 };

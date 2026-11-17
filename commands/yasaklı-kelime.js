@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require('croxydb');
 
@@ -22,20 +23,20 @@ module.exports = {
 
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) 
-      return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Mesajları Yönet Yetkin Yok!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + "  | Mesajları Yönet Yetkin Yok!", ephemeral: true });
 
     const kelime = interaction.options.getString("kelime");
     const sıfırla = interaction.options.getBoolean("sıfırla");
 
     if (sıfırla) {
       db.delete(`yasaklı_kelime_${interaction.guild.id}`);
-      return interaction.reply({ content: "<a:yeilonay:1221172106637611169>  | Başarıyla yasaklı kelime sistemini sıfırladım!" });
+      return interaction.reply({ content: emoji.tik + "  | Başarıyla yasaklı kelime sistemini sıfırladım!" });
     }
     if (kelime) {
       db.push(`yasaklı_kelime_${interaction.guild.id}`, kelime);
-      return interaction.reply({ content: `<a:yeilonay:1221172106637611169>  | Başarıyla yasaklı kelimeyi **${kelime}** olarak ayarladım!` });
+      return interaction.reply({ content: `${emoji.tik}  | Başarıyla yasaklı kelimeyi **${kelime}** olarak ayarladım!` });
     }
 
-    return interaction.reply({ content: "<a:carpi:1227670096462221363>  | Lütfen bir kelime girin veya yasaklı kelimeyi sıfırlayın!" });
+    return interaction.reply({ content: emoji.carpi + "  | Lütfen bir kelime girin veya yasaklı kelimeyi sıfırlayın!" });
   },
 };

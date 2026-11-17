@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
@@ -19,7 +20,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content:
-          "❌ | Bu komutu kullanmak için **Sunucuyu Yönet** yetkisine sahip olmalısınız!",
+          emoji.carpi + " | Bu komutu kullanmak için **Sunucuyu Yönet** yetkisine sahip olmalısınız!",
         ephemeral: true,
       });
     }
@@ -30,7 +31,7 @@ module.exports = {
     if (aktifCekilis) {
       return interaction.reply({
         content:
-          "❌ | Bu çekiliş hala devam ediyor! Lütfen çekilişin tamamlanmasını bekleyin.",
+          emoji.carpi + " | Bu çekiliş hala devam ediyor! Lütfen çekilişin tamamlanmasını bekleyin.",
         ephemeral: true,
       });
     }
@@ -39,7 +40,7 @@ module.exports = {
     if (!cekilisData) {
       return interaction.reply({
         content:
-          "❌ | Bu ID'ye sahip tamamlanmış bir çekiliş bulunamadı! Lütfen doğru mesaj ID'sini girin.",
+          emoji.carpi + " | Bu ID'ye sahip tamamlanmış bir çekiliş bulunamadı! Lütfen doğru mesaj ID'sini girin.",
         ephemeral: true,
       });
     }
@@ -49,7 +50,7 @@ module.exports = {
       .catch(() => null);
     if (!kanal) {
       return interaction.reply({
-        content: "❌ | Çekilişin kanalı bulunamadı! Kanal silinmiş olabilir.",
+        content: emoji.carpi + " | Çekilişin kanalı bulunamadı! Kanal silinmiş olabilir.",
         ephemeral: true,
       });
     }
@@ -64,7 +65,7 @@ module.exports = {
     }
 
     const resultEmbed = new EmbedBuilder()
-      .setTitle("🔄 Çekiliş Yeniden Çekildi!")
+      .setTitle(emoji.kbdDiscordLink + " Çekiliş Yeniden Çekildi!")
       .setDescription(
         `
         **Ödül:** ${cekilisData.ödül}
@@ -96,12 +97,12 @@ module.exports = {
     await interaction.reply({
       content:
         kazananlar.length > 0
-          ? `<:oyun:1382373583527088188> **${
+          ? `${emoji.kbdOyun} **${
               cekilisData.ödül
             }** çekilişinin yeni kazananları: ${kazananlar
               .map((id) => `<@${id}>`)
               .join(", ")}! Tebrikler!`
-          : "❌ Katılım olmadı, yeni kazanan seçilemedi!",
+          : emoji.carpi + " Katılım olmadı, yeni kazanan seçilemedi!",
       embeds: [resultEmbed],
     });
   },

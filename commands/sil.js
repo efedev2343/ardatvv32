@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
     Client,
     EmbedBuilder,
@@ -28,7 +29,7 @@ const {
           embeds: [
             new EmbedBuilder()
               .setColor("#e74c3c")
-              .setTitle("🚫 Yetkin Yok!")
+              .setTitle(emoji.carpi + " Yetkin Yok!")
               .setDescription("Bu komutu kullanmak için `Mesajları Yönet` yetkisine sahip olmalısın.")
               .setFooter({ text: guild.name, iconURL: guild.iconURL({ dynamic: true }) })
           ],
@@ -45,7 +46,7 @@ const {
           embeds: [
             new EmbedBuilder()
               .setColor("#f1c40f")
-              .setTitle("⚠️ Geçersiz Girdi")
+              .setTitle(emoji.kbdWarn + " Geçersiz Girdi")
               .setDescription("Lütfen **1 ile 100** arasında bir sayı girin.")
           ],
           ephemeral: true,
@@ -58,11 +59,11 @@ const {
   
         const embed = new EmbedBuilder()
           .setColor("#2ecc71")
-          .setTitle("🧹 Mesajlar Temizlendi!")
+          .setTitle(emoji.kbdCalisma + " Mesajlar Temizlendi!")
           .setDescription(`**${amount}** adet mesaj başarıyla silindi.`)
           .addFields(
-            { name: "👤 İşlem Yapan", value: `${user.tag}`, inline: true },
-            { name: "📍 Kanal", value: `<#${channel.id}>`, inline: true },
+            { name: emoji.kbdUser + " İşlem Yapan", value: `${user.tag}`, inline: true },
+            { name: emoji.kbdNews + " Kanal", value: `<#${channel.id}>`, inline: true },
           )
           .setFooter({ text: guild.name, iconURL: guild.iconURL({ dynamic: true }) })
           .setTimestamp();
@@ -84,7 +85,7 @@ const {
           embeds: [
             new EmbedBuilder()
               .setColor("Red")
-              .setTitle("❌ Hata Oluştu!")
+              .setTitle(emoji.carpi + " Hata Oluştu!")
               .setDescription("Mesajlar silinirken bir hata meydana geldi.")
               .addFields({ name: "Hata", value: `\`\`\`${err.message}\`\`\`` })
           ],

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, EmbedBuilder } = require("discord.js");
 
 module.exports = {
@@ -16,7 +17,7 @@ module.exports = {
         // Gerekli izinleri kontrol edin
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
             return interaction.reply({
-                content: "<a:carpi:1227670096462221363>  | Bu komutu kullanmak için `Rolleri Yönet` iznine sahip olmalısınız!",
+                content: emoji.carpi + "  | Bu komutu kullanmak için `Rolleri Yönet` iznine sahip olmalısınız!",
                 ephemeral: true
             });
         }
@@ -26,7 +27,7 @@ module.exports = {
         // Rol geçerli mi?
         if (!role) {
             return interaction.reply({
-                content: "<a:carpi:1227670096462221363>  | Geçerli bir rol seçmelisiniz.",
+                content: emoji.carpi + "  | Geçerli bir rol seçmelisiniz.",
                 ephemeral: true
             });
         }
@@ -39,7 +40,7 @@ module.exports = {
 
             if (totalMembers === 0) {
                 return interaction.reply({
-                    content: "<a:carpi:1227670096462221363>  | Alınacak rolü olan hiçbir üye yok.",
+                    content: emoji.carpi + "  | Alınacak rolü olan hiçbir üye yok.",
                     ephemeral: true
                 });
             }
@@ -47,7 +48,7 @@ module.exports = {
             let removedRoles = 0;
             let startTime = Date.now();
 
-            interaction.reply({ content: `⏳ | Rol alım işlemi başlatıldı. Toplam üye: ${totalMembers}`, ephemeral: true });
+            interaction.reply({ content: `${emoji.kbdSaat} | Rol alım işlemi başlatıldı. Toplam üye: ${totalMembers}`, ephemeral: true });
 
             for (const member of members.values()) {
                 await member.roles.remove(role).catch(error => console.error(`Couldn't remove role from ${member.user.tag}:`, error));
@@ -88,12 +89,12 @@ Tahmini Kalan Süre: ${formatTime((elapsed / removedRoles) * remainingMembers)}
                 }
             }
 
-            interaction.channel.send({ content: `<a:yeilonay:1221172106637611169>  | Rol alma işlemi başarıyla tamamlandı. Toplam: ${removedRoles}` });
+            interaction.channel.send({ content: `✅  | Rol alma işlemi başarıyla tamamlandı. Toplam: ${removedRoles}` });
 
         } catch (error) {
             console.error("Error fetching members:", error);
             return interaction.reply({
-                content: "<a:carpi:1227670096462221363>  | Üyeler getirilirken bir hata oluştu. Lütfen tekrar deneyin.",
+                content: emoji.carpi + "  | Üyeler getirilirken bir hata oluştu. Lütfen tekrar deneyin.",
                 ephemeral: true
             });
         }

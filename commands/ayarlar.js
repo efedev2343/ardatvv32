@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const config = require("../config.json");
 
@@ -38,7 +39,7 @@ module.exports = {
 
             const fields = systems.map(system => ({
                 name: `**${system.name}**`,
-                value: db.fetch(system.key) ? "<:acik:1394342391384772622> | Açık" : "<:kapal:1394342349357711532> | Kapalı",
+                value: db.fetch(system.key) ? [emoji.acik + " | Açık"] : emoji.kapal + " | Kapalı",
                 inline: true,
             }));
 
@@ -47,8 +48,8 @@ module.exports = {
             fields.push({
                 name: "**Sayaç Sistemi**",
                 value: sayacData
-                    ? `<:acik:1394342391384772622> | Açık  ${typeof sayacData === 'object' ? sayacData.target || 'Hedef belirtilmemiş' : sayacData}`
-                    : "<:kapal:1394342349357711532> | Kapalı",
+                    ? `${emoji.acik} | Açık  ${typeof sayacData === 'object' ? sayacData.target || 'Hedef belirtilmemiş' : sayacData}`
+                    : emoji.kapal + " | Kapalı",
                 inline: true,
             });
 
@@ -66,7 +67,7 @@ module.exports = {
 
            
             const embed = new EmbedBuilder()
-                .setTitle(`⚙ | ${botName} - Ayarlar Menüsü!`)
+                .setTitle(`${emoji.kbdCalisma} | ${botName} - Ayarlar Menüsü!`)
                 .addFields(fields)
                 .setColor("Blue")
                 .setTimestamp()

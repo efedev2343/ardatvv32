@@ -1,7 +1,8 @@
 const { Client, PermissionsBitField } = require("discord.js");
+const config = require("../config.json");
 
-// Bot sahibinin kullanıcı ID'sini burada belirtin
-const BOT_OWNER_ID = '808741421229539348';
+// Bot sahibinin ID'si config.json içinden alınır
+const BOT_OWNER_ID = config["sahip"];
 
 module.exports = {
     name: "restart",

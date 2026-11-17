@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 const Discord = require("discord.js");
@@ -12,7 +13,7 @@ module.exports = {
     // Kullanıcıya yetki kontrolü yapılır
     const yetkiEmbed = new Discord.EmbedBuilder()
       .setColor("Red")
-      .setDescription("<a:carpi:1227670096462221363>  | Bu komutu kullanabilmek için `Yönetici` yetkisine sahip olmalısın!");
+      .setDescription(emoji.carpi + "  | Bu komutu kullanabilmek için `Yönetici` yetkisine sahip olmalısın!");
 
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
       return interaction.reply({ embeds: [yetkiEmbed], ephemeral: true });
@@ -24,7 +25,7 @@ module.exports = {
     if (!timeoutAktif) {
       const mevcutDegerEmbed = new EmbedBuilder()
         .setColor("Yellow")
-        .setDescription("<a:uyari:1225959324426174475>  | Timeout sistemi zaten sıfırlanmış!");
+        .setDescription(emoji.kbdWarn + "  | Timeout sistemi zaten sıfırlanmış!");
 
       return interaction.reply({ embeds: [mevcutDegerEmbed], ephemeral: true });
     }
@@ -34,13 +35,13 @@ module.exports = {
 
     const basariliEmbed = new EmbedBuilder()
       .setColor("Green")
-      .setDescription("<a:yeilonay:1221172106637611169>  | **Timeout Sistemi** başarıyla sıfırlandı!");
+      .setDescription(emoji.tik + "  | **Timeout Sistemi** başarıyla sıfırlandı!");
 
     return interaction.reply({ embeds: [basariliEmbed], ephemeral: false }).catch((e) => {
       console.error("Timeout sıfırlama sırasında bir hata oluştu:", e);
       const hataEmbed = new EmbedBuilder()
         .setColor("Red")
-        .setDescription("<a:carpi:1227670096462221363>  | Timeout sistemi sıfırlanırken bir hata oluştu. Lütfen tekrar deneyin.");
+        .setDescription(emoji.carpi + "  | Timeout sistemi sıfırlanırken bir hata oluştu. Lütfen tekrar deneyin.");
 
       interaction.reply({ embeds: [hataEmbed], ephemeral: true });
     });

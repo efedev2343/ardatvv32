@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client } = require("discord.js");
 const canvafy = require("canvafy");
 
@@ -48,7 +49,7 @@ module.exports = {
       });
     } catch (error) {
       console.error("Tweet oluşturulurken bir hata oluştu:", error);
-      await interaction.editReply({ content: "<a:uyari:1225959324426174475>  Tweet oluşturulamadı. Lütfen tekrar deneyin." });
+      await interaction.editReply({ content: emoji.kbdWarn + "  Tweet oluşturulamadı. Lütfen tekrar deneyin." });
     }
   }
 };

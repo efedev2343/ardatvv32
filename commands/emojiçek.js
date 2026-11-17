@@ -1,3 +1,4 @@
+const emj = require("../emoji.js");
 const { Client, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -87,9 +88,9 @@ module.exports = {
         .setTitle('Emoji Çekme Tamamlandı')
         .setDescription([
           `**"${sourceServer.name}" sunucusundan emoji çekme işlemi tamamlandı!**`,
-          `✅ **Eklendi:** ${addedCount}`,
-          `⏩ **Atlandı:** ${skippedCount}`,
-          `❌ **Başarısız:** ${failedCount}`,
+          `${emj.tik} **Eklendi:** ${addedCount}`,
+          `${emj.kbdDiscordLink} **Atlandı:** ${skippedCount}`,
+          `${emj.carpi} **Başarısız:** ${failedCount}`,
           failedCount > 0 ? `\n**Başarısız Olan Emojiler:** ${failedEmojis.join(', ')}` : ''
         ].join('\n'))
         .setImage("https://i.hizliresim.com/t7avr37.gif")

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder, WebhookClient } = require('discord.js');
 
 module.exports = {
@@ -19,27 +20,27 @@ module.exports = {
     const [_, webhookID, webhookToken] = webhookURL.match(/webhooks\/(\d+)\/(.+)/) || [];
 
     if (!webhookID || !webhookToken) {
-      return interaction.reply({ content: '<a:carpi:1227670096462221363>  Webhook bilgileri hatalı veya eksik!', ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + '  Webhook bilgileri hatalı veya eksik!', ephemeral: true });
     }
 
     const webhookClient = new WebhookClient({ id: webhookID, token: webhookToken });
 
     const embed = new EmbedBuilder()
-      .setTitle('📩 Yeni Öneri')
-      .setDescription(`📢 **Öneri:** ${öneri}`)
+      .setTitle(emoji.kbdNews + ' Yeni Öneri')
+      .setDescription(`${emoji.kbdZil} **Öneri:** ${öneri}`)
       .addFields(
-        { name: '👤 Öneren Kullanıcı', value: `${interaction.user.username}`, inline: true },
-        { name: '<:calisma:1382375444158091358> Öneri Tarihi', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+        { name: emoji.kbdUser + ' Öneren Kullanıcı', value: `${interaction.user.username}`, inline: true },
+        { name: emoji.kbdCalisma + ' Öneri Tarihi', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
       )
       .setColor('#3498db')
       .setTimestamp();
 
     try {
       await webhookClient.send({ embeds: [embed] });
-      interaction.reply({ content: '<a:yeilonay:1221172106637611169>  Öneriniz başarıyla iletildi!', ephemeral: true });
+      interaction.reply({ content: emoji.tik + '  Öneriniz başarıyla iletildi!', ephemeral: true });
     } catch (error) {
       console.error('Öneri gönderilirken hata oluştu:', error);
-      interaction.reply({ content: '<a:carpi:1227670096462221363>  Öneriniz gönderilemedi. Lütfen tekrar deneyin.', ephemeral: true });
+      interaction.reply({ content: emoji.carpi + '  Öneriniz gönderilemedi. Lütfen tekrar deneyin.', ephemeral: true });
     }
   }
 };

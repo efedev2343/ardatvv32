@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
     Client,
     EmbedBuilder,
@@ -21,7 +22,7 @@ const {
           embeds: [
             new EmbedBuilder()
               .setColor("Red")
-              .setTitle("🚫 Sunucu Bannerı Yok!")
+              .setTitle(emoji.carpi + " Sunucu Bannerı Yok!")
               .setDescription("Bu sunucuda ayarlanmış bir **banner** bulunmamakta.")
               .setThumbnail("https://i.imgur.com/O3DHIA5.png")
               .setFooter({
@@ -35,18 +36,18 @@ const {
   
       const embed = new EmbedBuilder()
         .setColor("#ff0055")
-        .setTitle(`🌆 ${guild.name} - Banner Görünümü`)
-        .setDescription(`🔗 [Banner bağlantısı için buraya tıkla](${bannerUrl})`)
+        .setTitle(`${emoji.kbdNews} ${guild.name} - Banner Görünümü`)
+        .setDescription(`${emoji.kbdDiscordLink} [Banner bağlantısı için buraya tıkla](${bannerUrl})`)
         .setImage(bannerUrl)
         .setThumbnail(guild.iconURL({ dynamic: true }))
         .setFooter({
-          text: `<:admin:1296904503966044190>Üye Sayısı: ${guild.memberCount.toLocaleString()} • Oluşturulma: ${guild.createdAt.toLocaleDateString("tr-TR")}`,
+          text: `${emoji.admin}Üye Sayısı: ${guild.memberCount.toLocaleString()} • Oluşturulma: ${guild.createdAt.toLocaleDateString("tr-TR")}`,
           iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
         });
   
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-          .setLabel("🔽 Bannerı İndir")
+          .setLabel(emoji.kbdDiscordLink + " Bannerı İndir")
           .setStyle(ButtonStyle.Link)
           .setURL(bannerUrl)
       );

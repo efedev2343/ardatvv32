@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("croxydb");
 const config = require("../config.json");
@@ -17,7 +18,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
-      return interaction.reply({ content: "❌ | Rolleri Yönet Yetkin Yok!", ephemeral: true });
+      return interaction.reply({ content: emoji.carpi + " | Rolleri Yönet Yetkin Yok!", ephemeral: true });
     }
 
     const roller = interaction.options.getString('roller').split(' ');
@@ -30,7 +31,7 @@ module.exports = {
 
     if (invalidRoles.length > 0) {
       return interaction.reply({ 
-        content: `❌ | Bot, şu rolleri vermek için yeterli yetkiye sahip değil: ${invalidRoles.join(', ')}. Lütfen bot rolünü bu rollerden daha yükseğe taşıyın.`, 
+        content: `${emoji.carpi} | Bot, şu rolleri vermek için yeterli yetkiye sahip değil: ${invalidRoles.join(', ')}. Lütfen bot rolünü bu rollerden daha yükseğe taşıyın.`, 
         ephemeral: true 
       });
     }
@@ -56,10 +57,18 @@ module.exports = {
         const yazı = modalInteraction.fields.getTextInputValue('embedInput');
 
         const embed = new EmbedBuilder()
-          .setTitle(`${config["bot-adi"]} - Buton Rol Al Sistemi!`)
+          .setAuthor({
+            name: `${config["bot-adi"]} - Buton Rol Al Sistemi`,
+            iconURL: interaction.client.user.displayAvatarURL(),
+          })
           .setDescription(yazı)
-          .setImage("https://i.imgur.com/Yfz9IQA.gif")
-          .setColor("#ff0000");
+          .setColor(config.embedColor || "#5865F2")
+          .setThumbnail(interaction.client.user.displayAvatarURL())
+          .setFooter({
+            text: `${config["bot-adi"]} • Buton Rol Al Sistemi`,
+            iconURL: interaction.client.user.displayAvatarURL(),
+          })
+          .setTimestamp();
 
         const rows = [];
         let currentRow = new ActionRowBuilder();
@@ -96,7 +105,7 @@ module.exports = {
       })
       .catch(err => {
         console.error('Modal gönderimi zaman aşımına uğradı veya başarısız oldu:', err);
-        interaction.followUp({ content: "❌ | Mesaj yazma işlemi sırasında bir hata oluştu veya işlem zaman aşımına uğradı.", ephemeral: true });
+        interaction.followUp({ content: emoji.carpi + " | Mesaj yazma işlemi sırasında bir hata oluştu veya işlem zaman aşımına uğradı.", ephemeral: true });
       });
   }
 };
@@ -114,20 +123,20 @@ client.on('interactionCreate', async buttonInteraction => {
     const botRole = buttonInteraction.guild.members.me.roles.highest;
 
     if (rol.position >= botRole.position) {
-      return buttonInteraction.reply({ content: `❌ | Bot, ${rol.name} rolünü vermek veya almak için yeterli yetkiye sahip değil.`, ephemeral: true });
+      return buttonInteraction.reply({ content: `${emoji.carpi} | Bot, ${rol.name} rolünü vermek veya almak için yeterli yetkiye sahip değil.`, ephemeral: true });
     }
 
     try {
       if (member.roles.cache.has(rolID)) {
         await member.roles.remove(rolID);
-        await buttonInteraction.reply({ content: `❌ | ${rol.name} rolü kaldırıldı!`, ephemeral: true });
+        await buttonInteraction.reply({ content: `${emoji.carpi} | ${rol.name} rolü kaldırıldı!`, ephemeral: true });
       } else {
         await member.roles.add(rolID);
-        await buttonInteraction.reply({ content: `✅ | ${rol.name} rolü verildi!`, ephemeral: true });
+        await buttonInteraction.reply({ content: `${emoji.tik} | ${rol.name} rolü verildi!`, ephemeral: true });
       }
     } catch (error) {
       console.error('Rol verme/alma işlemi sırasında hata:', error);
-      await buttonInteraction.reply({ content: `❌ | Rol işlemi sırasında bir hata oluştu.`, ephemeral: true });
+      await buttonInteraction.reply({ content: `${emoji.carpi} | Rol işlemi sırasında bir hata oluştu.`, ephemeral: true });
     }
   }
 });

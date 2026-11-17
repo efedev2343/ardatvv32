@@ -1,4 +1,6 @@
+const emoji = require("../emoji.js");
 const { EmbedBuilder } = require("discord.js");
+const config = require("../config.json");
 const moment = require("moment");
 require("moment-duration-format");
 
@@ -21,52 +23,52 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("#5865F2")
-      .setTitle("📊 Bot İstatistikleri")
+      .setTitle(emoji.kbdNews + " Bot İstatistikleri")
       .setThumbnail(client.user.displayAvatarURL())
       .addFields(
         {
-          name: "🕒 Çalışma Süresi",
+          name: emoji.kbdSaat + " Çalışma Süresi",
           value: uptime,
           inline: true
         },
         {
-          name: "💾 Bellek Kullanımı",
+          name: emoji.kbdNews + " Bellek Kullanımı",
           value: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
           inline: true
         },
         {
-          name: "👥 Toplam Kullanıcı",
+          name: emoji.kbdUser + " Toplam Kullanıcı",
           value: totalUsers.toLocaleString(),
           inline: true
         },
         {
-          name: "🌐 Sunucu Sayısı",
+          name: emoji.kbdDiscordLink + " Sunucu Sayısı",
           value: client.guilds.cache.size.toLocaleString(),
           inline: true
         },
         {
-          name: "📺 Kanal Sayısı",
+          name: emoji.kbdZil + " Kanal Sayısı",
           value: client.channels.cache.size.toLocaleString(),
           inline: true
         },
         {
-          name: "📡 Ping",
+          name: emoji.kbdZil + " Ping",
           value: `${client.ws.ping} ms`,
           inline: true
         },
         {
-          name: "⚙ Sistem Bilgileri",
+          name: emoji.kbdCalisma + " Sistem Bilgileri",
           value: `**OS:** ${process.platform} ${process.arch}\n**Node.js:** ${process.version}\n**Discord.js:** v${require("discord.js").version}`,
           inline: false
         },
         {
-          name: "👑 Bot Sahibi",
-          value: "<@808741421229539348>",
+          name: emoji.kbdTac + " Bot Sahibi",
+          value: `<@${config["sahip"]}>`,
           inline: false
         }
       )
       .setFooter({
-        text: "✨ Hazırlayan: ardatvv 💙",
+        text: emoji.kbdOyun + ` Hazırlayan: ${config["sahip-adi"]} ` + emoji.kbdOyun,
         iconURL: interaction.user.displayAvatarURL()
       })
       .setTimestamp();

@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const {
   Client,
   EmbedBuilder,
@@ -47,12 +48,12 @@ module.exports = {
 
       // Region mapping with broader support
       const bölgeler = {
-        "tr": "🇹🇷 Türkiye",
-        "en-US": "🇺🇸 Amerika",
-        "en-GB": "🇬🇧 Birleşik Krallık",
-        "de": "🇩🇪 Almanya",
-        "fr": "🇫🇷 Fransa",
-        "ja": "🇯🇵 Japonya",
+        "tr": emoji.kbdDiscordLink + " Türkiye",
+        "en-US": emoji.kbdDiscordLink + " Amerika",
+        "en-GB": emoji.kbdDiscordLink + " Birleşik Krallık",
+        "de": emoji.kbdDiscordLink + " Almanya",
+        "fr": emoji.kbdDiscordLink + " Fransa",
+        "ja": emoji.kbdDiscordLink + " Japonya",
       };
       const ülke = bölgeler[guild.preferredLocale] || guild.preferredLocale;
 
@@ -103,35 +104,35 @@ module.exports = {
       // Embed definitions
       const embedler = {
         genel: createEmbed(
-          "📌 Sunucu Genel Bilgileri",
+          emoji.kbdNews + " Sunucu Genel Bilgileri",
           "#9b59b6",
           [
-            { name: "📛 Sunucu Adı", value: guild.name || "Bilinmiyor", inline: true },
-            { name: "🆔 Sunucu ID", value: guild.id, inline: true },
-            { name: "👑 Sahip", value: sahipBilgi, inline: true },
-            { name: "<:website:1382376051736313969> Bölge", value: ülke, inline: true },
-            { name: "<:calisma:1382375444158091358> Kuruluş", value: moment(guild.createdAt).format("LLL"), inline: true },
-            { name: "<:admin:1296904503966044190>Doğrulama", value: doğrulama, inline: true },
-            { name: "<:kullanici:1382373832144326656> Üye Sayısı", value: `${memberCount} (İnsan: ${humanCount}, Bot: ${botCount})`, inline: true },
-            { name: "🚀 Boost Seviyesi", value: `Seviye ${boostSeviyesi} (${boostSayısı} boost)`, inline: true },
-            { name: "🚫 Yasaklama Sayısı", value: `${banSayısı}`, inline: true },
+            { name: emoji.kbdApi + " Sunucu Adı", value: guild.name || "Bilinmiyor", inline: true },
+            { name: emoji.kbdApi + " Sunucu ID", value: guild.id, inline: true },
+            { name: emoji.kbdTac + " Sahip", value: sahipBilgi, inline: true },
+            { name: emoji.kbdWebsite + " Bölge", value: ülke, inline: true },
+            { name: emoji.kbdCalisma + " Kuruluş", value: moment(guild.createdAt).format("LLL"), inline: true },
+            { name: emoji.admin + "Doğrulama", value: doğrulama, inline: true },
+            { name: emoji.kbdUser + " Üye Sayısı", value: `${memberCount} (İnsan: ${humanCount}, Bot: ${botCount})`, inline: true },
+            { name: emoji.kbdOyun + " Boost Seviyesi", value: `Seviye ${boostSeviyesi} (${boostSayısı} boost)`, inline: true },
+            { name: emoji.carpi + " Yasaklama Sayısı", value: `${banSayısı}`, inline: true },
           ],
           guild.iconURL({ dynamic: true }),
           "Sunucu Bilgi Paneli"
         ),
 
         kanallar: createEmbed(
-          "📁 Kanal Bilgileri",
+          emoji.kbdNews + " Kanal Bilgileri",
           "#3498db",
           [
             {
-              name: "🔢 Kanal Sayısı",
+              name: emoji.kbdApi + " Kanal Sayısı",
               value: [
                 `Toplam: \`${guild.channels.cache.size}\``,
-                `> 📂 Kategori: \`${kanalSayısı.kategori || 0}\``,
-                `> 💬 Yazı: \`${kanalSayısı.yazı || 0}\``,
-                `> 🔊 Ses: \`${kanalSayısı.ses || 0}\``,
-                `> 🧵 Forum: \`${kanalSayısı.altbaşlık || 0}\``,
+                `> ${emoji.kbdNews} Kategori: \`${kanalSayısı.kategori || 0}\``,
+                `> ${emoji.kbdNews} Yazı: \`${kanalSayısı.yazı || 0}\``,
+                `> ${emoji.kbdZil} Ses: \`${kanalSayısı.ses || 0}\``,
+                `> ${emoji.kbdNews} Forum: \`${kanalSayısı.altbaşlık || 0}\``,
               ].join("\n"),
             },
           ],
@@ -140,24 +141,24 @@ module.exports = {
         ),
 
         emojiler: createEmbed(
-          "😄 Emoji Bilgileri",
+          emoji.kbdOyun + " Emoji Bilgileri",
           "#2ecc71",
           [
-            { name: "📦 Toplam Emoji", value: `${guild.emojis.cache.size}`, inline: true },
-            { name: "🎞️ Animasyonlu", value: `${guild.emojis.cache.filter((e) => e.animated).size}`, inline: true },
-            { name: "🖼️ Normal", value: `${guild.emojis.cache.filter((e) => !e.animated).size}`, inline: true },
-            { name: "🧩 Emojiler", value: emojiBilgi },
+            { name: emoji.kbdNews + " Toplam Emoji", value: `${guild.emojis.cache.size}`, inline: true },
+            { name: emoji.kbdOyun + " Animasyonlu", value: `${guild.emojis.cache.filter((e) => e.animated).size}`, inline: true },
+            { name: emoji.kbdNews + " Normal", value: `${guild.emojis.cache.filter((e) => !e.animated).size}`, inline: true },
+            { name: emoji.kbdNews + " Emojiler", value: emojiBilgi },
           ],
           guild.iconURL({ dynamic: true }),
           "Sunucu Emojileri"
         ),
 
         roller: createEmbed(
-          "🎭 Rol Bilgileri",
+          emoji.kbdOyun + " Rol Bilgileri",
           "#f39c12",
           [
-            { name: "📌 Toplam Rol", value: `${guild.roles.cache.size}`, inline: true },
-            { name: "🧷 İlk 15 Rol", value: rolBilgi },
+            { name: emoji.kbdNews + " Toplam Rol", value: `${guild.roles.cache.size}`, inline: true },
+            { name: emoji.kbdNews + " İlk 15 Rol", value: rolBilgi },
           ],
           guild.iconURL({ dynamic: true }),
           "Sunucu Rolleri"
@@ -167,14 +168,14 @@ module.exports = {
       // Select menu with enhanced styling
       const menu = new StringSelectMenuBuilder()
         .setCustomId("sunucuBilgiMenu")
-        .setPlaceholder("🔎 Bilgi Kategorisi Seçin")
+        .setPlaceholder(emoji.kbdCalisma + " Bilgi Kategorisi Seçin")
         .setMinValues(1)
         .setMaxValues(1)
         .addOptions(
-          { label: "Genel Bilgiler", value: "genel", emoji: "📌", description: "Sunucunun temel bilgileri" },
-          { label: "Kanallar", value: "kanallar", emoji: "📁", description: "Kanal istatistikleri" },
-          { label: "Emojiler", value: "emojiler", emoji: "😄", description: "Sunucu emojileri" },
-          { label: "Roller", value: "roller", emoji: "🎭", description: "Sunucu rolleri" }
+          { label: "Genel Bilgiler", value: "genel", emoji: emoji.kbdNews, description: "Sunucunun temel bilgileri" },
+          { label: "Kanallar", value: "kanallar", emoji: emoji.kbdNews, description: "Kanal istatistikleri" },
+          { label: "Emojiler", value: "emojiler", emoji: emoji.kbdOyun, description: "Sunucu emojileri" },
+          { label: "Roller", value: "roller", emoji: emoji.kbdOyun, description: "Sunucu rolleri" }
         );
 
       const row = new ActionRowBuilder().addComponents(menu);
@@ -208,7 +209,7 @@ module.exports = {
           // Disable menu after timeout
           const disabledMenu = new StringSelectMenuBuilder(menu)
             .setDisabled(true)
-            .setPlaceholder("🔎 Süre doldu, tekrar çalıştırın");
+            .setPlaceholder(emoji.kbdCalisma + " Süre doldu, tekrar çalıştırın");
           const disabledRow = new ActionRowBuilder().addComponents(disabledMenu);
           await interaction.editReply({ components: [disabledRow] });
         } catch (error) {

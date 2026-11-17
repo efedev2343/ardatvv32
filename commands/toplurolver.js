@@ -1,3 +1,4 @@
+const emoji = require("../emoji.js");
 const { PermissionsBitField, EmbedBuilder } = require("discord.js");
 
 module.exports = {
@@ -42,8 +43,8 @@ module.exports = {
             if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
                 const embed = new EmbedBuilder()
                     .setColor("#FF0000")
-                    .setTitle("⛔ Yetki Hatası")
-                    .setDescription("<a:carpi:1227670096462221363> Bu komutu kullanmak için `Rolleri Yönet` iznine sahip olmalısınız!");
+                    .setTitle(emoji.carpi + " Yetki Hatası")
+                    .setDescription(emoji.carpi + " Bu komutu kullanmak için `Rolleri Yönet` iznine sahip olmalısınız!");
                 return await safeReply({ embeds: [embed], ephemeral: true });
             }
 
@@ -54,8 +55,8 @@ module.exports = {
             if (!role) {
                 const embed = new EmbedBuilder()
                     .setColor("#FF0000")
-                    .setTitle("❌ Hata")
-                    .setDescription("<a:carpi:1227670096462221363> Geçerli bir üye rolü seçmelisiniz.");
+                    .setTitle(emoji.carpi + " Hata")
+                    .setDescription(emoji.carpi + " Geçerli bir üye rolü seçmelisiniz.");
                 return await safeReply({ embeds: [embed], ephemeral: true });
             }
 
@@ -66,9 +67,9 @@ module.exports = {
             ) {
                 const embed = new EmbedBuilder()
                     .setColor("#FF0000")
-                    .setTitle("⚠️ Rol Hatası")
+                    .setTitle(emoji.kbdWarn + " Rol Hatası")
                     .setDescription(
-                        "<a:carpi:1227670096462221363> Botun rolü verilen rollerden aşağıda, işlem yapılamaz. Lütfen botun rolünü yükseltin!"
+                        emoji.carpi + " Botun rolü verilen rollerden aşağıda, işlem yapılamaz. Lütfen botun rolünü yükseltin!"
                     );
                 return await safeReply({ embeds: [embed], ephemeral: true });
             }
@@ -96,20 +97,20 @@ module.exports = {
             if (totalToAdd === 0 && totalBotsAssigned === 0) {
                 const embed = new EmbedBuilder()
                     .setColor("#FFFF00")
-                    .setTitle("ℹ️ Bilgi")
-                    .setDescription("<a:carpi:1227670096462221363> İşlem yapılacak üye veya bot bulunamadı.");
+                    .setTitle(emoji.kbdNews + " Bilgi")
+                    .setDescription(emoji.carpi + " İşlem yapılacak üye veya bot bulunamadı.");
                 return await safeEditReply({ embeds: [embed] });
             }
 
             // Initial progress message
             const initialEmbed = new EmbedBuilder()
                 .setColor("#0099FF")
-                .setTitle("⏳ İşlem Başlatıldı")
+                .setTitle(emoji.kbdSaat + " İşlem Başlatıldı")
                 .setDescription(`
-                    <:saat:1362926664031670574> Rol dağıtımı başladı...
+                    ${emoji.kbdSaat} Rol dağıtımı başladı...
                     **Tahmini İşlemler:**
-                    👥 Üyelere eklenecek: ${totalToAdd}
-                    🤖 Botlara eklenecek: ${totalBotsAssigned}
+                    ${emoji.kbdUser} Üyelere eklenecek: ${totalToAdd}
+                    ${emoji.kbdBot} Botlara eklenecek: ${totalBotsAssigned}
                 `);
             await safeEditReply({ embeds: [initialEmbed] });
 
@@ -143,15 +144,15 @@ module.exports = {
             const completionTime = ((Date.now() - startTime) / 1000).toFixed(2);
             const completionEmbed = new EmbedBuilder()
                 .setColor("#00FF00")
-                .setTitle("✅ İşlem Başarıyla Tamamlandı")
+                .setTitle(emoji.tik + " İşlem Başarıyla Tamamlandı")
                 .setDescription(`
-                    <a:yeilonay:1221172106637611169> Rol dağıtım işlemi tamamlandı!
+                    ${emoji.tik} Rol dağıtım işlemi tamamlandı!
                     **İşlem Detayları:**
                 `)
                 .addFields(
-                    { name: "👥 Üyelere Rol Verildi", value: `${totalToAdd} kişi`, inline: true },
-                    { name: "🤖 Botlara Rol Verildi", value: `${totalBotsAssigned} bot`, inline: true },
-                    { name: "⏱️ İşlem Süresi", value: `${completionTime} saniye`, inline: true },
+                    { name: emoji.kbdUser + " Üyelere Rol Verildi", value: `${totalToAdd} kişi`, inline: true },
+                    { name: emoji.kbdBot + " Botlara Rol Verildi", value: `${totalBotsAssigned} bot`, inline: true },
+                    { name: emoji.kbdSaat + " İşlem Süresi", value: `${completionTime} saniye`, inline: true },
                     { name: "Üye Rolü", value: `${role}`, inline: true },
                     { name: "Bot Rolü", value: botRole ? `${botRole}` : "Belirtilmedi", inline: true }
                 )
@@ -167,8 +168,8 @@ module.exports = {
             console.error("Hata oluştu:", error);
             const errorEmbed = new EmbedBuilder()
                 .setColor("#FF0000")
-                .setTitle("❌ Kritik Hata")
-                .setDescription("<a:carpi:1227670096462221363> Rol dağıtım işlemi sırasında beklenmedik bir hata oluştu!")
+                .setTitle(emoji.carpi + " Kritik Hata")
+                .setDescription(emoji.carpi + " Rol dağıtım işlemi sırasında beklenmedik bir hata oluştu!")
                 .addFields({
                     name: "Hata Detayı",
                     value: `\`\`\`${error.message.substring(0, 1000)}\`\`\``,
