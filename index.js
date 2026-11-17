@@ -78,7 +78,8 @@ for (let commandName of fs.readdirSync("./commands")) {
       options: command.options || [],
       dm_permission: false,
       type: 1,
-      execute: command.run || command.execute
+      execute: command.run || command.execute,
+      autocomplete: command.autocomplete
     });
 
     console.log(`[+] ${commandName} komutu başarıyla yüklendi.`);
@@ -234,14 +235,31 @@ client.once("ready", async () => {
   }
 
   try {
+    // Slash komutları global kaydet: bot hangi sunucuya eklenirse eklensin çalışır
+    const commandBody = client.commands.map(({ execute, autocomplete, ...cmd }) => cmd);
+
+    if (commandBody.length > 100) {
+      console.warn(`[!] ${commandBody.length} komut var, Discord global limiti 100. Fazla komutlar kaydedilemeyebilir.`);
+    }
+
+    // PUT, tüm global komutları yenisiyle değiştirir (eski komutlar otomatik silinir)
     await rest.put(Routes.applicationCommands(client.user.id), {
-      body: client.commands,
+      body: commandBody,
     });
+    console.log(`[+] ${commandBody.length} slash komutu global olarak kaydedildi (tüm sunucular).`);
+
+    // guildId doluysa o sunucuya da kaydet (komutlar anında görünsün diye)
+    if (config.guildId) {
+      await rest.put(Routes.applicationGuildCommands(client.user.id, config.guildId), {
+        body: commandBody,
+      });
+      console.log(`[+] ${commandBody.length} slash komutu ayrıca sunucuya (${config.guildId}) kaydedildi.`);
+    }
 
     console.log(`${client.user.tag} Aktif! ${emoji.kbdOK}`); // Bot aktif olduğunda konsola basılır
     db.set("botAcilis_", Date.now());
 
-    
+
   } catch (error) {
     console.error("[x] Bot hazır olurken bir hata oluştu:", error);
   }
@@ -256,7 +274,9 @@ client.login(config.token)
     console.error('[x] Discord API\'ye istek gönderimi başarısız:', err);
     setTimeout(() => {
       console.log('[i] Yeniden bağlantı kuruluyor...');
-      client.login(config.token);
+      client.login(config.token).catch((err2) => {
+        console.error('[x] Yeniden bağlantı başarısız:', err2.message);
+      });
     }, 10000);
   });
 
@@ -273,7 +293,8 @@ client.on('guildCreate', async (guild) => {
 });
 
 
-const hataLogKanalID = "1363268284035891270";
+// Hata log kanalı config'den; boşsa eski sabit kullanılır
+const hataLogKanalID = config.log || "1363268284035891270";
 
 
 async function komutCalistir(interaction, komutIsmi, komutFonksiyonu) {

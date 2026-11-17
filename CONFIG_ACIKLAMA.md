@@ -18,6 +18,8 @@
 | `bot-adi` | Botun arayüzlerde görünen adı. |
 | `bot-id` | Botun Discord kullanıcı ID. Davet bağlantısı fallback'inde kullanılır. |
 | `website` | Website butonunun açtığı bağlantı. |
+| `bot-banner` | Davet komutunda kullanılacak banner görseli URL. Boşsa varsayılan görsel kullanılır. |
+| `sesXp` | Ses kanalında dakika başına verilen XP miktarı (sayı, örn. `5`). |
 | `durum` | Botun özel durum (custom status) metni. `"yok"` ise durum ayarlanmaz. |
 | `prefix` | Birincil prefix komut öneki (`.p`). |
 | `prefixes` | Prefix komutlarının çalıştığı tüm önekler listesi. En uzun eşleşen önek kullanılır. |
@@ -27,7 +29,7 @@
 | `footer` | Embed alt bilgilerinde görünen metin/bot adı. |
 | `webhookURL` | Log ve shard bildirimlerinin gönderildiği webhook URL. Gizli tutun. |
 | `clientId` | Slash komutlarını kaydetmek için kullanılan uygulama ID. |
-| `guildId` | Slash komutlarının kaydedildiği sunucu ID. |
+| `guildId` | Slash komutlarının **ek olarak** anında kaydedileceği sunucu ID (opsiyonel). Komutlar her zaman global kaydedilir; bot hangi sunucuya eklenirse eklensin çalışır. Bu alan doluysa o sunucuda komutlar anında görünür. |
 
 ## Notlar
 
