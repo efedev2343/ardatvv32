@@ -57,7 +57,7 @@ module.exports = {
       const joinTime = userVoiceJoinTimes[userId];
       if (joinTime) {
         const durationMs = Date.now() - joinTime;
-        const xpToAdd = Math.floor(durationMs / 60000) * config.sesXp;
+        const xpToAdd = Math.floor(durationMs / 60000) * (Number(config.sesXp) || 5);
 
         if (xpToAdd > 0) {
           db.add(`xpPos_${userId}_${guildId}`, xpToAdd);

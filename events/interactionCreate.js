@@ -7,7 +7,6 @@ const moment = require("moment");
 require("moment-duration-format");
 const os = require("os");
 const fs = require("fs");
-const { readdirSync } = require("fs");
 const path = require("path");
 const KARALISTE_JSON_PATH = path.join(__dirname, "..", "karaliste.json");
 const { createButton, deleteMessageButton } = require("../function/functions");
@@ -17,13 +16,31 @@ module.exports = {
 
   run: async (client, interaction) => {
    
-    if (!interaction || !interaction.guild || !interaction.user?.id) return; 
+    if (!interaction || !interaction.guild || !interaction.user?.id) return;
 
-    
+    // Autocomplete (ör. /hava-durumu şehir) — hata verse bile bot çökmez
+    if (interaction.isAutocomplete()) {
+      try {
+        const cmd = (client.commands || []).find(
+          (c) => c.name === interaction.commandName.toLowerCase()
+        );
+        if (typeof cmd?.autocomplete === "function") {
+          await cmd.autocomplete(interaction);
+        } else {
+          await interaction.respond([]);
+        }
+      } catch (err) {
+        console.error("Autocomplete hatası:", err);
+        try { await interaction.respond([]); } catch { /* zaten yanıtlandı */ }
+      }
+      return;
+    }
+
+
     const bakimModu = db.get("bakim_modu"); 
     const kullaniciID = interaction.user.id; 
-    const BAKIM_IZIN_VERILEN_IDLER = config.sahip || []; 
-    const isUserAllowed = BAKIM_IZIN_VERILEN_IDLER.includes(kullaniciID); 
+    const BAKIM_IZIN_VERILEN_IDLER = config.sahip ? [config.sahip] : [];
+    const isUserAllowed = BAKIM_IZIN_VERILEN_IDLER.includes(kullaniciID);
 
     if (bakimModu && !isUserAllowed) {
       try {
@@ -219,20 +236,38 @@ module.exports = {
 
     if (!interaction.guildId) return;
 
-    readdirSync('./commands').forEach(f => {
+    // Komutları her etkileşimde yeniden require etmek yerine açılışta yüklenen listeden al
+    const cmd = (client.commands || []).find(
+      (c) => c.name === interaction.commandName.toLowerCase()
+    );
 
-      const cmd = require(`../commands/${f}`);
+    if (!cmd) {
+      try {
+        await interaction.reply({ content: "Bu komut bulunamadı.", ephemeral: true });
+      } catch { /* süresi dolmuş interaction */ }
+      return;
+    }
 
-      if(interaction.commandName.toLowerCase() === cmd.name.toLowerCase()) {
+    console.log(`Komut kullandı: ${interaction.user.tag} (${interaction.user.id}) (${interaction.guild.name})`);
 
-		console.log(`Komut kullandı: ${interaction.user.tag} (${interaction.user.id}) (${interaction.guild.name}) `)
-
-       return cmd.run(client, interaction, db);
-
+    try {
+      if (typeof cmd.execute === "function") {
+        await cmd.execute(client, interaction, db);
+      } else if (typeof cmd.run === "function") {
+        await cmd.run(client, interaction, db);
       }
-
-
-    });
+    } catch (err) {
+      // Bir komut çökse bile bot ayakta kalır
+      console.error(`Komut hatası (${cmd.name}):`, err);
+      const hataMesaji = "Bu komut çalıştırılırken bir hata oluştu. Lütfen tekrar deneyin.";
+      try {
+        if (interaction.deferred || interaction.replied) {
+          await interaction.followUp({ content: hataMesaji, ephemeral: true });
+        } else if (interaction.isRepliable()) {
+          await interaction.reply({ content: hataMesaji, ephemeral: true });
+        }
+      } catch { /* 10062 / 40060 */ }
+    }
 
 
 
@@ -825,7 +860,7 @@ if(interaction.customId === 'giriscikis'){
           const embed = new EmbedBuilder()
           .setAuthor({ name: " Sistemler Menüsü", iconURL: client.user.displayAvatarURL({ dynamic: true })})
           .setTitle("・Hangi komutlarım hakkında bilgi almak istiyorsan o butona bas!")
-          .setDescription("\n\n**Linkler**\n>・**Botun davet linki: [Tıkla](" + config["bot-davet"] + ")**\n>・**Botun destek sunucusu: [Tıkla](" + config["desteksunucusu"] + ")**")
+          .setDescription("\n\n**Linkler**\n>・**Botun davet linki: [Tıkla](" + config["bot-davet"] + ")**\n>・**Botun destek sunucusu: [Tıkla](" + config["desteksunucu"] + ")**")
           .setColor('Blue')
           interaction.update({embeds: [embed], components: [row, row2]})
       
@@ -985,7 +1020,7 @@ if(interaction.customId === 'giriscikis'){
           const embed = new EmbedBuilder()
           .setAuthor({ name: "Genel Bot Yardım Menüsü", iconURL: client.user.displayAvatarURL({ dynamic: true })})
           .setTitle("・Hangi komutlarım hakkında bilgi almak istiyorsan o butona bas!")
-          .setDescription("\n\n**Linkler**\n> ・**Botun davet linki: [Tıkla](" + config["bot-davet"] + ")**\n> ・**Botun destek sunucusu: [Tıkla](" + config["desteksunucusu"] + ")**")
+          .setDescription("\n\n**Linkler**\n> ・**Botun davet linki: [Tıkla](" + config["bot-davet"] + ")**\n> ・**Botun destek sunucusu: [Tıkla](" + config["desteksunucu"] + ")**")
           .setColor('Blue')
           const row = new Discord.ActionRowBuilder()
           .addComponents(

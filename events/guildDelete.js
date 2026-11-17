@@ -7,6 +7,7 @@ const {
   ButtonStyle 
 } = require("discord.js");
 const config = require("../config.json");
+const guvenliURL = (v) => (typeof v === "string" && /^https?:\/\/[^\s]+$/i.test(v.trim()) ? v.trim() : null);
 
 module.exports = {
   name: Events.GuildDelete,
@@ -44,14 +45,17 @@ Sunucu Sayısı: ${client.guilds.cache.size}`)
         .setImage(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
         .setColor("#2B2D31");
 
-      const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-          .setLabel(emoji.kbdOyun + " Destek Sunucusu")
-          .setStyle(ButtonStyle.Link)
-          .setURL(config["desteksunucu"])
-      );
+      const destekURL = guvenliURL(config["desteksunucu"]);
+      const row = destekURL
+        ? new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+              .setLabel(emoji.kbdOyun + " Destek Sunucusu")
+              .setStyle(ButtonStyle.Link)
+              .setURL(destekURL)
+          )
+        : null;
 
-      await owner.send({ embeds: [dmEmbed], components: [row] }).catch(err => {
+      await owner.send({ embeds: [dmEmbed], components: row ? [row] : [] }).catch(err => {
         console.warn(`[${client.user.username}] DM gönderilemedi: ${owner.tag}`);
       });
     }

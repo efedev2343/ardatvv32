@@ -114,12 +114,9 @@ module.exports = {
             }
 
             
-            const saas = db.fetch(`saas_${message.guild.id}`);
-            if (saas) {
-                const selaamlar = ["sa", "slm", "sea", "selam", "selamünaleyküm"];
-                if (selaamlar.includes(message.content.toLowerCase())) {
-                    message.channel.send(`<@${message.author.id}> aleyküm selam, hoş geldin!`);
-                }
+            const selaamlar = ["sa", "as", "slm", "sea", "selam", "selamünaleyküm"];
+            if (selaamlar.includes(message.content.toLowerCase().trim())) {
+                message.channel.send(`<@${message.author.id}> aleyküm selam, hoş geldin!`);
             }
 
            
