@@ -1,6 +1,7 @@
 const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 const config = require("../config.json");
+const guvenliURL = (v) => (typeof v === "string" && /^https?:\/\/[^\s]+$/i.test(v.trim()) ? v.trim() : null);
 
 module.exports = {
   name: "davet",
@@ -12,20 +13,24 @@ module.exports = {
     try {
       // URL değerlerini kontrol et ve varsayılan değer ata
       const botAdi = (config["bot-adi"] || "Bot").trim();
-      const botDavetURL = config["bot-davet"] || `https://discord.com/oauth2/authorize?client_id=${config["bot-id"]}&permissions=8&integration_type=0&scope=bot+applications.commands`;
-      const destekURL = config["desteksunucu"];
+      const botDavetURL = guvenliURL(config["bot-davet"]) || `https://discord.com/oauth2/authorize?client_id=${config["bot-id"]}&permissions=8&integration_type=0&scope=bot+applications.commands`;
+      const destekURL = guvenliURL(config["desteksunucu"]);
 
-      // Butonları oluştur
+      // Butonları oluştur (geçersiz link varsa o buton eklenmez)
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setLabel(`${botAdi.toLocaleUpperCase("tr-TR")} BOTU DAVET`)
           .setStyle(5)
-          .setURL(botDavetURL),
-        new ButtonBuilder()
-          .setLabel(emoji.kbdCalisma + " Yardım Al!")
-          .setStyle(5)
-          .setURL(destekURL)
+          .setURL(botDavetURL)
       );
+      if (destekURL) {
+        row.addComponents(
+          new ButtonBuilder()
+            .setLabel(emoji.kbdCalisma + " Yardım Al!")
+            .setStyle(5)
+            .setURL(destekURL)
+        );
+      }
 
       // Embed oluştur
       const embed = new EmbedBuilder()

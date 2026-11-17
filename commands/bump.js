@@ -2,6 +2,7 @@ const emoji = require("../emoji.js");
 const { Client, EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("croxydb");
 const config = require("../config.json");
+const guvenliURL = (v) => (typeof v === "string" && /^https?:\/\/[^\s]+$/i.test(v.trim()) ? v.trim() : null);
 
 module.exports = {
   name: "bump",
@@ -72,25 +73,24 @@ module.exports = {
       const nowDate = new Date();
       const yearsDiff = nowDate.getFullYear() - createdDate.getFullYear();
 
-      // Butonları oluştur
-      const row = new ActionRowBuilder()
-        .addComponents(
-          new ButtonBuilder()
-            .setLabel('Sunucuya Git')
-            .setURL(inviteLink)
-            .setEmoji(emoji.kbdReklam)
-            .setStyle(ButtonStyle.Link),
-          new ButtonBuilder()
-            .setLabel('Botu Ekle')
-            .setURL(config["bot-davet"])
-            .setEmoji(emoji.kbdBot)
-            .setStyle(ButtonStyle.Link),
-          new ButtonBuilder()
-            .setLabel('Destek Sunucusu')
-            .setURL(config["desteksunucu"])
-             .setEmoji(emoji.kbdDiscordLink)
-            .setStyle(ButtonStyle.Link)
-        );
+      // Butonları oluştur (geçersiz linkler eklenmez)
+      const row = new ActionRowBuilder();
+      const bumpLinkler = [
+        { label: 'Sunucuya Git', url: guvenliURL(inviteLink), emoji: emoji.kbdReklam },
+        { label: 'Botu Ekle', url: guvenliURL(config["bot-davet"]), emoji: emoji.kbdBot },
+        { label: 'Destek Sunucusu', url: guvenliURL(config["desteksunucu"]), emoji: emoji.kbdDiscordLink },
+      ];
+      for (const link of bumpLinkler) {
+        if (link.url) {
+          row.addComponents(
+            new ButtonBuilder()
+              .setLabel(link.label)
+              .setURL(link.url)
+              .setEmoji(link.emoji)
+              .setStyle(ButtonStyle.Link)
+          );
+        }
+      }
 
       // Embed oluştur (davet linki artık sadece butonda ve embed footer'ında)
       const embed = new EmbedBuilder()

@@ -1,6 +1,7 @@
 const { Client, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const emoji = require("../emoji.js");
 const config = require("../config.json");
+const guvenliURL = (v) => (typeof v === "string" && /^https?:\/\/[^\s]+$/i.test(v.trim()) ? v.trim() : null);
 
 module.exports = {
   name: "yardım",
@@ -53,59 +54,64 @@ module.exports = {
           {
             label: "Kullanıcı",
             value: "kullanıcı",
-            emoji: emoji.kullanici,
+            emoji: emoji.kbdUser,
             description: "Kullanıcı komutları",
           },
           {
             label: "Eğlence",
             value: "eglence",
-            emoji: emoji.oyun,
+            emoji: emoji.kbdOyun,
             description: "Eğlenceli komutlar",
           },
           {
             label: "Sunucu",
             value: "sunucu",
-            emoji: emoji.ayarlar,
+            emoji: emoji.kbdAyarlar,
             description: "Sunucu yönetimi",
           },
           {
             label: "Bot",
             value: "bot",
-            emoji: emoji.bot2,
+            emoji: emoji.kbdBot2,
             description: "Bot kontrol komutları",
           },
           {
             label: "Yetkili",
             value: "yetkili",
-            emoji: emoji.calisma,
+            emoji: emoji.kbdCalisma,
             description: "Yetkili komutları",
           },
         ]);
 
       const rowMenu = new ActionRowBuilder().addComponents(selectMenu);
 
-      const buttons = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-          .setLabel("Davet Et")
-          .setStyle(ButtonStyle.Link)
-          .setURL(config["bot-davet"])
-          .setEmoji(emoji.davet),
-        new ButtonBuilder()
-          .setLabel("Website")
-          .setStyle(ButtonStyle.Link)
-          .setURL(config["website"])
-          .setEmoji(emoji.website),
-        new ButtonBuilder()
-          .setLabel("Destek")
-          .setStyle(ButtonStyle.Link)
-          .setURL(config["desteksunucu"])
-          .setEmoji(emoji.destek),
+      // "yok" / boş / geçersiz linkler buton eklenmeden önce elenir
+      const buttonComponents = [];
+      const linkButtons = [
+        { label: "Davet Et", url: guvenliURL(config["bot-davet"]), emoji: emoji.kbdDavet },
+        { label: "Website", url: guvenliURL(config["website"]), emoji: emoji.kbdWebsite },
+        { label: "Destek", url: guvenliURL(config["desteksunucu"]), emoji: emoji.kbdDestek },
+      ];
+      for (const link of linkButtons) {
+        if (link.url) {
+          buttonComponents.push(
+            new ButtonBuilder()
+              .setLabel(link.label)
+              .setStyle(ButtonStyle.Link)
+              .setURL(link.url)
+              .setEmoji(link.emoji)
+          );
+        }
+      }
+      buttonComponents.push(
         new ButtonBuilder()
           .setLabel("Komut Listesi")
           .setStyle(ButtonStyle.Secondary)
           .setCustomId(`komut_listesi_${interaction.id}`)
-          .setEmoji(emoji.komutlar)
+          .setEmoji(emoji.kbdCommands)
       );
+
+      const buttons = new ActionRowBuilder().addComponents(buttonComponents);
 
       const message = await interaction.followUp({
         embeds: [baseEmbed],
@@ -120,15 +126,24 @@ module.exports = {
 
       collector.on("collect", async (i) => {
         try {
+          if (!i.isRepliable()) return;
           if (!i.customId.includes(interaction.id)) return;
+
+          // Token süresi (15 dk) dolmuş eski etkileşimlerde sessizce çık
+          if (Date.now() - i.createdTimestamp > 15 * 60 * 1000) return;
+
           if (i.user.id !== interaction.user.id) {
-            return await i.reply({
-              content: "Bu menüyü sadece komutu kullanan kişi kullanabilir!",
-              ephemeral: true,
-            });
+            return await safeReply(i, () =>
+              i.reply({
+                content: "Bu menüyü sadece komutu kullanan kişi kullanabilir!",
+                ephemeral: true,
+              })
+            );
           }
 
           if (i.isStringSelectMenu()) {
+            // Önce onayla, sonra hazırla (3 saniyelik token süresi aşılmasın)
+            await safeReply(i, () => i.deferUpdate());
             const kategori = i.values[0];
             const commands = Array.from(client.commands.values());
 
@@ -171,7 +186,7 @@ module.exports = {
                 color: "#ED4245",
               },
               kullanıcı: {
-                title: `${emoji.kullanici} Kullanıcı Komutları`,
+                title: `${emoji.kbdUser} Kullanıcı Komutları`,
                 description: `
                 **Kullanıcılar için faydalı araçlar:**
                 
@@ -193,7 +208,7 @@ module.exports = {
                 color: "#57F287",
               },
               eglence: {
-                title: `${emoji.oyun} Eğlence Komutları`,
+                title: `${emoji.kbdOyun} Eğlence Komutları`,
                 description: `
                 **Eğlenceli vakit geçirmeniz için komutlar:**
                 
@@ -214,7 +229,7 @@ module.exports = {
                 color: "#FEE75C",
               },
               sunucu: {
-                title: `${emoji.ayarlar} Sunucu Yönetimi`,
+                title: `${emoji.kbdAyarlar} Sunucu Yönetimi`,
                 description: `
                 **Sunucunuzu yönetmek için araçlar:**
                 
@@ -235,7 +250,7 @@ module.exports = {
                 color: "#EB459E",
               },
               bot: {
-                title: `${emoji.bot2} Bot Komutları`,
+                title: `${emoji.kbdBot2} Bot Komutları`,
                 description: `
                 **Bot kontrol ve bilgi komutları:**
                 
@@ -256,7 +271,7 @@ module.exports = {
                 color: "#5865F2",
               },
               yetkili: {
-                title: `${emoji.calisma} Yetkili Komutları`,
+                title: `${emoji.kbdCalisma} Yetkili Komutları`,
                 description: `
                 **Sadece yetkililer için özel komutlar:**
                 
@@ -289,11 +304,14 @@ module.exports = {
               })
               .setTimestamp();
 
-            await i.update({
-              embeds: [kategoriEmbed],
-              components: i.message.components,
-            });
+            await safeReply(i, () =>
+              i.editReply({
+                embeds: [kategoriEmbed],
+                components: i.message.components,
+              })
+            );
           } else if (i.isButton()) {
+            await safeReply(i, () => i.deferReply({ ephemeral: true }));
             const commands = Array.from(client.commands.values());
 
             // Tüm komutları listelemek için
@@ -343,18 +361,11 @@ module.exports = {
               embeds.push(embed);
             }
 
-            await i.reply({
-              embeds: embeds,
-              ephemeral: true,
-            });
+            await safeReply(i, () => i.editReply({ embeds }));
           }
         } catch (err) {
-          console.error("Collector interaction işlenirken hata:", err);
-          if (i.isRepliable() && !i.replied && !i.deferred) {
-            await i.reply({
-              content: "Bir hata oluştu, lütfen tekrar deneyin.",
-              ephemeral: true,
-            });
+          if (![10062, 40060, 10008].includes(err.code)) {
+            console.error("Collector interaction işlenirken hata:", err);
           }
         }
       });
@@ -380,14 +391,18 @@ module.exports = {
             .setDisabled(true)
             .addOptions([{ label: "Süre Doldu", value: "disabled" }]);
 
+          // Link butonlar devre dışı bırakılamaz (Discord kuralı), sadece diğerlerini kapat
           const disabledButtons = new ActionRowBuilder().addComponents(
-            buttons.components.map((btn) =>
-              ButtonBuilder.from(btn).setDisabled(true)
-            )
+            buttons.components
+              .filter((btn) => btn.data.style !== ButtonStyle.Link)
+              .map((btn) => ButtonBuilder.from(btn).setDisabled(true))
           );
 
           await fetchedMessage.edit({
-            components: [new ActionRowBuilder().addComponents(disabledMenu), disabledButtons],
+            components: [
+              new ActionRowBuilder().addComponents(disabledMenu),
+              disabledButtons,
+            ],
           });
         } catch (err) {
           console.error("Collector kapatma hatası:", err);
@@ -395,21 +410,31 @@ module.exports = {
         }
       });
     } catch (err) {
-      console.error("Yardım komutu çalıştırılırken hata:", err);
+      if (![10062, 40060, 10008].includes(err.code)) {
+        console.error("Yardım komutu çalıştırılırken hata:", err);
+      }
+      const hataMesaji = {
+        content: "Bir hata oluştu, lütfen tekrar deneyin.",
+        ephemeral: true,
+      };
       if (!interaction.replied && !interaction.deferred) {
-        await interaction.reply({
-          content: "Bir hata oluştu, lütfen tekrar deneyin.",
-          ephemeral: true,
-        });
+        await safeReply(interaction, () => interaction.reply(hataMesaji));
       } else if (interaction.deferred) {
-        await interaction.followUp({
-          content: "Bir hata oluştu, lütfen tekrar deneyin.",
-          ephemeral: true,
-        });
+        await safeReply(interaction, () => interaction.followUp(hataMesaji));
       }
     }
   },
 };
+
+// Süresi dolmuş / zaten yanıtlanmış interaction hatalarını (10062, 40060, 10008) bastırır
+async function safeReply(interaction, fn) {
+  try {
+    return await fn();
+  } catch (err) {
+    if ([10062, 40060, 10008].includes(err.code)) return null;
+    throw err;
+  }
+}
 
 function formatUptime(seconds) {
   const days = Math.floor(seconds / (3600 * 24));

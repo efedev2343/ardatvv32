@@ -1,5 +1,5 @@
 const emj = require("../emoji.js");
-const { Client, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 module.exports = {
   name: "emojiler",
@@ -8,127 +8,137 @@ module.exports = {
 
   run: async (client, interaction) => {
     const guild = interaction.guild;
+    const id = interaction.id;
 
     try {
       await interaction.deferReply();
 
       const emojiler = guild.emojis.cache;
-      
+
       if (emojiler.size === 0) {
         return interaction.editReply({
           content: "Bu sunucuda hiç özel emoji bulunmamaktadır.",
-          flags: MessageFlags.FLAGS.EPHEMERAL
+          ephemeral: true
         });
       }
 
       // Emojileri türlerine göre ayır
-      const animasyonluEmojiler = emojiler.filter(emoji => emoji.animated);
-      const normalEmojiler = emojiler.filter(emoji => !emoji.animated);
+      const animasyonluEmojiler = emojiler.filter(e => e.animated);
+      const normalEmojiler = emojiler.filter(e => !e.animated);
 
-      // Sayfalara ayırma fonksiyonu
       const paginateEmojis = (emojiList, title, emojisPerPage = 20) => {
         const pages = [];
-        const totalPages = Math.ceil(emojiList.size / emojisPerPage);
-        
-        let currentPage = 0;
         const emojiArray = [...emojiList.values()];
-        
-        while (currentPage < totalPages) {
-          const start = currentPage * emojisPerPage;
-          const end = start + emojisPerPage;
-          const pageEmojis = emojiArray.slice(start, end);
-          
-          const embed = new EmbedBuilder()
-            .setColor("#3498db")
-            .setTitle(`${guild.name} Sunucusu - ${title}`)
-            .setDescription(pageEmojis.map(emoji => `${emoji} \`${emoji.name}\``).join(" "))
-            .setFooter({ 
-              text: `Sayfa ${currentPage + 1}/${totalPages} • Toplam ${emojiList.size} emoji`,
-              iconURL: guild.iconURL() 
-            });
-          
-          pages.push(embed);
-          currentPage++;
+        const totalPages = Math.ceil(emojiArray.length / emojisPerPage);
+
+        for (let currentPage = 0; currentPage < totalPages; currentPage++) {
+          const pageEmojis = emojiArray.slice(currentPage * emojisPerPage, (currentPage + 1) * emojisPerPage);
+
+          pages.push(
+            new EmbedBuilder()
+              .setColor("#3498db")
+              .setTitle(`${guild.name} Sunucusu - ${title}`)
+              .setDescription(pageEmojis.map(e => `${e} \`${e.name}\``).join(" "))
+              .setFooter({
+                text: `Sayfa ${currentPage + 1}/${totalPages} • Toplam ${emojiArray.length} emoji`,
+                iconURL: guild.iconURL() || undefined
+              })
+          );
         }
-        
         return pages;
       };
 
-      // Tüm sayfaları oluştur
-      const normalPages = paginateEmojis(normalEmojiler, "Statik Emojiler");
-      const animasyonluPages = paginateEmojis(animasyonluEmojiler, "Animasyonlu Emojiler");
-      const allPages = [...normalPages, ...animasyonluPages];
-      
-      // Eğer tek sayfa varsa direkt gönder
-      if (allPages.length <= 1) {
+      const allPages = [
+        ...paginateEmojis(normalEmojiler, "Statik Emojiler"),
+        ...paginateEmojis(animasyonluEmojiler, "Animasyonlu Emojiler")
+      ];
+
+      if (allPages.length === 0) {
+        return interaction.editReply({ content: "Gösterilecek emoji bulunamadı.", ephemeral: true });
+      }
+
+      // Tek sayfa varsa butonsuz gönder
+      if (allPages.length === 1) {
         return interaction.editReply({ embeds: [allPages[0]] });
       }
 
-      // Sayfa kontrol butonları
+      let currentPage = 0;
+      const prevId = `emoji_prev_${id}`;
+      const nextId = `emoji_next_${id}`;
+
       const buttons = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-          .setCustomId("previous")
+          .setCustomId(prevId)
           .setLabel(emj.kbdDiscordLink + " Önceki")
           .setStyle(ButtonStyle.Primary)
           .setDisabled(true),
         new ButtonBuilder()
-          .setCustomId("next")
+          .setCustomId(nextId)
           .setLabel("Sonraki " + emj.kbdDiscordLink)
           .setStyle(ButtonStyle.Primary)
       );
 
-      let currentPage = 0;
-      const message = await interaction.editReply({ 
-        embeds: [allPages[currentPage]], 
-        components: [buttons] 
+      const message = await interaction.editReply({
+        embeds: [allPages[currentPage]],
+        components: [buttons]
       });
 
-      // Buton etkileşimleri için collector
-      const collector = message.createMessageComponentCollector({ 
-        time: 300000 // 5 dakika sonra zaman aşımı
+      const collector = message.createMessageComponentCollector({
+        filter: (i) => i.customId === prevId || i.customId === nextId,
+        time: 300000
       });
 
       collector.on("collect", async (i) => {
-        if (i.user.id !== interaction.user.id) {
-          return i.reply({ 
-            content: "Bu butonları sadece komutu kullanan kişi kullanabilir.",
-            ephemeral: true 
-          });
+        try {
+          if (i.user.id !== interaction.user.id) {
+            await i.reply({
+              content: "Bu butonları sadece komutu kullanan kişi kullanabilir.",
+              ephemeral: true
+            }).catch(() => {});
+            return;
+          }
+
+          if (i.customId === prevId) currentPage--;
+          else if (i.customId === nextId) currentPage++;
+
+          if (currentPage < 0) currentPage = 0;
+          if (currentPage > allPages.length - 1) currentPage = allPages.length - 1;
+
+          buttons.components[0].setDisabled(currentPage === 0);
+          buttons.components[1].setDisabled(currentPage === allPages.length - 1);
+
+          await i.deferUpdate().catch(() => {});
+          await message.edit({
+            embeds: [allPages[currentPage]],
+            components: [buttons]
+          }).catch(() => {});
+        } catch (err) {
+          if (![10062, 40060].includes(err.code)) {
+            console.error("Emojiler buton hatası:", err);
+          }
         }
-
-        if (i.customId === "previous") {
-          currentPage--;
-        } else if (i.customId === "next") {
-          currentPage++;
-        }
-
-        // Buton durumlarını güncelle
-        buttons.components[0].setDisabled(currentPage === 0);
-        buttons.components[1].setDisabled(currentPage === allPages.length - 1);
-
-        await i.update({
-          embeds: [allPages[currentPage]],
-          components: [buttons]
-        });
       });
 
       collector.on("end", () => {
-        message.edit({ components: [] }).catch(console.error);
+        message.edit({ components: [] }).catch((err) => {
+          if (![10062, 40060, 10008].includes(err.code)) {
+            console.error("Collector kapatma hatası:", err);
+          }
+        });
       });
-
     } catch (err) {
-      console.error("Emojiler alınırken bir hata oluştu:", err);
-      if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({
-          content: emj.carpi + "  | Emojiler alınırken bir hata oluştu.",
-          flags: MessageFlags.FLAGS.EPHEMERAL
-        }).catch(console.error);
-      } else {
-        await interaction.reply({
-          content: emj.carpi + "  | Emojiler alınırken bir hata oluştu.",
-          flags: MessageFlags.FLAGS.EPHEMERAL
-        }).catch(console.error);
+      if (![10062, 40060].includes(err.code)) {
+        console.error("Emojiler alınırken bir hata oluştu:", err);
       }
+      const mesaj = emj.carpi + "  | Emojiler alınırken bir hata oluştu.";
+      const payload = { content: mesaj, ephemeral: true };
+      try {
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply(payload).catch(() => {});
+        } else if (interaction.isRepliable()) {
+          await interaction.reply(payload).catch(() => {});
+        }
+      } catch { /* sessizce geç */ }
     }
-  },
+  }
 };

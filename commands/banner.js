@@ -2,6 +2,7 @@ const emoji = require("../emoji.js");
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js");
 const { DiscordBanners } = require("discord-banners");
 const config = require("../config.json");
+const guvenliURL = (v) => (typeof v === "string" && /^https?:\/\/[^\s]+$/i.test(v.trim()) ? v.trim() : null);
 
 module.exports = {
     name: "banner",
@@ -68,24 +69,22 @@ module.exports = {
             .setTimestamp();
 
         const buttons = new ActionRowBuilder();
-        try {
-            new URL(bannerURL); 
+        const guvenliBanner = guvenliURL(bannerURL);
+        const guvenliDestek = guvenliURL(config["desteksunucu"]);
+
+        if (guvenliBanner) {
             buttons.addComponents(
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Link)
-                    .setURL(bannerURL)
-                    .setLabel(emoji.kbdNews + " Banner'ı Gör / İndir"),
-                new ButtonBuilder()
-                    .setStyle(ButtonStyle.Link)
-                    .setURL(config["desteksunucu"])
-                    .setLabel(emoji.kbdNews + " Destek Sunucusu")
+                    .setURL(guvenliBanner)
+                    .setLabel(emoji.kbdNews + " Banner'ı Gör / İndir")
             );
-        } catch {
-            // URL geçersizse sadece destek sunucusu butonunu ekle
+        }
+        if (guvenliDestek) {
             buttons.addComponents(
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Link)
-                    .setURL(config["desteksunucu"])
+                    .setURL(guvenliDestek)
                     .setLabel(emoji.kbdNews + " Destek Sunucusu")
             );
         }

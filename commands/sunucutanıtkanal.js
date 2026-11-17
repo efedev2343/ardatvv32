@@ -3,7 +3,7 @@ const { Client, PermissionsBitField } = require("discord.js");
 const db = require("croxydb");
 
 module.exports = {
-  name: "Bump-kanal-ayarla",
+  name: "bump-kanal-ayarla",
   description: "Sunucuda tanıtım yapılacak kanalı ayarlayın!",
   type: 1,
   options: [
